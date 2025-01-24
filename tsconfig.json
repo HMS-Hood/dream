@@ -5,9 +5,11 @@
     "moduleResolution": "node",
     "strict": true,
     "jsx": "preserve",
+    "noImplicitAny": false,
     "sourceMap": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"]
