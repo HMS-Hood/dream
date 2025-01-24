@@ -26,4 +26,10 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['**/*.vue'],
+      customSyntax: 'postcss-html',
+    },
+  ],
 };
