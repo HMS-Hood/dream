@@ -6,7 +6,7 @@
   "author": "ArcoDesign Team",
   "license": "MIT",
   "scripts": {
-    "dev": "vite --config ./config/vite.config.dev.ts",
+    "dev": "vite --config ./config/vite.config.dev.ts --host",
     "build": "vue-tsc --noEmit && vite build --config ./config/vite.config.prod.ts",
     "report": "cross-env REPORT=true npm run build",
     "preview": "npm run build && vite preview --host",
@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@arco-design/web-vue": "^2.56.0",
+    "@google/generative-ai": "^0.21.0",
     "@vueuse/core": "^9.3.0",
     "arco-design-pro-vue": "^2.5.15",
     "axios": "^0.24.0",
