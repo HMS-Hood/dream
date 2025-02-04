@@ -13,6 +13,8 @@ export class Character implements CharacterInterface {
 
   name: string;
 
+  nickName: string;
+
   avatar: string;
 
   level: CharacterLevel;
@@ -54,6 +56,7 @@ export class Character implements CharacterInterface {
   constructor(initParam: CharacterInterface) {
     this.id = initParam.id;
     this.name = initParam.name;
+    this.nickName = initParam.nickName;
     this.avatar = initParam.avatar;
     this.level = initParam.level;
     this.experience = initParam.experience;

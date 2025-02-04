@@ -12,6 +12,8 @@ export class Player {
 
   name: string;
 
+  nickName: string;
+
   title: string;
 
   reputation: number;
@@ -35,12 +37,13 @@ export class Player {
   constructor(name: string, familyEmblem: Emblem, familyFlag: Flag) {
     this.id = Math.random().toString(36).substring(2, 15);
     this.name = name;
-    this.title = '红叶原之主';
+    this.nickName = '';
+    this.title = '';
     this.reputation = 0;
     this.familyEmblem = familyEmblem;
     this.familyFlag = familyFlag;
-    this.gold = 0;
-    const protagonist = reactive(generateCharacter('jane'));
+    this.gold = 2000;
+    const protagonist = reactive(generateCharacter());
     this.protagonistId = protagonist.id;
     this.members.push(protagonist);
     this.leadTeam = reactive(

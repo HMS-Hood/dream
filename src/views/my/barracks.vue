@@ -5,6 +5,7 @@
   >
     <div class="row banner">
       <div class="cell detail">
+        <back></back>
         <div
           :style="{
             'backgroundImage': `url(${player.familyEmblem.imageUrl})`,
@@ -12,7 +13,8 @@
             'height': '80px',
             'background-size': 'cover',
           }"
-        ></div>
+        >
+        </div>
         <div class="cell-content">
           <div class="player-details">
             <div class="name-title">
@@ -30,14 +32,8 @@
           </div>
         </div>
       </div>
-      <div
-        v-for="(item, index) in row1"
-        :key="index"
-        class="cell hold"
-        :style="{ backgroundImage: `url(${item.image})` }"
-      >
+      <div class="cell" :style="{ backgroundImage: `url('')` }">
         <div class="cell-content">
-          <h3>{{ item.title }}</h3>
           <p>asdfasdf</p>
           <p>asdfasdf</p>
           <p>asdfasdf</p>
@@ -71,12 +67,9 @@
   import { player } from '../../core/game';
   import TeamList from './TeamList.vue';
   import CharacterManager from './CharacterManager.vue';
+  import back from './back.vue';
 
   const backgroundImage = ref('/img/bg/bg1.png');
-  const row1 = ref([
-    { title: 'Item 1', image: '/img/10.png' },
-    { title: 'Item 2', image: '/img/11.png' },
-  ]);
 
   const showList = ref<'team' | 'character' | 'item'>('team');
 </script>

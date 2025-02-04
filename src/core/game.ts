@@ -6,18 +6,21 @@ import { Player } from './entities/Player';
 import { Emblem } from './entities/Emblem';
 import { Flag } from './entities/Flag';
 import { generateCharacter } from './utils';
+import { Calendar } from './entities/Calendar';
 
 // Create Emblem and Flag
 const emblem = new Emblem('Eagle Emblem', '/img/emblem.png');
 const flag = new Flag('Red Banner', '/images/red-banner.png');
 
 // Create Player
-const player = reactive(new Player('Hero', emblem, flag));
+export const player = reactive(new Player('Hero', emblem, flag));
 
-for (let i = 1; i <= 30; i += 1) {
-  const character = reactive(generateCharacter(`Fighter${i}`));
+for (let i = 1; i <= 5; i += 1) {
+  const character = reactive(generateCharacter());
   player.members.push(character);
 }
+
+export const calendar = reactive(new Calendar());
 
 // for (let i = 1; i <= 4; i += 1) {
 //   const leadMember = generateCharacter(`Lead${i}`);
@@ -86,5 +89,3 @@ for (let i = 1; i <= 30; i += 1) {
 // const game
 // = new Game(battleConfig, [army1, army2], player);
 // game.startGame();
-
-export { player };

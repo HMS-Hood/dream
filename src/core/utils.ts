@@ -32,6 +32,7 @@ import {
   TwoHandWeapon,
 } from './interfaces/item';
 import { Character } from './entities/Character';
+import { characterNames } from './setting/names';
 
 export function generateId(): string {
   return Math.random().toString(36).substring(2, 15);
@@ -134,10 +135,14 @@ export function getRandomAttackMethod(): AttackMethod {
   return validEnumValues[randomIndex] as AttackMethod; // Type assertion for safety
 }
 
+function generateName(): string {
+  return characterNames[getRandomInt(0, characterNames.length - 1)];
+}
+
 /**
  * Function to generate a team member.
  */
-export function generateCharacter(name: string = 'Team Member'): Character {
+export function generateCharacter(): Character {
   // Generate qualities for each attribute group
   const qualityGroups = {
     strengthAgility: generateQualityLevel(),
@@ -192,7 +197,8 @@ export function generateCharacter(name: string = 'Team Member'): Character {
 
   const character: CharacterInterface = {
     id: generateId(),
-    name,
+    name: generateName(),
+    nickName: '',
     avatar: generateAvatarURL(),
     level: CharacterLevel.ROOKIE,
     experience: 0,

@@ -6,10 +6,23 @@
     <div class="row one">
       <div
         class="cell"
-        :style="{ backgroundImage: `url(${player.familyEmblem.imageUrl})` }"
+        :style="{
+          backgroundImage: `url(${
+            player.members.find((member) => member.id === player.protagonistId)
+              ?.avatar
+          })`,
+        }"
       >
+        <div class="emblem">
+          <img
+            width="150px"
+            height="150px"
+            :src="player.familyEmblem.imageUrl"
+          />
+        </div>
         <div class="cell-content">
           <div class="player-details">
+            <div class="calendar">{{ calendar.getDate() }}</div>
             <div class="name-title">
               <h2 class="player-name">{{ player.name }}</h2>
               <p class="player-title">{{ player.title }}</p>
@@ -62,7 +75,7 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
-  import { player } from '../../core/game';
+  import { player, calendar } from '../../core/game';
 
   const backgroundImage = ref('/img/bg/bg1.png');
   const router = useRouter();
@@ -75,8 +88,8 @@
     { title: 'Item 2', image: '/img/avatar/2.png' },
     { title: 'Item 3', image: '/img/avatar/3.png' },
     { title: 'Item 4', image: '/img/avatar/4.png' },
-    { title: 'Item 5', image: '/img/avatar/5.png' },
-    { title: '兵营', image: '/img/bg/military-camp.png', url: '/barracks' },
+    { title: '征兵所', image: '/img/bg/military-camp.png', url: '/recruit' },
+    { title: '兵营', image: '/img/bg/barracks.png', url: '/barracks' },
     { title: '商店', image: '/img/bg/store.png' },
     { title: '酒馆', image: '/img/bg/tavern1.png' },
   ]);
@@ -103,7 +116,6 @@
       background-position: center;
       background-size: cover;
       border-radius: 10px;
-      cursor: pointer;
       transition: transform 0.3s;
     }
 
@@ -121,11 +133,21 @@
 
     &.one .cell.hold {
       height: 70vh;
+      cursor: pointer;
 
       &:hover {
         box-shadow: 0 0 10px rgb(0 0 0 / 30%);
         transform: scale(1.025);
       }
+    }
+
+    .emblem {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 150px;
+      height: 150px;
+      background-color: rgb(128 128 128 / 70%);
     }
 
     &.two .cell {
@@ -141,31 +163,38 @@
   .player-details {
     width: 100%;
     margin-bottom: 20px;
-  }
 
-  .player-name {
-    margin: 0 0 5px;
-    font-size: 1.5em;
-  }
+    .calendar {
+      color: goldenrod;
+      font-weight: bolder;
+      font-size: 2em;
+    }
 
-  .player-title {
-    margin: 0 0 10px;
-    color: #777;
-  }
+    .player-name {
+      margin: 1em 0 5px;
+      font-size: 2em;
+    }
 
-  .reputation,
-  .gold {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-  }
+    .player-title {
+      margin: 0.5em 0 10px;
+      color: #777;
+      font-size: 1.5em;
+    }
 
-  .reputation span:first-child,
-  .gold span:first-child {
-    display: inline-block;
-    width: 80px; /* Align labels */
-    margin-right: 5px;
-    font-weight: bold;
+    .reputation,
+    .gold {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.5em;
+      font-size: 1.5em;
+
+      > *:first-child {
+        display: inline-block;
+        width: 120px; /* Align labels */
+        margin-right: 1em;
+        font-weight: bold;
+      }
+    }
   }
 
   h3 {

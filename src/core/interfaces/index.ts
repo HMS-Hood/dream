@@ -14,6 +14,7 @@ export interface Skill {
 export interface CharacterInterface {
   id: string;
   name: string;
+  nickName: string;
   avatar: string;
   level: CharacterLevel;
   experience: number;

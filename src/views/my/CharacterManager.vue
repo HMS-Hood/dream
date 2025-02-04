@@ -1,10 +1,6 @@
 <template>
   <div class="row character-list">
-    <character-list
-      title="领主"
-      :characters="[leader as CharacterInterface]"
-    ></character-list>
-    <character-list title="下属" :characters="player.members"></character-list>
+    <character-list title="" :characters="player.members"></character-list>
   </div>
 </template>
 
