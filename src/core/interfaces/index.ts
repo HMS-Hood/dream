@@ -1,15 +1,38 @@
-import { SquadPosition, AttackMethod, TeamMemberLevel } from '../enums';
+import {
+  SquadPosition,
+  AttackMethod,
+  CharacterLevel,
+  QualityLevel,
+} from '../enums';
+import { Armor, OneHandWeapon, Shield, TwoHandWeapon } from './item';
 
-export interface TeamMember {
+export interface Skill {
+  name: string;
+  Effect: any;
+}
+
+export interface CharacterInterface {
   id: string;
   name: string;
+  avatar: string;
+  level: CharacterLevel;
+  experience: number;
+  quality: QualityLevel;
+  attackMethod: AttackMethod;
+  health: number;
   strength: number;
   agility: number;
   endurance: number;
   intelligence: number;
-  energy: number;
+  spirit: number;
+  perception: number;
   luck: number;
-  level: TeamMemberLevel;
+  charm: number;
+  skills: Skill[];
+  oneHandWeapon?: OneHandWeapon;
+  twoHandWeapon?: TwoHandWeapon;
+  shield?: Shield;
+  armor?: Armor;
 }
 
 export interface Squad {
@@ -17,7 +40,7 @@ export interface Squad {
   position: SquadPosition;
   attackSpeed: number;
   attackMethod: AttackMethod;
-  members: TeamMember[]; // Use TeamMember type
+  members: CharacterInterface[]; // Use TeamMember type
   // Add properties to track targets, dead status for battle
   targets: Squad[];
   isDead: boolean;
@@ -39,4 +62,14 @@ export interface BattleState {
   armies: Army[];
   round: number;
   isBattleOver: boolean;
+}
+
+export interface Equipment {
+  name: string;
+}
+
+export interface Question {
+  name: string;
+  desc: string;
+  quality: QualityLevel;
 }

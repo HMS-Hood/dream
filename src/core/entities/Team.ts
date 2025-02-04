@@ -1,7 +1,9 @@
-import { TeamMember } from '../interfaces';
+/* eslint-disable import/prefer-default-export */
+import { reactive } from 'vue';
 import { Emblem } from './Emblem';
 import { Flag } from './Flag';
-import { TeamMemberLevel } from '../enums';
+import { AttackMethod } from '../enums';
+import { Character } from './Character';
 
 export class Team {
   id: string;
@@ -12,57 +14,36 @@ export class Team {
 
   flag: Flag;
 
-  members: TeamMember[];
+  memberIds: string[];
 
-  leader: TeamMember;
+  leaderId: string;
 
-  viceLeader?: TeamMember;
+  viceLeaderId?: string;
 
-  constructor(name: string, leader: TeamMember, emblem: Emblem, flag: Flag) {
+  constructor(name: string, leaderId: string, emblem: Emblem, flag: Flag) {
     this.id = Math.random().toString(36).substring(2, 15);
     this.name = name;
     this.emblem = emblem;
     this.flag = flag;
-    this.members = [
-      {
-        id: leader.id,
-        name: leader.name,
-        strength: 5,
-        agility: 5,
-        endurance: 5,
-        intelligence: 5,
-        energy: 5,
-        luck: 5,
-        level: TeamMemberLevel.ROOKIE,
-      },
-    ];
-    [this.leader] = this.members;
+    this.leaderId = leaderId;
+    this.memberIds = reactive([]);
   }
 
-  addMember(member: TeamMember): void {
-    this.members.push(member);
+  addMember(memberId: string): void {
+    this.memberIds.push(memberId);
   }
 
-  removeMember(memberId: string): void {
-    this.members = this.members.filter((member) => member.id !== memberId);
-    if (this.leader?.id === memberId) {
-      [this.leader] = this.members;
-    }
+  removeMember(removedMemberId: string): void {
+    this.memberIds = this.memberIds.filter(
+      (memberId) => memberId !== removedMemberId
+    );
   }
 
-  setLeader(memberId: string): void {
-    const newLeader = this.members.find((member) => member.id === memberId);
-    if (newLeader) {
-      this.leader = newLeader;
-    }
+  setLeader(newLeaderId: string): void {
+    this.leaderId = newLeaderId;
   }
 
-  setViceLeader(memberId: string): void {
-    const newViceLeader = this.members.find((member) => member.id === memberId);
-    if (newViceLeader) {
-      this.viceLeader = newViceLeader;
-    }
+  setViceLeader(newViceLeaderId: string): void {
+    this.viceLeaderId = newViceLeaderId;
   }
 }
-
-export default Team;

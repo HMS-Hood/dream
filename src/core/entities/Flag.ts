@@ -1,3 +1,4 @@
+/* eslint-disable import/prefer-default-export */
 export class Flag {
   id: string;
 
@@ -11,5 +12,3 @@ export class Flag {
     this.imageUrl = imageUrl;
   }
 }
-
-export default Flag;

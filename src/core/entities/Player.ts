@@ -1,8 +1,11 @@
+/* eslint-disable import/prefer-default-export */
+import { reactive } from 'vue';
 import { Team } from './Team';
 import { Emblem } from './Emblem';
 import { Flag } from './Flag';
-import { TeamMember } from '../interfaces';
-import { TeamMemberLevel } from '../enums';
+import { Equipment } from '../interfaces';
+import { generateCharacter } from '../utils';
+import { Character } from './Character';
 
 export class Player {
   id: string;
@@ -17,32 +20,32 @@ export class Player {
 
   familyFlag: Flag;
 
-  team: Team; // The default team
+  gold: number;
 
-  protagonist: TeamMember = {
-    id: 'protagonist',
-    name: 'Jane',
-    strength: 5,
-    agility: 5,
-    endurance: 5,
-    intelligence: 5,
-    energy: 5,
-    luck: 5,
-    level: TeamMemberLevel.ROOKIE,
-  };
+  leadTeam: Team; // The default team
+
+  teams: Team[] = reactive([]);
+
+  equipments: Equipment[] = reactive([]);
+
+  members: Character[] = reactive([]);
+
+  protagonistId: string;
 
   constructor(name: string, familyEmblem: Emblem, familyFlag: Flag) {
     this.id = Math.random().toString(36).substring(2, 15);
     this.name = name;
-    this.title = 'Adventurer';
+    this.title = '红叶原之主';
     this.reputation = 0;
     this.familyEmblem = familyEmblem;
     this.familyFlag = familyFlag;
-    this.team = new Team(name, this.protagonist, familyEmblem, familyFlag);
-  }
-
-  createTeam(teamName: string, emblem: Emblem, flag: Flag) {
-    this.team = new Team(teamName, this.protagonist, emblem, flag);
+    this.gold = 0;
+    const protagonist = reactive(generateCharacter('jane'));
+    this.protagonistId = protagonist.id;
+    this.members.push(protagonist);
+    this.leadTeam = reactive(
+      new Team(name, this.protagonistId, familyEmblem, familyFlag)
+    );
   }
 
   addReputation(amount: number) {
@@ -53,5 +56,3 @@ export class Player {
     this.title = title;
   }
 }
-
-export default Player;
