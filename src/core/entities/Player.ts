@@ -3,9 +3,9 @@ import { reactive } from 'vue';
 import { Team } from './Team';
 import { Emblem } from './Emblem';
 import { Flag } from './Flag';
-import { Equipment } from '../interfaces';
-import { generateCharacter } from '../utils';
+import { generateCharacter } from '../utils/utils';
 import { Character } from './Character';
+import { Item } from '../interfaces/item';
 
 export class Player {
   id: string;
@@ -28,7 +28,7 @@ export class Player {
 
   teams: Team[] = reactive([]);
 
-  equipments: Equipment[] = reactive([]);
+  items: Item[] = reactive([]);
 
   members: Character[] = reactive([]);
 

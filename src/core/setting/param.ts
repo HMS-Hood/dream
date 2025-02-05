@@ -8,6 +8,14 @@ export type QualityRange = {
   [key in QualityLevel]: [number, number];
 };
 
+export type QualityString = {
+  [key in QualityLevel]: string;
+};
+
+export type QualityNumber = {
+  [key in QualityLevel]: number;
+};
+
 /**
  * Weights for each quality level.
  */

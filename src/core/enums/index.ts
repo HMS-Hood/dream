@@ -10,12 +10,61 @@ export enum AttackMethod {
   LONG_RANGE,
 }
 
+export enum ItemType {
+  WEAPON,
+  ARMOR,
+  SHIELD,
+  SCROLL,
+}
+
+export enum WeaponHandType {
+  ONE_HAND,
+  TWO_HAND,
+}
+
+export enum OneHandWeaponType {
+  SWORD,
+  AXE,
+  MACE,
+  DAGGER,
+}
+
+export enum TwoHandWeaponType {
+  GREAT_SWORD,
+  GREAT_AXE,
+  GREAT_MACE,
+}
+
+export enum MiddleRangeWeaponType {
+  LANCE,
+  POLEARM,
+  HALBERD,
+}
+
+export enum LongRangeWeaponType {
+  BOW,
+  CROSSBOW,
+  THROWING_AXE,
+  STONE,
+}
+
 export enum CharacterLevel {
   ROOKIE = 'ROOKIE',
   ORDINARY = 'ORDINARY',
   VETERAN = 'VETERAN',
   ELITE = 'ELITE',
   LEGENDARY = 'LEGENDARY',
+}
+
+export enum CharacterBaseProperty {
+  strength = 'strength',
+  agility = 'agility',
+  endurance = 'endurance',
+  intelligence = 'intelligence',
+  spirit = 'spirit',
+  perception = 'perception',
+  luck = 'luck',
+  charm = 'charm',
 }
 
 export enum QualityLevel {

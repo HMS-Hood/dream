@@ -4,35 +4,17 @@ import {
   QualityLevel,
   SquadPosition,
   CharacterLevel,
-} from './enums';
+} from '../enums';
 import {
   qualityWeights,
   qualityAttributeRanges,
   maxAvatarIndex,
   QualityRange,
-} from './setting/param';
-import {
-  qualityDamageRanges,
-  qualityPlateRanges,
-  qualityLeatherRanges,
-  qualityLeatherAgiRanges,
-  qualityRobeRanges,
-  qualityRobeIntellRanges,
-  qualityShieldRanges,
-  qualityTwoHandDamageRanges,
-} from './setting/param-item';
-import { Army, Squad, CharacterInterface } from './interfaces';
-import {
-  Leather,
-  OneHandWeapon,
-  Plate,
-  RangeWeapon,
-  Robe,
-  Shield,
-  TwoHandWeapon,
-} from './interfaces/item';
-import { Character } from './entities/Character';
-import { characterNames } from './setting/names';
+} from '../setting/param';
+import { Army, Squad, CharacterInterface } from '../interfaces';
+import { Character } from '../entities/Character';
+import { characterNames } from '../setting/names';
+import { Equipments } from '../entities/Equipments';
 
 export function generateId(): string {
   return Math.random().toString(36).substring(2, 15);
@@ -41,7 +23,7 @@ export function generateId(): string {
 /**
  * Function to get a random quality level based on weights.
  */
-function generateQualityLevel(): QualityLevel {
+export function generateQualityLevel(): QualityLevel {
   const totalWeight = Object.values(qualityWeights).reduce(
     (sum, weight) => sum + weight,
     0
@@ -64,7 +46,7 @@ function generateQualityLevel(): QualityLevel {
 /**
  * Function to get a random integer within a range.
  */
-function getRandomInt(min: number, max: number): number {
+export function getRandomInt(min: number, max: number): number {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -73,7 +55,7 @@ function getRandomInt(min: number, max: number): number {
 /**
  * Function to generate attribute value based on quality level.
  */
-function generateAttributeValue(
+export function generateAttributeValue(
   quality: QualityLevel,
   ranges: QualityRange = qualityAttributeRanges
 ): number {
@@ -214,111 +196,10 @@ export function generateCharacter(): Character {
     perception: generateAttributeValue(adjustedQualities.luckPerception),
     attackMethod: getRandomAttackMethod(),
     skills: [],
+    equipment: new Equipments(),
   };
 
   return reactive(new Character(character));
-}
-
-export function createOneHandWeapon(): OneHandWeapon {
-  const quality = generateQualityLevel();
-  const weapon: OneHandWeapon = {
-    name: `one-${generateId}`,
-    value: 0,
-    quality,
-    img: '',
-    keys: [],
-    type: 'one-hand',
-    minDamage: generateAttributeValue(quality, qualityDamageRanges) - 1,
-    maxDamage: generateAttributeValue(quality, qualityDamageRanges) + 1,
-    attackMethod: getRandomAttackMethod(),
-  };
-  return weapon;
-}
-
-export function createRangeWeapon(): RangeWeapon {
-  const quality = generateQualityLevel();
-  const weapon: RangeWeapon = {
-    name: `range-${generateId}`,
-    value: 0,
-    quality,
-    img: '',
-    keys: [],
-    type: 'range',
-    minDamage: generateAttributeValue(quality, qualityDamageRanges) - 1,
-    maxDamage: generateAttributeValue(quality, qualityDamageRanges) + 1,
-    attackMethod: getRandomAttackMethod(),
-  };
-  return weapon;
-}
-
-export function createTwohandWeapon(): TwoHandWeapon {
-  const quality = generateQualityLevel();
-  const weapon: TwoHandWeapon = {
-    name: `two-${generateId}`,
-    value: 0,
-    quality,
-    img: '',
-    keys: [],
-    type: 'two-hand',
-    minDamage: generateAttributeValue(quality, qualityTwoHandDamageRanges) - 1,
-    maxDamage: generateAttributeValue(quality, qualityTwoHandDamageRanges) + 1,
-    attackMethod: getRandomAttackMethod(),
-  };
-  return weapon;
-}
-
-export function createShield(): Shield {
-  const quality = generateQualityLevel();
-  const shield: Shield = {
-    name: `shield-${generateId}`,
-    value: 0,
-    quality,
-    img: '',
-    keys: [],
-    defence: generateAttributeValue(quality, qualityShieldRanges),
-  };
-  return shield;
-}
-
-export function createPlate(): Plate {
-  const quality = generateQualityLevel();
-  const plate: Plate = {
-    name: `plate-${generateId}`,
-    value: 0,
-    quality,
-    img: '',
-    keys: [],
-    defence: generateAttributeValue(quality, qualityPlateRanges),
-  };
-  return plate;
-}
-
-export function createLeather(): Leather {
-  const quality = generateQualityLevel();
-  const leather: Leather = {
-    name: `leather-${generateId}`,
-    value: 0,
-    quality,
-    img: '',
-    keys: [],
-    defence: generateAttributeValue(quality, qualityLeatherRanges),
-    agility: generateAttributeValue(quality, qualityLeatherAgiRanges),
-  };
-  return leather;
-}
-
-export function createRobe(): Robe {
-  const quality = generateQualityLevel();
-  const robe: Robe = {
-    name: `robe-${generateId}`,
-    value: 0,
-    quality,
-    img: '',
-    keys: [],
-    defence: generateAttributeValue(quality, qualityRobeRanges),
-    intelligence: generateAttributeValue(quality, qualityRobeIntellRanges),
-  };
-  return robe;
 }
 
 export function createSquad(

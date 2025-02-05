@@ -1,10 +1,10 @@
+import { Equipments } from '../entities/Equipments';
 import {
   SquadPosition,
   AttackMethod,
   CharacterLevel,
   QualityLevel,
 } from '../enums';
-import { Armor, OneHandWeapon, Shield, TwoHandWeapon } from './item';
 
 export interface Skill {
   name: string;
@@ -30,10 +30,7 @@ export interface CharacterInterface {
   luck: number;
   charm: number;
   skills: Skill[];
-  oneHandWeapon?: OneHandWeapon;
-  twoHandWeapon?: TwoHandWeapon;
-  shield?: Shield;
-  armor?: Armor;
+  equipment: Equipments;
 }
 
 export interface Squad {
@@ -63,10 +60,6 @@ export interface BattleState {
   armies: Army[];
   round: number;
   isBattleOver: boolean;
-}
-
-export interface Equipment {
-  name: string;
 }
 
 export interface Question {

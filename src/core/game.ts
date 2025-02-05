@@ -5,7 +5,7 @@ import { reactive } from 'vue';
 import { Player } from './entities/Player';
 import { Emblem } from './entities/Emblem';
 import { Flag } from './entities/Flag';
-import { generateCharacter } from './utils';
+import { generateCharacter } from './utils/utils';
 import { Calendar } from './entities/Calendar';
 
 // Create Emblem and Flag

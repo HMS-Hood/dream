@@ -1,4 +1,13 @@
-import { AttackMethod, QualityLevel } from '../enums';
+import {
+  AttackMethod,
+  ItemType,
+  QualityLevel,
+  WeaponHandType,
+  OneHandWeaponType,
+  TwoHandWeaponType,
+  MiddleRangeWeaponType,
+  LongRangeWeaponType,
+} from '../enums';
 
 export interface ItemKey {
   desc: string;
@@ -14,24 +23,43 @@ export interface Item {
   img: string;
   quality: QualityLevel;
   keys: ItemKey[];
+  type: ItemType;
 }
 
 export interface Weapon extends Item {
   minDamage: number;
   maxDamage: number;
+  handType: WeaponHandType;
   attackMethod: AttackMethod;
+  weaponType:
+    | OneHandWeaponType
+    | TwoHandWeaponType
+    | MiddleRangeWeaponType
+    | LongRangeWeaponType;
 }
 
 export interface OneHandWeapon extends Weapon {
-  type: 'one-hand';
-}
-
-export interface RangeWeapon extends Weapon {
-  type: 'range';
+  handType: WeaponHandType.ONE_HAND;
+  attackMethod: AttackMethod.MELEE;
+  weaponType: OneHandWeaponType;
 }
 
 export interface TwoHandWeapon extends Weapon {
-  type: 'two-hand';
+  handType: WeaponHandType.TWO_HAND;
+  attackMethod: AttackMethod.MELEE;
+  weaponType: TwoHandWeaponType;
+}
+
+export interface MiddleRangeWeapon extends Weapon {
+  handType: WeaponHandType.TWO_HAND;
+  attackMethod: AttackMethod.MEDIUM_RANGE;
+  weaponType: MiddleRangeWeaponType;
+}
+
+export interface LongRangeWeapon extends Weapon {
+  handType: WeaponHandType.TWO_HAND;
+  attackMethod: AttackMethod.LONG_RANGE;
+  weaponType: LongRangeWeaponType;
 }
 
 export interface Shield extends Item {
@@ -43,15 +71,22 @@ export interface Armor extends Item {
 }
 
 export interface Plate extends Armor {
+  strengthLimit: number;
+  agilityDecrease: number;
+  defence: number;
+}
+
+export interface Chain extends Armor {
+  strengthLimit: number;
   defence: number;
 }
 
 export interface Leather extends Armor {
   defence: number;
-  agility: number;
+  agilityIncrease: number;
 }
 
 export interface Robe extends Armor {
   defence: number;
-  intelligence: number;
+  intelligenceIncrease: number;
 }

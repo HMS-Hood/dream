@@ -1,11 +1,6 @@
 import { AttackMethod, CharacterLevel, QualityLevel } from '../enums';
 import { CharacterInterface, Skill } from '../interfaces';
-import {
-  Armor,
-  OneHandWeapon,
-  Shield,
-  TwoHandWeapon,
-} from '../interfaces/item';
+import { Equipments } from './Equipments';
 
 /* eslint-disable import/prefer-default-export */
 export class Character implements CharacterInterface {
@@ -45,13 +40,7 @@ export class Character implements CharacterInterface {
 
   skills: Skill[];
 
-  oneHandWeapon?: OneHandWeapon;
-
-  twoHandWeapon?: TwoHandWeapon;
-
-  shield?: Shield;
-
-  armor?: Armor;
+  equipment: Equipments;
 
   constructor(initParam: CharacterInterface) {
     this.id = initParam.id;
@@ -72,33 +61,6 @@ export class Character implements CharacterInterface {
     this.luck = initParam.luck;
     this.charm = initParam.charm;
     this.skills = initParam.skills;
-  }
-
-  setOneHandWeapon(weapon: OneHandWeapon) {
-    if (this.twoHandWeapon) {
-      this.twoHandWeapon = undefined;
-    }
-    this.oneHandWeapon = weapon;
-  }
-
-  setTwoHandWeapon(weapon: TwoHandWeapon) {
-    if (this.oneHandWeapon) {
-      this.oneHandWeapon = undefined;
-    }
-    if (this.shield) {
-      this.shield = undefined;
-    }
-    this.twoHandWeapon = weapon;
-  }
-
-  setShield(shield: Shield) {
-    if (this.twoHandWeapon) {
-      this.twoHandWeapon = undefined;
-    }
-    this.shield = shield;
-  }
-
-  setArmor(armor: Armor) {
-    this.armor = armor;
+    this.equipment = initParam.equipment;
   }
 }

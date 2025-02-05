@@ -35,7 +35,7 @@
   import { ref, reactive, computed } from 'vue';
   import { CharacterInterface } from '@/core/interfaces';
   import CheckCharacter from './CheckCharacter.vue';
-  import { generateCharacter } from '../../core/utils';
+  import { generateCharacter } from '../../core/utils/utils';
   import { player } from '../../core/game';
   import back from './back.vue';
   import { Character } from '../../core/entities/Character';
