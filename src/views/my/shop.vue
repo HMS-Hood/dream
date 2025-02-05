@@ -1,8 +1,5 @@
 <template>
-  <div
-    class="container"
-    :style="{ backgroundImage: `url(${backgroundImage})` }"
-  >
+  <div class="container">
     <div class="panel">
       <div class="official">
         <back></back>
@@ -18,15 +15,57 @@
           <div class="label">当前拥有</div>
           <div class="value">{{ player.gold }}</div>
         </div>
-        <div class="action" @click="deal">雇佣</div>
+        <div class="action" @click="deal">交易</div>
       </div>
     </div>
-    <div class="list">
-      <div v-for="item in weaponList" :key="item.name" class="item">
-        <div class="name">{{ item.name }}</div>
-        <div class="value">{{ item.value }}</div>
-        <div class="num">
-          <input v-model="item.num" type="number" />
+    <div class="sell list">
+      <div class="tag-list">
+        <div class="tag">领主仓库</div>
+      </div>
+      <div class="item-list">
+        <div v-for="item in player.items" :key="item.name" class="item">
+          <div class="name" :class="item.quality">{{ item.name }}</div>
+          <div class="value">{{ item.value }}</div>
+        </div>
+      </div>
+    </div>
+    <div class="buy list">
+      <div class="tag-list">
+        <div :class="showWeapon ? 'tag cur' : 'tag'" @click="showWeapon = true"
+          >Weapon</div
+        >
+        <div :class="showWeapon ? 'tag' : 'cur tag'" @click="showWeapon = false"
+          >Armor</div
+        >
+      </div>
+      <div v-if="showWeapon" class="item-list">
+        <div v-for="item in weaponList" :key="item.name" class="item">
+          <div class="name" :class="item.quality">{{ item.name }}</div>
+          <div class="num">
+            <a-input-number
+              v-model="item.num"
+              type="number"
+              mode="button"
+              :min="0"
+              size="large"
+            ></a-input-number>
+          </div>
+          <div class="value">{{ item.value }}</div>
+        </div>
+      </div>
+      <div v-if="!showWeapon" class="item-list">
+        <div v-for="item in armorList" :key="item.name" class="item">
+          <div class="name" :class="item.quality">{{ item.name }}</div>
+          <div class="num">
+            <a-input-number
+              v-model="item.num"
+              type="number"
+              mode="button"
+              :min="0"
+              size="large"
+            ></a-input-number>
+          </div>
+          <div class="value">{{ item.value }}</div>
         </div>
       </div>
     </div>
@@ -35,7 +74,6 @@
 
 <script setup lang="ts">
   import { ref, reactive, computed } from 'vue';
-  import CheckCharacter from './CheckCharacter.vue';
   import { player } from '../../core/game';
   import back from './back.vue';
   import {
@@ -61,7 +99,6 @@
     createNormalStandardWeapon,
   } from '../../core/utils/item-utils';
 
-  const backgroundImage = '/img/bg/recruit.png';
   const weaponList: {
     name: string;
     value: number;
@@ -349,6 +386,8 @@
   );
   const info = ref('这里什么都有！不许瞎想 ~~~！');
 
+  const showWeapon = ref(true);
+
   const deal = () => {
     if (player.gold >= consume.value) {
       weaponList.forEach((item) => {
@@ -375,11 +414,14 @@
 </script>
 
 <style lang="less" scoped>
+  @import url('../../assets/style/dream.less');
+
   .container {
     display: flex;
     justify-content: center;
     height: 100vh;
     padding: 20px;
+    background-image: url('/img/bg/weapon-store.png');
     background-position: center;
     background-size: cover;
 
@@ -449,7 +491,82 @@
     }
 
     .list {
+      flex-basis: 30vw;
       flex-grow: 1;
+      padding: 0 1em;
+      color: aliceblue;
+
+      .tag-list {
+        display: flex;
+        font-size: 2.5em;
+
+        .tag {
+          margin: 0 2px;
+          padding: 0.5em 1em;
+          color: rgb(21 21 21);
+          background-color: goldenrod;
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+          cursor: pointer;
+
+          &:hover {
+            color: #000;
+            background-color: rgb(240 189 62);
+          }
+
+          &.cur {
+            color: #000;
+            background-color: rgb(240 189 62);
+          }
+        }
+      }
+
+      .item-list {
+        height: 92vh;
+        overflow-y: scroll;
+        font-size: 2em;
+
+        .item {
+          display: flex;
+          justify-content: space-between;
+          margin: 2px 0.5em 2px 0;
+          padding: 0.5em 1em;
+          background-color: rgb(0 0 0 / 80%);
+
+          .name {
+            width: 10em;
+
+            &.A {
+              color: @quality-A-color;
+            }
+
+            &.B {
+              color: @quality-B-color;
+            }
+
+            &.C {
+              color: @quality-C-color;
+            }
+
+            &.D {
+              color: @quality-D-color;
+            }
+
+            &.E {
+              color: @quality-E-color;
+            }
+
+            &.F {
+              color: @quality-F-color;
+            }
+          }
+
+          .value {
+            width: 5em;
+            text-align: right;
+          }
+        }
+      }
     }
   }
 </style>

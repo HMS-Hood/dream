@@ -90,7 +90,7 @@
     { title: 'Item 4', image: '/img/avatar/4.png' },
     { title: '征兵所', image: '/img/bg/military-camp.png', url: '/recruit' },
     { title: '兵营', image: '/img/bg/barracks.png', url: '/barracks' },
-    { title: '商店', image: '/img/bg/store.png' },
+    { title: '商店', image: '/img/bg/store.png', url: '/shop' },
     { title: '酒馆', image: '/img/bg/tavern1.png' },
   ]);
   const hoverItem = ref<{ title: string; image: string } | null>();

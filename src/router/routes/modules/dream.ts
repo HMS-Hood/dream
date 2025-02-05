@@ -18,6 +18,14 @@ const DASHBOARD: AppRouteRecordRaw[] = [
     },
   },
   {
+    path: '/shop',
+    name: 'shop',
+    component: () => import('@/views/my/shop.vue'),
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
     path: '/barracks',
     name: 'barracks',
     component: () => import('@/views/my/barracks.vue'),
