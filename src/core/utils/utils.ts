@@ -11,10 +11,12 @@ import {
   maxAvatarIndex,
   QualityRange,
 } from '../setting/param';
-import { Army, Squad, CharacterInterface } from '../interfaces';
+import { CharacterInterface } from '../interfaces';
+import { Squad, Army } from '../interfaces/combat';
 import { Character } from '../entities/Character';
 import { characterNames } from '../setting/names';
 import { Equipments } from '../entities/Equipments';
+import { CombatUnit } from '../entities/CombatUnit';
 
 export function generateId(): string {
   return Math.random().toString(36).substring(2, 15);
@@ -125,25 +127,28 @@ function generateName(): string {
  * Function to generate a team member.
  */
 export function generateCharacter(): Character {
-  // Generate qualities for each attribute group
-  const qualityGroups = {
-    strengthAgility: generateQualityLevel(),
-    enduranceEnergy: generateQualityLevel(),
+  // Generate qualities for each attribute independently
+  const qualities = {
+    strength: generateQualityLevel(),
+    agility: generateQualityLevel(),
+    endurance: generateQualityLevel(),
+    spirit: generateQualityLevel(),
     intelligence: generateQualityLevel(),
     charm: generateQualityLevel(),
-    luckPerception: generateQualityLevel(),
+    luck: generateQualityLevel(),
+    perception: generateQualityLevel(),
   };
 
   // Determine the highest quality
-  const highestQuality = Object.values(qualityGroups).reduce<QualityLevel>(
-    (privious, current) => {
+  const highestQuality = Object.values(qualities).reduce<QualityLevel>(
+    (previous, current) => {
       if (
         Object.values(QualityLevel).indexOf(current) >
-        Object.values(QualityLevel).indexOf(privious)
+        Object.values(QualityLevel).indexOf(previous)
       ) {
         return current;
       }
-      return privious;
+      return previous;
     },
     QualityLevel.F
   );
@@ -160,21 +165,16 @@ export function generateCharacter(): Character {
     qualityAdjustment = 2;
   }
 
-  const adjustedQualities: typeof qualityGroups = {
-    strengthAgility: qualityGroups.strengthAgility, // Strength and Agility group quality remains as generated
-    enduranceEnergy: adjustQualityLevel(
-      qualityGroups.enduranceEnergy,
-      qualityAdjustment
-    ),
-    intelligence: adjustQualityLevel(
-      qualityGroups.intelligence,
-      qualityAdjustment
-    ),
-    charm: adjustQualityLevel(qualityGroups.charm, qualityAdjustment),
-    luckPerception: adjustQualityLevel(
-      qualityGroups.luckPerception,
-      qualityAdjustment
-    ),
+  // Adjust all qualities
+  const adjustedQualities = {
+    strength: adjustQualityLevel(qualities.strength, qualityAdjustment),
+    agility: adjustQualityLevel(qualities.agility, qualityAdjustment),
+    endurance: adjustQualityLevel(qualities.endurance, qualityAdjustment),
+    spirit: adjustQualityLevel(qualities.spirit, qualityAdjustment),
+    intelligence: adjustQualityLevel(qualities.intelligence, qualityAdjustment),
+    charm: adjustQualityLevel(qualities.charm, qualityAdjustment),
+    luck: adjustQualityLevel(qualities.luck, qualityAdjustment),
+    perception: adjustQualityLevel(qualities.perception, qualityAdjustment),
   };
 
   const character: CharacterInterface = {
@@ -186,14 +186,14 @@ export function generateCharacter(): Character {
     experience: 0,
     quality: teamMemberQuality,
     health: 100,
-    strength: generateAttributeValue(adjustedQualities.strengthAgility),
-    agility: generateAttributeValue(adjustedQualities.strengthAgility),
-    endurance: generateAttributeValue(adjustedQualities.enduranceEnergy),
-    spirit: generateAttributeValue(adjustedQualities.enduranceEnergy),
+    strength: generateAttributeValue(adjustedQualities.strength),
+    agility: generateAttributeValue(adjustedQualities.agility),
+    endurance: generateAttributeValue(adjustedQualities.endurance),
+    spirit: generateAttributeValue(adjustedQualities.spirit),
     intelligence: generateAttributeValue(adjustedQualities.intelligence),
     charm: generateAttributeValue(adjustedQualities.charm),
-    luck: generateAttributeValue(adjustedQualities.luckPerception),
-    perception: generateAttributeValue(adjustedQualities.luckPerception),
+    luck: generateAttributeValue(adjustedQualities.luck),
+    perception: generateAttributeValue(adjustedQualities.perception),
     attackMethod: getRandomAttackMethod(),
     skills: [],
     equipment: new Equipments(),
@@ -213,8 +213,8 @@ export function createSquad(
     position,
     attackMethod,
     attackSpeed,
-    members,
-    targets: [],
+    members: members.map((member) => new CombatUnit(member)),
+    targetIds: [],
     isDead: false,
   };
 }

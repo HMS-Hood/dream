@@ -1,10 +1,5 @@
 import { Equipments } from '../entities/Equipments';
-import {
-  SquadPosition,
-  AttackMethod,
-  CharacterLevel,
-  QualityLevel,
-} from '../enums';
+import { AttackMethod, CharacterLevel, QualityLevel } from '../enums';
 
 export interface Skill {
   name: string;
@@ -33,37 +28,36 @@ export interface CharacterInterface {
   equipment: Equipments;
 }
 
-export interface Squad {
-  id: string; // Unique ID for each squad
-  position: SquadPosition;
-  attackSpeed: number;
-  attackMethod: AttackMethod;
-  members: CharacterInterface[]; // Use TeamMember type
-  // Add properties to track targets, dead status for battle
-  targets: Squad[];
-  isDead: boolean;
-}
-
-export interface Army {
-  id: string; // Unique ID for each army
-  squads: Squad[];
-  reserveSquads: Squad[];
-}
-
-export interface BattleConfig {
-  maxRounds: number;
-  maxTroopsPerSide: number;
-  battleTimeLimit: number;
-}
-
-export interface BattleState {
-  armies: Army[];
-  round: number;
-  isBattleOver: boolean;
-}
-
 export interface Question {
   name: string;
   desc: string;
   quality: QualityLevel;
+}
+
+export interface BattleConfig {
+  maxRounds: number;
+  battlefieldWidth: number; // 战场宽度，决定每方最多上场部队数
+  battleTimeLimit: number; // 每场战斗的时间限制
+  positionWeight: {
+    // 不同位置的选中权重
+    front: number;
+    middle: number;
+    back: number;
+  };
+}
+
+export interface CombatStats {
+  currentHealth: number;
+  isDead: boolean;
+  maxHealth: number;
+  physicalAttack: number;
+  physicalDefense: number;
+  magicalAttack: number;
+  magicalDefense: number;
+  hitRate: number;
+  dodgeRate: number;
+  criticalRate: number;
+  criticalDamage: number;
+  attackSpeed: number;
+  moveSpeed: number;
 }

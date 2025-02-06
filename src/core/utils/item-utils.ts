@@ -49,6 +49,7 @@ import {
   namesOfQualityCloth,
   valueOfQualityCloth,
   qualityClothIntellRanges,
+  qualityLongRangeDamageRanges,
 } from '../setting/param-item';
 import {
   generateAttributeValue,
@@ -151,7 +152,7 @@ export function createLongRangeWeapon(
     quality ?? generateQualityLevel(),
     valueOfQualityLongRangeWeapon[quality ?? generateQualityLevel()],
     WeaponHandType.TWO_HAND,
-    qualityDamageRanges,
+    qualityLongRangeDamageRanges,
     AttackMethod.LONG_RANGE,
     longRangeWeaponType ?? randomLongRangeWeaponType()
   ) as LongRangeWeapon;
