@@ -25,7 +25,7 @@
   import { ref, reactive } from 'vue';
   import { useRouter } from 'vue-router';
   import back from './my/back.vue';
-  import { Campaign } from '../core/campaign';
+  import { Campaign } from '../core/battle/campaign';
   import { generateCharacter } from '../core/utils/utils';
   import { Character } from '../core/entities/Character';
   import { Army, Squad } from '../core/interfaces/combat';

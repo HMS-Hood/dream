@@ -211,7 +211,7 @@
 
 <script lang="ts" setup>
   import { ref, watch, computed } from 'vue';
-  import { BattleGroupResult, CombatLog } from '../../core/campaign';
+  import { BattleGroupResult, CombatLog } from '../../core/battle/campaign';
   import { Army, BattleGroup } from '../../core/interfaces/combat';
   import { SquadPosition } from '../../core/enums';
   import { useCampaignStore } from '../../store/campaign';
