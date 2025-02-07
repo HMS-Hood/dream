@@ -33,6 +33,22 @@ const DASHBOARD: AppRouteRecordRaw[] = [
       requiresAuth: false,
     },
   },
+  {
+    path: '/campaign',
+    name: 'campaign',
+    component: () => import('@/views/my/CampaignView.vue'),
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    path: '/campaign-test',
+    name: 'CampaignTest',
+    component: () => import('@/views/CampaignTest.vue'),
+    meta: {
+      requiresAuth: false,
+    },
+  },
 ];
 
 export default DASHBOARD;

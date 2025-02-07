@@ -1,11 +1,10 @@
-import { SquadPosition, AttackMethod } from '../enums';
+import { SquadPosition } from '../enums';
 import { CombatUnit } from '../entities/CombatUnit';
 
 export interface Squad {
   id: string;
   position: SquadPosition;
   attackSpeed: number;
-  attackMethod: AttackMethod;
   members: CombatUnit[];
   targetIds: string[];
   isDead: boolean;
@@ -40,4 +39,27 @@ export interface BattleState {
   battleGroups: BattleGroup[];
   round: number;
   isBattleOver: boolean;
+}
+
+export interface BattleAction {
+  attackerSquadId: string;
+  targetSquadId: string;
+  damage: number;
+  isCritical: boolean;
+  targetDestroyed: boolean;
+}
+
+export interface BattleRound {
+  round: number;
+  actions: BattleAction[];
+}
+
+export interface BattleGroupResult {
+  isPlayerInvolved: boolean;
+  rounds: BattleRound[];
+  winningSide?: number;
+  casualties?: {
+    side1: number;
+    side2: number;
+  };
 }

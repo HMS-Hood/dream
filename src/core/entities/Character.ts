@@ -41,6 +41,8 @@ export class Character implements CharacterInterface {
 
   equipment: Equipments;
 
+  maxHp: number;
+
   constructor(initParam: CharacterInterface) {
     this.id = initParam.id;
     this.name = initParam.name;
@@ -60,6 +62,7 @@ export class Character implements CharacterInterface {
     this.charm = initParam.charm;
     this.skills = initParam.skills;
     this.equipment = initParam.equipment;
+    this.maxHp = initParam.maxHp || 100; // Default max HP value
   }
 
   get quality(): QualityLevel {

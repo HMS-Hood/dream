@@ -1,43 +1,78 @@
 /* eslint-disable no-console */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
-import { Player } from './entities/Player';
 import { SquadPosition, AttackMethod } from './enums';
-import { CharacterInterface } from './interfaces';
+import { BattleConfig, CharacterInterface } from './interfaces';
 import {
   BattleState,
-  BattleConfig,
   Army,
   Squad,
   BattleGroup,
+  BattleSide,
+  BattleRound,
 } from './interfaces/combat';
 import { CombatUnit } from './entities/CombatUnit';
 import { generateId } from './utils/utils';
 
-export class Campaign {
-  private battleState: BattleState;
+// 添加新的接口定义
+export interface CombatLog {
+  type: 'squad' | 'unit';
+  attackerId: string;
+  targetId: string;
+  damage: number;
+  isKill: boolean;
+  timestamp: number;
+}
 
+export interface BattleGroupResult {
+  groupId: string;
+  side1Casualties: number;
+  side2Casualties: number;
+  combatLogs: CombatLog[];
+  isPlayerInvolved: boolean;
+  rounds: BattleRound[];
+}
+
+export class Campaign {
   private config: BattleConfig;
 
-  private player: Player;
+  private battleState: BattleState;
+
+  private currentBattleGroupResults: Map<string, BattleGroupResult>;
+
+  private playerBattleGroupId: string | null;
+
+  private battleMatched: boolean;
+
+  private nonPlayerBattlesExecuted: boolean;
+
+  private playerBattleExecuted: boolean;
 
   constructor(
     config: BattleConfig,
     side1Armies: Army[],
     side2Armies: Army[],
-    player: Player,
+    playerArmy: Army | null,
     isPlayerOnSide1: boolean = true
   ) {
     this.config = config;
-    this.player = player;
+
+    // 如果存在 playerArmy，将其添加到对应阵营
+    if (playerArmy) {
+      if (isPlayerOnSide1) {
+        side1Armies = [playerArmy, ...side1Armies];
+      } else {
+        side2Armies = [playerArmy, ...side2Armies];
+      }
+    }
 
     this.battleState = {
       sides: [
         {
           id: generateId(),
           name: 'Side 1',
-          armies: [], // 当前上场部队
-          reserveArmies: side1Armies, // 所有部队初始都在预备队
+          armies: [],
+          reserveArmies: side1Armies,
           isPlayerSide: isPlayerOnSide1,
         },
         {
@@ -52,6 +87,12 @@ export class Campaign {
       round: 0,
       isBattleOver: false,
     };
+
+    this.currentBattleGroupResults = new Map();
+    this.playerBattleGroupId = null;
+    this.battleMatched = false;
+    this.nonPlayerBattlesExecuted = false;
+    this.playerBattleExecuted = false;
   }
 
   // Get squads that are participating in the battle
@@ -143,7 +184,11 @@ export class Campaign {
   }
 
   // Handle squad attack
-  private handleSquadAttack(attackerSquad: Squad, targetSquad: Squad): void {
+  private handleSquadAttack(
+    attackerSquad: Squad,
+    targetSquad: Squad,
+    battleGroup: BattleGroup
+  ): void {
     if (
       attackerSquad.members.length === 0 ||
       targetSquad.members.length === 0
@@ -165,7 +210,28 @@ export class Campaign {
         Math.random() * targetSquad.members.length
       );
       const target = targetSquad.members[randomIndex];
-      this.handleTeamMemberAttack(attacker, target);
+
+      // 计算伤害
+      const { attackerDamage, targetDamage } = this.calculateDamage(
+        attacker.getCharacter(),
+        target.getCharacter()
+      );
+
+      // 记录战斗结果
+      const isCritical = Math.random() < attacker.getCharacter().luck * 0.1;
+      const finalDamage = isCritical ? attackerDamage * 1.5 : attackerDamage;
+
+      this.recordBattleResult(
+        battleGroup,
+        attackerSquad,
+        targetSquad,
+        finalDamage,
+        isCritical
+      );
+
+      // 执行伤害
+      target.takeDamage(finalDamage);
+      attacker.takeDamage(targetDamage);
 
       // Remove dead units
       targetSquad.members = targetSquad.members.filter(
@@ -283,76 +349,61 @@ export class Campaign {
 
   // 执行单个战团的战斗
   private executeBattleGroup(group: BattleGroup): void {
-    const side1Squads = group.side1Armies.flatMap((army) =>
-      army.squads.filter((squad) => !squad.isDead)
-    );
-    const side2Squads = group.side2Armies.flatMap((army) =>
-      army.squads.filter((squad) => !squad.isDead)
-    );
-
-    if (side1Squads.length === 0 || side2Squads.length === 0) {
-      group.battleState.isOver = true;
-      return;
-    }
-
     // 创建行动队列
-    const actionQueue: { time: number; squad: Squad }[] = [];
+    const attackQueue: { time: number; squad: Squad; army: Army }[] = [];
 
-    // 添加side1的行动
-    side1Squads.forEach((squad) => {
-      const actionInterval = this.config.battleTimeLimit / squad.attackSpeed;
-      for (
-        let time = actionInterval;
-        time <= this.config.battleTimeLimit;
-        time += actionInterval
-      ) {
-        actionQueue.push({ time, squad });
-      }
+    // 将所有小队添加到行动队列
+    [...group.side1Armies, ...group.side2Armies].forEach((army) => {
+      this.getParticipatingSquads(army).forEach((squad) => {
+        const attackInterval = this.config.battleTimeLimit / squad.attackSpeed;
+        for (
+          let time = attackInterval;
+          time <= this.config.battleTimeLimit;
+          time += attackInterval
+        ) {
+          attackQueue.push({ time, squad, army });
+        }
+      });
     });
 
-    // 添加side2的行动
-    side2Squads.forEach((squad) => {
-      const actionInterval = this.config.battleTimeLimit / squad.attackSpeed;
-      for (
-        let time = actionInterval;
-        time <= this.config.battleTimeLimit;
-        time += actionInterval
-      ) {
-        actionQueue.push({ time, squad });
-      }
-    });
-
-    // 按时间排序
-    actionQueue.sort((a, b) => a.time - b.time);
+    // 按时间排序行动队列
+    attackQueue.sort((a, b) => a.time - b.time);
 
     // 执行行动队列
-    actionQueue.forEach(({ squad }) => {
+    attackQueue.forEach(({ squad, army }) => {
+      // 检查小队是否还存活
       if (squad.isDead) return;
 
-      const isInSide1 = side1Squads.includes(squad);
-      const enemySquads = isInSide1 ? side2Squads : side1Squads;
+      // 确定目标方的军队
+      const targetArmies = group.side1Armies.includes(army)
+        ? group.side2Armies
+        : group.side1Armies;
 
-      const validTargets = this.selectTargets(
-        squad,
-        enemySquads,
-        side1Squads,
-        side2Squads
+      // 获取所有可用的目标小队
+      const validTargets = targetArmies.flatMap((targetArmy) =>
+        this.getParticipatingSquads(targetArmy)
       );
 
-      const target = this.getRandomTarget(validTargets);
-      if (target) {
-        this.handleSquadAttack(squad, target);
+      if (validTargets.length === 0) return;
+
+      // 选择目标并执行攻击
+      const targetSquad = this.getRandomTarget(validTargets);
+      if (targetSquad) {
+        this.handleSquadAttack(squad, targetSquad, group);
       }
     });
 
-    // 更新战团状态
-    group.battleState.timeElapsed += this.config.battleTimeLimit;
-    group.battleState.isOver = true;
+    // 检查战斗组是否结束
+    const side1Alive = group.side1Armies.some(
+      (army) => this.getParticipatingSquads(army).length > 0
+    );
+    const side2Alive = group.side2Armies.some(
+      (army) => this.getParticipatingSquads(army).length > 0
+    );
 
-    // 更新军队状态
-    [...group.side1Armies, ...group.side2Armies].forEach((army) => {
-      army.squads = army.squads.filter((squad) => !squad.isDead);
-    });
+    if (!side1Alive || !side2Alive) {
+      group.battleState.isOver = true;
+    }
   }
 
   // 检查战役是否结束
@@ -576,29 +627,75 @@ export class Campaign {
 
   // 选择可攻击目标
   private selectTargets(
-    squad: Squad,
+    attackerSquad: Squad,
     enemySquads: Squad[],
-    side1Squads: Squad[],
-    side2Squads: Squad[]
+    allySquads: Squad[],
+    allEnemySquads: Squad[]
   ): Squad[] {
-    const attackRange = this.getSquadAttackRange(squad);
-    const validTargets: Squad[] = [];
+    // 如果已有目标且目标仍然存活，优先攻击已有目标
+    const existingTargets = attackerSquad.targetIds
+      .map((id) => allEnemySquads.find((squad) => squad.id === id))
+      .filter((squad): squad is Squad => squad !== undefined && !squad.isDead);
 
-    enemySquads.forEach((targetSquad) => {
-      if (!targetSquad.isDead) {
-        const distance = this.calculateBattleDistance(
-          squad,
-          targetSquad,
-          side1Squads,
-          side2Squads
-        );
-        if (distance <= attackRange) {
-          validTargets.push(targetSquad);
-        }
-      }
+    if (existingTargets.length > 0) {
+      return existingTargets;
+    }
+
+    // 根据位置筛选可攻击的目标
+    const validTargets = enemySquads.filter((targetSquad) => {
+      // 计算攻击距离
+      const distance = this.calculateAttackDistance(attackerSquad, targetSquad);
+
+      // 获取攻击范围
+      const maxRange = Math.max(
+        ...attackerSquad.members.map((unit) =>
+          this.getAttackRange(unit.getCharacter().attackMethod)
+        )
+      );
+
+      return distance <= maxRange;
     });
 
-    return validTargets;
+    if (validTargets.length === 0) {
+      return [];
+    }
+
+    // 计算目标权重
+    const targetWeights = validTargets.map((target) => {
+      let weight = 1.0;
+
+      // 距离权重
+      const distance = this.calculateAttackDistance(attackerSquad, target);
+      weight *= 1 - distance * 0.2;
+
+      // 位置权重
+      weight *=
+        this.config.positionWeight[this.getPositionKey(target.position)];
+
+      // 剩余生命值权重
+      const remainingHpRatio =
+        target.members.length / target.members[0].getCharacter().maxHp;
+      weight *= (1 - remainingHpRatio) * 0.5 + 0.5;
+
+      // 威胁度权重（攻击力）
+      const avgAttack =
+        target.members.reduce(
+          (sum, unit) => sum + unit.getCharacter().strength,
+          0
+        ) / target.members.length;
+      weight *= avgAttack * 0.01 + 0.9;
+
+      return { target, weight };
+    });
+
+    // 按权重排序
+    targetWeights.sort((a, b) => b.weight - a.weight);
+
+    // 返回权重最高的目标
+    const selectedTarget = targetWeights[0].target;
+    attackerSquad.targetIds = [selectedTarget.id];
+
+    return [selectedTarget];
   }
 
   // 根据位置权重选择目标
@@ -669,5 +766,286 @@ export class Campaign {
         targetSquad.isDead = true;
       }
     });
+  }
+
+  // 执行战役的一个步骤
+  public executeNextStep():
+    | 'match'
+    | 'nonPlayerBattles'
+    | 'playerBattle'
+    | 'complete' {
+    if (!this.battleMatched) {
+      this.prepareBattlefield();
+      this.matchBattleGroups();
+      this.playerBattleGroupId = this.findPlayerBattleGroup()?.id || null;
+      this.battleMatched = true;
+      return 'match';
+    }
+
+    if (!this.nonPlayerBattlesExecuted) {
+      this.executeNonPlayerBattles();
+      this.nonPlayerBattlesExecuted = true;
+      return 'nonPlayerBattles';
+    }
+
+    if (!this.playerBattleExecuted && this.playerBattleGroupId) {
+      this.executePlayerBattle();
+      this.playerBattleExecuted = true;
+      return 'playerBattle';
+    }
+
+    this.finishRound();
+    return 'complete';
+  }
+
+  private findPlayerBattleGroup(): BattleGroup | null {
+    if (!this.playerBattleGroupId) return null;
+
+    return (
+      this.battleState.battleGroups.find((group) =>
+        [...group.side1Armies, ...group.side2Armies].some(
+          (army) => army.id === this.playerBattleGroupId
+        )
+      ) || null
+    );
+  }
+
+  private executeNonPlayerBattles(): void {
+    this.battleState.battleGroups.forEach((group) => {
+      if (group.id !== this.playerBattleGroupId && !group.battleState.isOver) {
+        const result = this.executeBattleGroupWithLogs(group);
+        this.currentBattleGroupResults.set(group.id, result);
+      }
+    });
+  }
+
+  private executePlayerBattle(): void {
+    const playerGroup = this.findPlayerBattleGroup();
+    if (!playerGroup) return;
+
+    // 记录战斗前的人数
+    const side1UnitsBefore = this.countTotalUnits(playerGroup.side1Armies);
+    const side2UnitsBefore = this.countTotalUnits(playerGroup.side2Armies);
+
+    // 执行战斗
+    this.executeBattleGroup(playerGroup);
+
+    // 记录战斗结果
+    const result: BattleGroupResult = {
+      groupId: playerGroup.id,
+      side1Casualties:
+        side1UnitsBefore - this.countTotalUnits(playerGroup.side1Armies),
+      side2Casualties:
+        side2UnitsBefore - this.countTotalUnits(playerGroup.side2Armies),
+      combatLogs: [], // 战斗日志会在 executeBattleGroup 过程中通过 recordBattleResult 方法记录
+      isPlayerInvolved: true,
+      rounds: [],
+    };
+
+    // 设置战斗结果
+    this.currentBattleGroupResults.set(playerGroup.id, result);
+
+    // 更新战团状态
+    playerGroup.battleState.isOver = true;
+  }
+
+  private executeBattleGroupWithLogs(group: BattleGroup): BattleGroupResult {
+    const result: BattleGroupResult = {
+      groupId: group.id,
+      side1Casualties: 0,
+      side2Casualties: 0,
+      combatLogs: [],
+      isPlayerInvolved: this.isPlayerBattleGroup(group),
+      rounds: [] as BattleRound[],
+    };
+
+    // 记录战斗前的人数
+    const side1UnitsBefore = this.countTotalUnits(group.side1Armies);
+    const side2UnitsBefore = this.countTotalUnits(group.side2Armies);
+
+    // 执行战斗并记录日志
+    this.executeBattleGroup(group);
+
+    // 计算伤亡
+    result.side1Casualties =
+      side1UnitsBefore - this.countTotalUnits(group.side1Armies);
+    result.side2Casualties =
+      side2UnitsBefore - this.countTotalUnits(group.side2Armies);
+
+    return result;
+  }
+
+  private countTotalUnits(armies: Army[]): number {
+    return armies.reduce(
+      (total, army) =>
+        total +
+        army.squads.reduce(
+          (squadTotal, squad) => squadTotal + squad.members.length,
+          0
+        ),
+      0
+    );
+  }
+
+  // 获取当前回合的战斗结果
+  public getCurrentBattleResults(): Map<string, BattleGroupResult> {
+    return this.currentBattleGroupResults;
+  }
+
+  private finishRound(): void {
+    this.battleState.round += 1;
+    this.battleState.isBattleOver = this.checkCampaignEnd();
+    this.currentBattleGroupResults.clear();
+    this.battleMatched = false;
+    this.nonPlayerBattlesExecuted = false;
+    this.playerBattleExecuted = false;
+    this.playerBattleGroupId = null;
+  }
+
+  // 获取当前状态
+  public getBattleStatus(): {
+    battleMatched: boolean;
+    nonPlayerBattlesExecuted: boolean;
+    playerBattleExecuted: boolean;
+  } {
+    return {
+      battleMatched: this.battleMatched,
+      nonPlayerBattlesExecuted: this.nonPlayerBattlesExecuted,
+      playerBattleExecuted: this.playerBattleExecuted,
+    };
+  }
+
+  // 获取战斗状态
+  public getBattleState(): BattleState {
+    return this.battleState;
+  }
+
+  // 获取玩家军队ID
+  public getPlayerArmyId(): string | null {
+    return this.playerBattleGroupId;
+  }
+
+  public getWinningStatus(): { winner: BattleSide | null; isDraw: boolean } {
+    const aliveSides = this.battleState.sides.filter((side) =>
+      side.armies.some((army) => army.squads.some((squad) => !squad.isDead))
+    );
+
+    return {
+      winner: aliveSides.length === 1 ? aliveSides[0] : null,
+      isDraw: aliveSides.length === 0,
+    };
+  }
+
+  // 获取活跃的战斗组
+  public getActiveBattleGroups(): BattleGroup[] {
+    return this.battleState.battleGroups.filter(
+      (group) => !group.battleState.isOver
+    );
+  }
+
+  // 获取玩家方
+  public getPlayerSide(): BattleSide | undefined {
+    return this.battleState.sides.find((side) => side.isPlayerSide);
+  }
+
+  // 判断是否为玩家军队
+  public isPlayerArmy(army: Army): boolean {
+    const playerSide = this.getPlayerSide();
+    return playerSide?.armies.includes(army) || false;
+  }
+
+  // 判断是否为玩家战斗组
+  public isPlayerBattleGroup(group: BattleGroup): boolean {
+    const playerSide = this.getPlayerSide();
+    if (!playerSide) return false;
+
+    return (
+      group.side1Armies.some((army) => playerSide.armies.includes(army)) ||
+      group.side2Armies.some((army) => playerSide.armies.includes(army))
+    );
+  }
+
+  // 获取所有战斗组
+  public getBattleGroups(): BattleGroup[] {
+    return this.battleState.battleGroups;
+  }
+
+  // 获取所有阵营
+  public getSides(): BattleSide[] {
+    return this.battleState.sides;
+  }
+
+  // 获取当前回合数
+  public getRound(): number {
+    return this.battleState.round;
+  }
+
+  // 获取战斗是否结束
+  public isBattleOver(): boolean {
+    return this.battleState.isBattleOver;
+  }
+
+  // 记录战斗结果
+  private recordBattleResult(
+    group: BattleGroup,
+    attackerSquad: Squad,
+    targetSquad: Squad,
+    damage: number,
+    isCritical: boolean
+  ): void {
+    const result = this.currentBattleGroupResults.get(group.id) || {
+      groupId: group.id,
+      side1Casualties: 0,
+      side2Casualties: 0,
+      combatLogs: [],
+      isPlayerInvolved: this.isPlayerBattleGroup(group),
+      rounds: [] as BattleRound[],
+    };
+
+    // 获取当前回合的战斗记录
+    let currentRound = result.rounds.find(
+      (r) => r.round === this.battleState.round
+    );
+    if (!currentRound) {
+      currentRound = {
+        round: this.battleState.round,
+        actions: [],
+      };
+      result.rounds.push(currentRound);
+    }
+
+    // 记录战斗行动
+    currentRound.actions.push({
+      attackerSquadId: attackerSquad.id,
+      targetSquadId: targetSquad.id,
+      damage,
+      isCritical,
+      targetDestroyed: targetSquad.isDead,
+    });
+
+    this.currentBattleGroupResults.set(group.id, result);
+  }
+
+  // 获取指定战斗组的战斗结果
+  public getBattleGroupResult(groupId: string): BattleGroupResult | undefined {
+    return this.currentBattleGroupResults.get(groupId);
+  }
+
+  // 获取所有战斗结果
+  public getAllBattleResults(): Map<string, BattleGroupResult> {
+    return this.currentBattleGroupResults;
+  }
+
+  private getPositionKey(position: SquadPosition): 'front' | 'middle' | 'back' {
+    switch (position) {
+      case SquadPosition.FRONT:
+        return 'front';
+      case SquadPosition.MIDDLE:
+        return 'middle';
+      case SquadPosition.BACK:
+        return 'back';
+      default:
+        return 'front';
+    }
   }
 }

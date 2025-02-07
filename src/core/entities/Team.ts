@@ -2,8 +2,6 @@
 import { reactive } from 'vue';
 import { Emblem } from './Emblem';
 import { Flag } from './Flag';
-import { AttackMethod } from '../enums';
-import { Character } from './Character';
 
 export class Team {
   id: string;
