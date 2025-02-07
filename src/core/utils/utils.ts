@@ -211,7 +211,6 @@ export function createSquad(
   return {
     id: generateId(),
     position,
-    attackMethod,
     attackSpeed,
     members: members.map((member) => new CombatUnit(member)),
     targetIds: [],

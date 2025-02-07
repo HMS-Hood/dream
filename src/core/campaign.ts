@@ -674,7 +674,7 @@ export class Campaign {
 
       // 剩余生命值权重
       const remainingHpRatio =
-        target.members.length / target.members[0].getCharacter().maxHp;
+        target.members.length / target.members[0].maxHealth;
       weight *= (1 - remainingHpRatio) * 0.5 + 0.5;
 
       // 威胁度权重（攻击力）
