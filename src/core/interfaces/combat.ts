@@ -55,10 +55,20 @@ export interface BattleRound {
   actions: BattleAction[];
 }
 
+export interface CombatLog {
+  attackerId: CombatUnit;
+  targetId: CombatUnit;
+  damage: number;
+  type: string;
+  isKill: boolean;
+}
+
 export interface BattleGroupResult {
   isPlayerInvolved: boolean;
+  groupId: string;
   rounds: BattleRound[];
   winningSide?: number;
+  combatLogs: CombatLog[];
   casualties?: {
     side1: number;
     side2: number;
@@ -66,7 +76,6 @@ export interface BattleGroupResult {
 }
 
 export interface ICampaign {
-  startCampaign(): void;
   executeNextStep(): 'match' | 'nonPlayerBattles' | 'playerBattle' | 'complete';
   getCurrentBattleResults(): Map<string, BattleGroupResult>;
   getBattleStatus(): {

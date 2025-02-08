@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { defineStore } from 'pinia';
-import { Campaign } from '../core/campaign';
+import { Campaign } from '../core/battle/campaign';
 
 export const useCampaignStore = defineStore('campaign', {
   state: () => ({

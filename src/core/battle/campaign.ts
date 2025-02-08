@@ -38,6 +38,8 @@ export class Campaign {
 
   private battleUtils: BattleUtils;
 
+  private playerArmyId: string | null = null;
+
   constructor(
     config: BattleConfig,
     side1Armies: Army[],
@@ -53,6 +55,7 @@ export class Campaign {
       } else {
         side2Armies = [playerArmy, ...side2Armies];
       }
+      this.playerArmyId = playerArmy.id;
     }
 
     this.battleStateHandler = new BattleStateHandler(
@@ -75,54 +78,12 @@ export class Campaign {
     this.playerBattleExecuted = false;
   }
 
-  public startCampaign(): void {
-    this.prepareBattlefield();
-
-    while (!this.battleState.isBattleOver) {
-      console.log(`Round ${this.battleState.round + 1} starting...`);
-
-      this.matchBattleGroups();
-
-      this.battleState.battleGroups.forEach((group) => {
-        if (!group.battleState.isOver) {
-          this.battleLogic.executeBattleGroup(group);
-        }
-      });
-
-      this.addReserveTroops();
-
-      this.battleState.round += 1;
-
-      this.battleState.isBattleOver = this.checkCampaignEnd();
-    }
-  }
-
   private prepareBattlefield(): void {
     this.battleStateHandler.prepareBattlefield();
   }
 
-  private createBattleGroup(
-    side1Armies: Army[],
-    side2Armies: Army[]
-  ): BattleGroup {
-    const battleGroup: BattleGroup = {
-      id: generateId(),
-      side1Armies,
-      side2Armies,
-      battleState: {
-        timeElapsed: 0,
-        isOver: false,
-      },
-    };
-    return battleGroup;
-  }
-
   private matchBattleGroups(): void {
     this.battleStateHandler.matchBattleGroups();
-  }
-
-  private addReserveTroops(): void {
-    this.battleStateHandler.addReserveTroops();
   }
 
   private checkCampaignEnd(): boolean {
@@ -164,7 +125,7 @@ export class Campaign {
     return (
       this.battleState.battleGroups.find((group) =>
         [...group.side1Armies, ...group.side2Armies].some(
-          (army) => army.id === this.playerBattleGroupId
+          (army) => army.id === this.playerArmyId
         )
       ) || null
     );
@@ -189,6 +150,8 @@ export class Campaign {
     this.battleLogic.executeBattleGroup(playerGroup);
 
     const result: BattleGroupResult = {
+      groupId: playerGroup.id,
+      combatLogs: [],
       casualties: {
         side1: side1UnitsBefore - this.countTotalUnits(playerGroup.side1Armies),
         side2: side2UnitsBefore - this.countTotalUnits(playerGroup.side2Armies),
@@ -204,6 +167,8 @@ export class Campaign {
 
   private executeBattleGroupWithLogs(group: BattleGroup): BattleGroupResult {
     const result: BattleGroupResult = {
+      groupId: group.id,
+      combatLogs: [],
       casualties: {
         side1: 0,
         side2: 0,
