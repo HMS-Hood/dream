@@ -211,8 +211,12 @@
 
 <script lang="ts" setup>
   import { ref, watch, computed } from 'vue';
-  import { BattleGroupResult, CombatLog } from '../../core/battle/campaign';
-  import { Army, BattleGroup } from '../../core/interfaces/combat';
+  import {
+    Army,
+    BattleGroup,
+    BattleGroupResult,
+    CombatLog,
+  } from '../../core/interfaces/combat';
   import { SquadPosition } from '../../core/enums';
   import { useCampaignStore } from '../../store/campaign';
   import SquadDistribution from './SquadDistribution.vue';
@@ -338,7 +342,9 @@
           (sum, log) => sum + log.damage,
           0
         ),
-        unitsLost: playerResult.side1Casualties + playerResult.side2Casualties,
+        unitsLost:
+          playerResult.casualties?.side1 ??
+          0 + (playerResult.casualties?.side2 ?? 0),
       };
     }
   };
@@ -362,7 +368,9 @@
     if (results) {
       const result = results.get(group.id);
       if (result) {
-        return isSide1 ? result.side1Casualties : result.side2Casualties;
+        return (
+          (isSide1 ? result.casualties?.side1 : result.casualties?.side2) ?? 0
+        );
       }
     }
     return 0;
@@ -462,6 +470,12 @@
     padding: 15px;
     background-color: rgb(48 48 48 / 80%);
     border-radius: 6px;
+
+    .group-armies {
+      display: flex;
+      gap: 20px;
+      justify-content: space-evenly;
+    }
   }
 
   .battle-sides {
