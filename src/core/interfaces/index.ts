@@ -38,6 +38,7 @@ export interface BattleConfig {
   maxRounds: number;
   battlefieldWidth: number; // 战场宽度，决定每方最多上场部队数
   battleTimeLimit: number; // 每场战斗的时间限制
+  standardInterval: number;
   positionWeight: {
     // 不同位置的选中权重
     front: number;
