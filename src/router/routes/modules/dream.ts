@@ -1,4 +1,5 @@
 import { AppRouteRecordRaw } from '../types';
+import RefactoredCampaingView from '../../../views/my/RefactoredCampaingView.vue';
 
 const DASHBOARD: AppRouteRecordRaw[] = [
   {
@@ -37,6 +38,14 @@ const DASHBOARD: AppRouteRecordRaw[] = [
     path: '/campaign',
     name: 'campaign',
     component: () => import('@/views/my/CampaignView.vue'),
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
+    path: '/refactoredCampaign',
+    name: 'refactoredCampaign',
+    component: () => RefactoredCampaingView,
     meta: {
       requiresAuth: false,
     },

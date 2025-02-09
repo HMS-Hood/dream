@@ -25,7 +25,7 @@
   import { ref, reactive } from 'vue';
   import { useRouter } from 'vue-router';
   import back from './my/back.vue';
-  import { Campaign } from '../core/battle/campaign';
+  import { useCampaignStore } from '../store/campaign';
   import { generateCharacter } from '../core/utils/utils';
   import { Character } from '../core/entities/Character';
   import { Army, Squad } from '../core/interfaces/combat';
@@ -42,7 +42,7 @@
   } from '../core/utils/item-utils';
   import { Equipments } from '../core/entities/Equipments';
   import { CombatUnit } from '../core/entities/CombatUnit';
-  import { useCampaignStore } from '../store/campaign';
+  import { RefactoredCampaign } from '../core/battle/refactoredCampaign';
 
   const router = useRouter();
   const backgroundImage = ref('/img/bg/battle.png');
@@ -142,9 +142,10 @@
       reserveSquads: [],
     };
 
-    const campaign = new Campaign(
+    const campaign = new RefactoredCampaign(
       {
         battlefieldWidth: config.battleTeamLimit,
+        standardInterval: 40,
         battleTimeLimit: 100,
         maxRounds: 10,
         positionWeight: {
@@ -164,7 +165,7 @@
     campaignStore.setCampaign(campaign);
 
     // 直接跳转到战役页面
-    router.push({ name: 'campaign' });
+    router.push({ name: 'refactoredCampaign' });
   };
 </script>
 

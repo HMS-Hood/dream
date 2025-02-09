@@ -1,7 +1,12 @@
 /* eslint-disable no-continue */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
-import { Army, BattleGroup } from '../interfaces/combat';
+import {
+  Army,
+  BattleGroup,
+  BattleSide,
+  BattleState,
+} from '../interfaces/combat';
 import { BattleConfig } from '../interfaces';
 import { getFrontWidth } from '../utils/armyUtils';
 import { generateId } from '../utils/utils';
@@ -9,6 +14,7 @@ import { ActionScheduler } from './actionScheduler';
 import { BattleUtils } from './battleUtils';
 import { AttackMethod } from '../enums';
 import { IRefactoredCampaign } from './IRefactoredCampaign';
+import { BattleStateHandler } from './battleState';
 
 export class RefactoredCampaign implements IRefactoredCampaign {
   private config: BattleConfig;
@@ -22,6 +28,8 @@ export class RefactoredCampaign implements IRefactoredCampaign {
   // 保存最终匹配出的战团
   private battleGroups: BattleGroup[] = [];
 
+  private isPlayerOnSide1: boolean;
+
   constructor(
     config: BattleConfig,
     side1Armies: Army[],
@@ -31,6 +39,7 @@ export class RefactoredCampaign implements IRefactoredCampaign {
   ) {
     this.config = config;
     this.playerArmy = playerArmy;
+    this.isPlayerOnSide1 = isPlayerOnSide1;
     if (playerArmy) {
       if (isPlayerOnSide1) {
         this.side1Armies = [playerArmy, ...side1Armies];
@@ -397,5 +406,22 @@ export class RefactoredCampaign implements IRefactoredCampaign {
 
   getBattleConfig(): BattleConfig {
     return this.config;
+  }
+
+  getBattleState(): BattleState {
+    return new BattleStateHandler(
+      this.config,
+      this.side1Armies,
+      this.side2Armies,
+      this.isPlayerOnSide1
+    ).getBattleState();
+  }
+
+  getPlayerSide(): Army[] {
+    return this.playerArmy ? [this.playerArmy] : [];
+  }
+
+  getActiveBattleGroups(): BattleGroup[] {
+    return this.battleGroups;
   }
 }
