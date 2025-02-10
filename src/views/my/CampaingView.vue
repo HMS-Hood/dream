@@ -4,40 +4,12 @@
     :style="{ backgroundImage: `url(${backgroundImage})` }"
   >
     <!-- 左侧部队列表 -->
-    <div class="side-panel">
-      <h2>{{ battleState?.sides[0].name }}</h2>
-      <div class="army-list">
-        <div
-          v-for="army in battleState?.sides[0].armies"
-          :key="army.id"
-          class="army-card"
-        >
-          <div class="army-info">
-            <h3>Army {{ army.id }}</h3>
-            <div class="army-stats">
-              <p>Squads: {{ army.squads.length }}</p>
-              <p>Total Units: {{ getTotalUnits(army) }}</p>
-              <div class="squad-distribution">
-                <div class="position-stat">
-                  <span>Front: {{ getSquadsByPosition(army, 'FRONT') }}</span>
-                </div>
-                <div class="position-stat">
-                  <span>Middle: {{ getSquadsByPosition(army, 'MIDDLE') }}</span>
-                </div>
-                <div class="position-stat">
-                  <span>Back: {{ getSquadsByPosition(army, 'BACK') }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <side-armies-list title="左方" :side-state="side1State" />
 
     <!-- 中间战役信息 -->
     <div class="battle-info">
       <div class="battle-header">
-        <h2>Battle Status - Round {{ battleState?.round }}</h2>
+        <h2>Battle Status</h2>
         <div class="control-buttons">
           <a-button
             type="primary"
@@ -124,38 +96,10 @@
     </div>
 
     <!-- 右侧部队列表 -->
-    <div class="side-panel">
-      <h2>{{ battleState?.sides[1].name }}</h2>
-      <div class="army-list">
-        <div
-          v-for="army in battleState?.sides[1].armies"
-          :key="army.id"
-          class="army-card"
-        >
-          <div class="army-info">
-            <h3>Army {{ army.id }}</h3>
-            <div class="army-stats">
-              <p>Squads: {{ army.squads.length }}</p>
-              <p>Total Units: {{ getTotalUnits(army) }}</p>
-              <div class="squad-distribution">
-                <div class="position-stat">
-                  <span>Front: {{ getSquadsByPosition(army, 'FRONT') }}</span>
-                </div>
-                <div class="position-stat">
-                  <span>Middle: {{ getSquadsByPosition(army, 'MIDDLE') }}</span>
-                </div>
-                <div class="position-stat">
-                  <span>Back: {{ getSquadsByPosition(army, 'BACK') }}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <side-armies-list title="右方" :side-state="side2State" />
 
     <!-- 战斗结束显示部分 -->
-    <div v-if="battleState?.isBattleOver" class="battle-result">
+    <div v-if="battleState" class="battle-result">
       <h2>Battle Ended</h2>
       <div>Winner: {{ getWinningSide() }}</div>
     </div>
@@ -168,6 +112,8 @@
   import { Army, BattleGroup } from '../../core/interfaces/combat';
   import SquadDistribution from './SquadDistribution.vue';
   import { useCampaignStore } from '../../store/campaign';
+  import sideArmiesList from './sideArmiesList.vue';
+  import { SideState } from '../../core/battle/SideState';
 
   const campaignStore = useCampaignStore();
   const campaign = ref<Campaign | null>(null);
@@ -177,6 +123,18 @@
 
   // 假定 RefactoredCampaign 实例提供 getBattleState、getActiveBattleGroups、getPlayerSide 等方法，供渲染使用
   const battleState = computed(() => campaign.value?.getBattleState());
+  const side1State = computed(() => {
+    if (campaign.value) {
+      return campaign.value?.getBattleState().side1State;
+    }
+    return new SideState([]);
+  });
+  const side2State = computed(() => {
+    if (campaign.value) {
+      return campaign.value?.getBattleState().side2State;
+    }
+    return new SideState([]);
+  });
   const activeBattleGroups = computed(
     () => campaign.value?.getActiveBattleGroups() || []
   );
@@ -186,7 +144,6 @@
   const battleMatched = ref(false);
   const nonPlayerBattlesExecuted = ref(false);
   const playerBattleExecuted = ref(false);
-  const showDetailedCombat = ref(false);
 
   const combatLogs = ref<string[]>([]);
   const battleStats = ref({
@@ -201,11 +158,6 @@
       (total, squad) => total + squad.members.length,
       0
     );
-  };
-
-  const getSquadsByPosition = (army: Army, position: string): number => {
-    return army.squads.filter((squad) => squad.position.toString() === position)
-      .length;
   };
 
   const isPlayerBattleGroup = (group: BattleGroup): boolean => {
@@ -262,45 +214,6 @@
     padding: 20px;
     color: #fff;
     background-size: cover;
-  }
-
-  .side-panel {
-    width: 25%;
-    padding: 10px;
-    background-color: rgb(32 32 32 / 80%);
-    border-radius: 6px;
-  }
-
-  .army-list {
-    margin-top: 10px;
-  }
-
-  .army-card {
-    margin-bottom: 10px;
-    padding: 10px;
-    background-color: rgb(48 48 48 / 80%);
-    border-radius: 6px;
-  }
-
-  .army-info h3 {
-    margin: 0;
-    font-size: 16px;
-  }
-
-  .army-stats p {
-    margin: 4px 0;
-  }
-
-  .squad-distribution {
-    display: flex;
-    gap: 8px;
-  }
-
-  .position-stat {
-    padding: 4px 6px;
-    font-size: 12px;
-    background-color: rgb(64 64 64 / 80%);
-    border-radius: 4px;
   }
 
   .battle-info {

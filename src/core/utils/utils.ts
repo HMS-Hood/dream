@@ -219,9 +219,12 @@ export function createSquad(
 }
 
 export function createArmy(squads: Squad[], reserveSquads: Squad[]): Army {
+  const id = generateId();
   return {
-    id: generateId(),
+    id,
+    name: `部队[${id}]`,
     squads,
     reserveSquads,
+    isDead: false,
   };
 }

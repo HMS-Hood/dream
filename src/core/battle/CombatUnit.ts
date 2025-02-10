@@ -169,4 +169,8 @@ export class CombatUnit implements CombatStats {
   public updateStats(): void {
     this.calculateSecondaryStats();
   }
+
+  get name(): string {
+    return this.character.name;
+  }
 }

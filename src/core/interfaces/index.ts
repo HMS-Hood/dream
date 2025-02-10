@@ -48,6 +48,7 @@ export interface BattleConfig {
 }
 
 export interface CombatStats {
+  name: string;
   currentHealth: number;
   isDead: boolean;
   maxHealth: number;

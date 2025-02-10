@@ -1,12 +1,7 @@
 /* eslint-disable no-continue */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
-import {
-  Army,
-  BattleGroup,
-  BattleSide,
-  BattleState,
-} from '../interfaces/combat';
+import { Army, BattleGroup } from '../interfaces/combat';
 import { BattleConfig } from '../interfaces';
 import { getFrontWidth } from '../utils/armyUtils';
 import { generateId } from '../utils/utils';
@@ -14,7 +9,8 @@ import { ActionScheduler } from './actionScheduler';
 import { BattleUtils } from './battleUtils';
 import { AttackMethod } from '../enums';
 import { IRefactoredCampaign } from './IRefactoredCampaign';
-import { BattleStateHandler } from './battleState';
+import { BattleState } from './battleState';
+import { BattleStateHandler } from './battleStateHandler';
 
 export class Campaign implements IRefactoredCampaign {
   private config: BattleConfig;
@@ -29,6 +25,8 @@ export class Campaign implements IRefactoredCampaign {
   private battleGroups: BattleGroup[] = [];
 
   private isPlayerOnSide1: boolean;
+
+  private battleStateHandler: BattleStateHandler;
 
   constructor(
     config: BattleConfig,
@@ -52,6 +50,12 @@ export class Campaign implements IRefactoredCampaign {
       this.side1Armies = side1Armies;
       this.side2Armies = side2Armies;
     }
+    this.battleStateHandler = new BattleStateHandler(
+      this.config,
+      this.side1Armies,
+      this.side2Armies,
+      this.isPlayerOnSide1
+    );
   }
 
   // 根据部队正面宽度和战场上限，将上场部队与后备部队分配出来
@@ -213,6 +217,7 @@ export class Campaign implements IRefactoredCampaign {
         this.tryPromoteReserveArmies();
       }
     }
+    this.battleStateHandler.getBattleState().isOver = true;
     console.log('Battle execution complete, simulation time:', simulationTime);
   }
 
@@ -409,12 +414,7 @@ export class Campaign implements IRefactoredCampaign {
   }
 
   getBattleState(): BattleState {
-    return new BattleStateHandler(
-      this.config,
-      this.side1Armies,
-      this.side2Armies,
-      this.isPlayerOnSide1
-    ).getBattleState();
+    return this.battleStateHandler.getBattleState();
   }
 
   getPlayerSide(): Army[] {

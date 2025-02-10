@@ -12,8 +12,10 @@ export interface Squad {
 
 export interface Army {
   id: string; // Unique ID for each army
+  name: string;
   squads: Squad[];
   reserveSquads: Squad[];
+  isDead: boolean;
 }
 
 export interface BattleGroup {
@@ -32,13 +34,6 @@ export interface BattleSide {
   armies: Army[]; // 当前上场部队
   reserveArmies: Army[]; // 后备部队
   isPlayerSide: boolean;
-}
-
-export interface BattleState {
-  sides: BattleSide[];
-  battleGroups: BattleGroup[];
-  round: number;
-  isBattleOver: boolean;
 }
 
 export interface BattleAction {
