@@ -16,7 +16,7 @@ import { AttackMethod } from '../enums';
 import { IRefactoredCampaign } from './IRefactoredCampaign';
 import { BattleStateHandler } from './battleState';
 
-export class RefactoredCampaign implements IRefactoredCampaign {
+export class Campaign implements IRefactoredCampaign {
   private config: BattleConfig;
 
   private side1Armies: Army[];

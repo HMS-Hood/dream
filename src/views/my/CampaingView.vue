@@ -164,13 +164,13 @@
 
 <script lang="ts" setup>
   import { ref, computed } from 'vue';
-  import { RefactoredCampaign } from '../../core/battle/refactoredCampaign';
+  import { Campaign } from '../../core/battle/campaign';
   import { Army, BattleGroup } from '../../core/interfaces/combat';
   import SquadDistribution from './SquadDistribution.vue';
   import { useCampaignStore } from '../../store/campaign';
 
   const campaignStore = useCampaignStore();
-  const campaign = ref<RefactoredCampaign | null>(null);
+  const campaign = ref<Campaign | null>(null);
 
   // 假定从 store 中获取重构后的 Campaign 实例
   campaign.value = campaignStore.getCampaign();

@@ -1,23 +1,23 @@
 /* eslint-disable import/prefer-default-export */
 import { defineStore } from 'pinia';
-import { RefactoredCampaign } from '../core/battle/refactoredCampaign';
+import { Campaign } from '../core/battle/campaign';
 
 export const useCampaignStore = defineStore('campaign', {
   state: () => ({
-    campaign: null as RefactoredCampaign | null,
+    campaign: null as Campaign | null,
   }),
 
   actions: {
-    setCampaign(campaign: RefactoredCampaign | null) {
-      if (campaign instanceof RefactoredCampaign) {
+    setCampaign(campaign: Campaign | null) {
+      if (campaign instanceof Campaign) {
         this.campaign = campaign;
       } else {
         this.campaign = null;
       }
     },
 
-    getCampaign(): RefactoredCampaign | null {
-      return this.campaign as RefactoredCampaign | null;
+    getCampaign(): Campaign | null {
+      return this.campaign as Campaign | null;
     },
   },
 });

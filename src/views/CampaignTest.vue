@@ -42,7 +42,7 @@
   } from '../core/utils/itemUtils';
   import { Equipments } from '../core/entities/Equipments';
   import { CombatUnit } from '../core/battle/CombatUnit';
-  import { RefactoredCampaign } from '../core/battle/refactoredCampaign';
+  import { Campaign } from '../core/battle/campaign';
 
   const router = useRouter();
   const backgroundImage = ref('/img/bg/battle.png');
@@ -142,7 +142,7 @@
       reserveSquads: [],
     };
 
-    const campaign = new RefactoredCampaign(
+    const campaign = new Campaign(
       {
         battlefieldWidth: config.battleTeamLimit,
         standardInterval: 40,
