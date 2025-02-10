@@ -97,7 +97,7 @@
   import {
     createNormalStandardArmor,
     createNormalStandardWeapon,
-  } from '../../core/utils/item-utils';
+  } from '../../core/utils/itemUtils';
 
   const weaponList: {
     name: string;

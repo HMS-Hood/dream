@@ -39,9 +39,9 @@
   import {
     createNormalStandardWeapon,
     createNormalStandardArmor,
-  } from '../core/utils/item-utils';
+  } from '../core/utils/itemUtils';
   import { Equipments } from '../core/entities/Equipments';
-  import { CombatUnit } from '../core/entities/CombatUnit';
+  import { CombatUnit } from '../core/battle/CombatUnit';
   import { RefactoredCampaign } from '../core/battle/refactoredCampaign';
 
   const router = useRouter();
@@ -165,7 +165,7 @@
     campaignStore.setCampaign(campaign);
 
     // 直接跳转到战役页面
-    router.push({ name: 'refactoredCampaign' });
+    router.push({ name: 'campaign' });
   };
 </script>
 

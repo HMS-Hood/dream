@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { Army, Squad } from '../interfaces/combat';
-import { CombatUnit } from '../entities/CombatUnit';
+import { CombatUnit } from './CombatUnit';
 
 interface ActionEvent {
   time: number;

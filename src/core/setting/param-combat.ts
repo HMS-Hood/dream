@@ -35,6 +35,7 @@ export const defaultBattleConfig: BattleConfig = {
   maxRounds: 10,
   battlefieldWidth: 3, // 每方最多3支部队同时参战
   battleTimeLimit: 100, // 战斗时限
+  standardInterval: 40,
   positionWeight: {
     front: 4, // 前排权重最高
     middle: 2,

@@ -1,6 +1,5 @@
 import { SquadPosition } from '../enums';
-import { CombatUnit } from '../entities/CombatUnit';
-import { BattleConfig } from '.';
+import { CombatUnit } from '../battle/CombatUnit';
 
 export interface Squad {
   id: string;
@@ -73,35 +72,4 @@ export interface BattleGroupResult {
     side1: number;
     side2: number;
   };
-}
-
-export interface ICampaign {
-  executeNextStep(): 'match' | 'nonPlayerBattles' | 'playerBattle' | 'complete';
-  getCurrentBattleResults(): Map<string, BattleGroupResult>;
-  getBattleStatus(): {
-    battleMatched: boolean;
-    nonPlayerBattlesExecuted: boolean;
-    playerBattleExecuted: boolean;
-  };
-  getBattleConfig(): BattleConfig;
-  getBattleState(): BattleState;
-  getPlayerArmyId(): string | null;
-  getWinningStatus(): { winner: BattleSide | null; isDraw: boolean };
-  getActiveBattleGroups(): BattleGroup[];
-  getPlayerSide(): BattleSide | undefined;
-  isPlayerArmy(army: Army): boolean;
-  isPlayerBattleGroup(group: BattleGroup): boolean;
-  getBattleGroups(): BattleGroup[];
-  getSides(): BattleSide[];
-  getRound(): number;
-  isBattleOver(): boolean;
-  getBattleGroupResult(groupId: string): BattleGroupResult | undefined;
-  getAllBattleResults(): Map<string, BattleGroupResult>;
-  getParticipatingSquads(army: Army): Squad[];
-  getSquadPosition(): typeof SquadPosition;
-  clearCurrentBattleGroupResults(): void;
-  setBattleMatched(value: boolean): void;
-  setNonPlayerBattlesExecuted(value: boolean): void;
-  setPlayerBattleExecuted(value: boolean): void;
-  setPlayerBattleGroupId(value: string | null): void;
 }

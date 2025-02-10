@@ -1,6 +1,5 @@
 /* eslint-disable import/prefer-default-export */
 import { reactive } from 'vue';
-import { Team } from './Team';
 import { Emblem } from './Emblem';
 import { Flag } from './Flag';
 import { generateCharacter } from '../utils/utils';
@@ -24,10 +23,6 @@ export class Player {
 
   gold: number;
 
-  leadTeam: Team; // The default team
-
-  teams: Team[] = reactive([]);
-
   items: Item[] = reactive([]);
 
   members: Character[] = reactive([]);
@@ -46,9 +41,6 @@ export class Player {
     const protagonist = reactive(generateCharacter());
     this.protagonistId = protagonist.id;
     this.members.push(protagonist);
-    this.leadTeam = reactive(
-      new Team(name, this.protagonistId, familyEmblem, familyFlag)
-    );
   }
 
   addReputation(amount: number) {

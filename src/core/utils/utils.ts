@@ -16,7 +16,7 @@ import { Squad, Army } from '../interfaces/combat';
 import { Character } from '../entities/Character';
 import { characterNames } from '../setting/names';
 import { Equipments } from '../entities/Equipments';
-import { CombatUnit } from '../entities/CombatUnit';
+import { CombatUnit } from '../battle/CombatUnit';
 
 export function generateId(): string {
   return Math.random().toString(36).substring(2, 15);

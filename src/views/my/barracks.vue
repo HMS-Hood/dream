@@ -41,11 +41,7 @@
       </div>
     </div>
     <div class="row tags">
-      <div
-        :class="showList === 'team' ? 'tag cur' : 'tag'"
-        @click="showList = 'team'"
-        ><div class="text">队伍</div></div
-      >
+      <div :class="'tag'"><div class="text">队伍</div></div>
       <div
         :class="showList === 'character' ? 'tag cur' : 'tag'"
         @click="showList = 'character'"
@@ -57,7 +53,6 @@
         ><div class="text">物品</div></div
       >
     </div>
-    <team-list v-if="showList === 'team'"></team-list>
     <character-manager v-if="showList === 'character'"></character-manager>
   </div>
 </template>
@@ -65,13 +60,12 @@
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { player } from '../../core/game';
-  import TeamList from './TeamList.vue';
   import CharacterManager from './CharacterManager.vue';
   import back from './back.vue';
 
   const backgroundImage = ref('/img/bg/bg1.png');
 
-  const showList = ref<'team' | 'character' | 'item'>('team');
+  const showList = ref<'character' | 'item'>('character');
 </script>
 
 <style lang="less" scoped>

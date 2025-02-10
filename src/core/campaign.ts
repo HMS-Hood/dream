@@ -11,7 +11,7 @@ import {
   BattleSide,
   BattleRound,
 } from './interfaces/combat';
-import { CombatUnit } from './entities/CombatUnit';
+import { CombatUnit } from './battle/CombatUnit';
 import { generateId } from './utils/utils';
 
 // 添加新的接口定义

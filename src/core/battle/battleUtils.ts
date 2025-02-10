@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
 import { Squad, Army, ICampaign } from '../interfaces/combat';
-import { CombatUnit } from '../entities/CombatUnit';
+import { CombatUnit } from './CombatUnit';
 import { SquadPosition } from '../enums';
 import { IRefactoredCampaign } from './IRefactoredCampaign';
 
