@@ -3,62 +3,53 @@
   <a-card class="equipments-panel" :bordered="false">
     <div class="equipment-slots">
       <div class="equipment-slot" @click="openEquipmentModal(ItemType.WEAPON)">
-        <div class="slot-label">武器</div>
         <div v-if="character.equipment?.weapon" class="equipped-item">
-          <img
+          <a-image
             :src="character.equipment.weapon.img"
-            alt="Weapon Icon"
             class="equipment-icon"
-          />
-          <div class="equipment-name">{{
-            character.equipment.weapon.name
-          }}</div>
-          <div class="equipment-stats">
-            <span
-              >攻: {{ character.equipment.weapon.minDamage }} -
-              {{ character.equipment.weapon.maxDamage }}</span
-            >
-          </div>
+            :title="character.equipment.weapon.name"
+            :description="`攻: ${character.equipment.weapon.minDamage} -
+              ${character.equipment.weapon.maxDamage}`"
+            width="128"
+            height="128"
+          ></a-image>
         </div>
         <div v-else class="empty-slot">
+          <div class="slot-label">武器</div>
           <span>选择武器</span>
         </div>
       </div>
 
       <div class="equipment-slot" @click="openEquipmentModal(ItemType.SHIELD)">
-        <div class="slot-label">盾牌</div>
         <div v-if="character.equipment?.shield" class="equipped-item">
-          <img
+          <a-image
             :src="character.equipment.shield.img"
-            alt="Shield Icon"
             class="equipment-icon"
-          />
-          <div class="equipment-name">{{
-            character.equipment.shield.name
-          }}</div>
-          <div class="equipment-stats">
-            <span>防: {{ character.equipment.shield.defence }}</span>
-          </div>
+            :title="character.equipment.shield.name"
+            width="128"
+            height="128"
+            :description="`防: ${character.equipment.shield.defence}`"
+          ></a-image>
         </div>
         <div v-else class="empty-slot">
+          <div class="slot-label">盾牌</div>
           <span>选择盾牌</span>
         </div>
       </div>
 
       <div class="equipment-slot" @click="openEquipmentModal(ItemType.ARMOR)">
-        <div class="slot-label">盔甲</div>
         <div v-if="character.equipment?.armor" class="equipped-item">
-          <img
+          <a-image
             :src="character.equipment.armor.img"
-            alt="Armor Icon"
             class="equipment-icon"
-          />
-          <div class="equipment-name">{{ character.equipment.armor.name }}</div>
-          <div class="equipment-stats">
-            <span>防: {{ character.equipment.armor.defence }}</span>
-          </div>
+            :title="character.equipment.armor.name"
+            :description="`防: ${character.equipment.armor.defence}`"
+            width="128"
+            height="128"
+          ></a-image>
         </div>
         <div v-else class="empty-slot">
+          <div class="slot-label">盔甲</div>
           <span>选择盔甲</span>
         </div>
       </div>
@@ -146,8 +137,8 @@
   }
 
   .equipment-icon {
-    width: 60px;
-    height: 60px;
+    width: 128px;
+    height: 128px;
     margin-bottom: 5px;
     object-fit: contain;
   }
