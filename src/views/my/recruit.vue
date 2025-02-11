@@ -33,7 +33,7 @@
 
 <script setup lang="ts">
   import { ref, reactive, computed } from 'vue';
-  import { CheckCharacter } from '@/core/interfaces';
+  import { CheckCharacter } from '../../core/interfaces';
   import CheckCharacterComp from './component/CheckCharacter.vue';
   import { generateCharacter } from '../../core/utils/utils';
   import { player } from '../../core/game';
