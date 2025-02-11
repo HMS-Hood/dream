@@ -11,10 +11,10 @@ export enum AttackMethod {
 }
 
 export enum ItemType {
-  WEAPON,
-  ARMOR,
-  SHIELD,
-  SCROLL,
+  WEAPON = 'weapon',
+  ARMOR = 'armor',
+  SHIELD = 'shield',
+  SCROLL = 'scroll',
 }
 
 export enum WeaponHandType {

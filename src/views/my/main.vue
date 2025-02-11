@@ -1,3 +1,4 @@
+<!-- filepath: /e:/my/dream/src/views/my/main.vue -->
 <template>
   <div
     class="container"
@@ -69,12 +70,17 @@
         </div>
       </div>
     </div>
+    <div class="game-controls">
+      <button class="btn save-btn" @click="saveGame">保存游戏</button>
+      <button class="btn load-btn" @click="loadGame">载入游戏</button>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
+  import { Message } from '@arco-design/web-vue';
   import { player, calendar } from '../../core/game';
 
   const backgroundImage = ref('/img/bg/bg1.png');
@@ -94,6 +100,35 @@
     { title: '酒馆', image: '/img/bg/tavern1.png' },
   ]);
   const hoverItem = ref<{ title: string; image: string } | null>();
+
+  const saveGame = () => {
+    try {
+      localStorage.setItem('player', JSON.stringify(player));
+      Message.success('游戏已保存');
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('保存游戏失败', error);
+      Message.warning('保存游戏失败，请重试。');
+    }
+  };
+
+  const loadGame = () => {
+    try {
+      const data = localStorage.getItem('player');
+      if (data) {
+        const savedPlayer = JSON.parse(data);
+        // Update all properties in player. This assumes player is a reactive object.
+        Object.assign(player, savedPlayer);
+        Message.success('游戏已载入');
+      } else {
+        Message.warning('没有保存的游戏数据');
+      }
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('载入游戏失败', error);
+      Message.error('载入游戏失败，请重试。');
+    }
+  };
 </script>
 
 <style lang="less" scoped>
@@ -193,6 +228,40 @@
         width: 120px; /* Align labels */
         margin-right: 1em;
         font-weight: bold;
+      }
+    }
+  }
+
+  .game-controls {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .save-btn {
+      color: #fff;
+      background-color: #4caf50;
+
+      &:hover {
+        background-color: #43a047;
+      }
+    }
+
+    .load-btn {
+      color: #fff;
+      background-color: #2196f3;
+
+      &:hover {
+        background-color: #1e88e5;
       }
     }
   }

@@ -15,10 +15,9 @@
 </template>
 
 <script setup lang="ts">
-  import { computed, reactive, ref } from 'vue';
+  import { computed, reactive } from 'vue';
   import { Character } from '../../core/entities/Character';
-  import { CharacterInterface } from '../../core/interfaces';
-  import CheckCharacter from './CheckCharacter.vue';
+  import CheckCharacter from './component/CheckCharacter.vue';
 
   const props = defineProps<{
     checkedIds?: string[];
@@ -34,7 +33,7 @@
   const displayList = computed(() => [
     ...props.characters.map((item) =>
       reactive({
-        ...item,
+        character: item,
         checked: props.checkedIds?.includes(item.id) ?? false,
       })
     ),
@@ -43,7 +42,7 @@
   const handleBeforeOk = () => {
     const returnList = displayList.value
       .filter((item) => item.checked)
-      .map((item) => item.id);
+      .map((item) => item.character.id);
     emit('changeChecked', returnList);
     return true;
   };

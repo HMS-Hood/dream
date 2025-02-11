@@ -24,7 +24,7 @@
 <script setup lang="ts">
   import { ref, reactive } from 'vue';
   import { useRouter } from 'vue-router';
-  import back from './my/back.vue';
+  import back from './my/component/back.vue';
   import { useCampaignStore } from '../store/campaign';
   import { generateCharacter } from '../core/utils/utils';
   import { Character } from '../core/entities/Character';

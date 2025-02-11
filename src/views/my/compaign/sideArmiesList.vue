@@ -53,10 +53,11 @@
 </template>
 
 <script setup lang="ts">
-  import { SideState } from '../../core/battle/SideState';
-  import { ArmyState } from '../../core/battle/ArmyState';
-  import { SquadPosition } from '../../core/enums';
+  import { SideState } from '../../../core/battle/SideState';
+  import { ArmyState } from '../../../core/battle/ArmyState';
+  import { SquadPosition } from '../../../core/enums';
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const props = defineProps<{
     title: string;
     sideState: SideState;

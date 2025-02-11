@@ -20,7 +20,7 @@
 </script>
 
 <style lang="less" scoped>
-  @import url('../../assets/style/dream.less');
+  @import url('../../../assets/style/dream.less');
 
   .team-avatar-container.parallelogram {
     position: relative;

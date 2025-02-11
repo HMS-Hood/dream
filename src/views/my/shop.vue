@@ -75,7 +75,7 @@
 <script setup lang="ts">
   import { ref, reactive, computed } from 'vue';
   import { player } from '../../core/game';
-  import back from './back.vue';
+  import back from './component/back.vue';
   import {
     LongRangeWeaponType,
     MiddleRangeWeaponType,

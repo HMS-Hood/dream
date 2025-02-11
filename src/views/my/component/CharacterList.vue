@@ -18,6 +18,7 @@
     :class="{ hovered: hoverItem === item }"
     @mouseover="hoverItem = item"
     @mouseleave="hoverItem = null"
+    @click="showCharacterDetail(item)"
   >
     <avatar :quality="item.quality" :avatar="item.avatar"></avatar>
     <div class="character-info parallelogram">
@@ -25,9 +26,9 @@
       <p class="method">Level: {{ item.level }}</p>
       <p class="method">Method: {{ AttackMethod[item.attackMethod] }}</p>
     </div>
-    <div :class="['quality', item.quality]"
-      ><div class="quality-text">{{ item.quality }}</div></div
-    >
+    <div :class="['quality', item.quality]">
+      <div class="quality-text">{{ item.quality }}</div>
+    </div>
     <div class="property">
       <div class="property-value">{{ item.strength }}</div>
     </div>
@@ -52,14 +53,44 @@
     <div class="property">
       <div class="property-value">{{ item.charm }}</div>
     </div>
+    <div class="equipment">
+      <img v-if="item.equipment.weapon" :src="item.equipment.weapon.img" />
+    </div>
+    <div class="equipment">
+      <img v-if="item.equipment.weapon" :src="item.equipment.weapon.img" />
+    </div>
+    <div class="equipment">
+      <img v-if="item.equipment.weapon" :src="item.equipment.weapon.img" />
+    </div>
   </div>
+  <a-modal
+    v-if="selectedCharacter"
+    v-model:visible="characterDetailModalVisible"
+    modal-class="modal-detail"
+    :modal-style="{
+      'background-color': 'rgb(0 0 0 / 60%)',
+      'border-radius': '10px',
+      'border': '0',
+      'box-shadow': '0 8px 16px rgb(0 0 0 / 30%)',
+    }"
+    :body-style="{ padding: '0' }"
+    :hide-title="true"
+    :closable="false"
+    :footer="false"
+    width="1064px"
+    height="1064px"
+    @before-ok="handleBeforeOk"
+  >
+    <character-detail :character="selectedCharacter"></character-detail>
+  </a-modal>
 </template>
 
 <script setup lang="ts">
   import { computed, ref } from 'vue';
   import Avatar from './Avatar.vue';
-  import { CharacterInterface } from '../../core/interfaces';
-  import { AttackMethod, qualityRankMap } from '../../core/enums';
+  import { CharacterInterface } from '../../../core/interfaces';
+  import { AttackMethod, qualityRankMap } from '../../../core/enums';
+  import CharacterDetail from './CharacterDetail.vue';
 
   const hoverItem = ref<CharacterInterface | null>(null);
 
@@ -87,10 +118,23 @@
   const order = (field: string) => {
     orderBy.value = field;
   };
+
+  const selectedCharacter = ref<CharacterInterface | null>(null);
+  const characterDetailModalVisible = ref<boolean>(false);
+
+  const showCharacterDetail = (character: CharacterInterface) => {
+    selectedCharacter.value = character;
+    characterDetailModalVisible.value = true;
+  };
+
+  const handleBeforeOk = () => {
+    characterDetailModalVisible.value = false;
+    return true;
+  };
 </script>
 
 <style lang="less" scoped>
-  @import url('../../assets/style/dream.less');
+  @import url('../../../assets/style/dream.less');
 
   .character-cell.cell {
     display: flex;
@@ -105,6 +149,7 @@
       #f2f7f5,
       0.5
     ); /* Gradient background */
+
     background-clip: padding-box, border-box;
     background-origin: padding-box, border-box;
     border-bottom: 1px solid transparent; /* Initial transparent border */
@@ -121,8 +166,35 @@
       background-color: rgb(
         39 39 39 / 60%
       ); /* Slightly less opaque background */
+
       box-shadow: 0 6px 12px rgb(0 0 0 / 30%); /* Stronger shadow on hover */
       transform: skewX(-10deg) scaleX(1.005); /* Subtle scale on hover */
+    }
+
+    .team-avatar-container.parallelogram {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 256px; /* Adjusted width for avatar container */
+      height: 100%;
+      // transform: skewX(-10deg); /* Skew for parallelogram */
+      // margin-right: 20px; /* Spacing between avatar and info */
+      padding: 5px;
+      overflow: hidden;
+      background-color: rgb(45 45 45 / 90%);
+
+      .avatar-bg {
+        width: 100%;
+        overflow: hidden;
+
+        .team-avatar {
+          width: 100%;
+          height: 112px;
+          background-position: center;
+          background-size: cover;
+        }
+      }
     }
 
     .character-info.parallelogram {
@@ -210,6 +282,30 @@
         padding: 10px;
         color: #c7c9c9;
         font-size: 1.5em;
+      }
+    }
+
+    .equipment {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 96px;
+      height: 96px;
+      margin: 0 1em;
+      padding: 0;
+      color: #f2f7f5;
+      font-size: 2em;
+      background: linear-gradient(
+        45deg,
+        rgb(94 94 94),
+        rgb(224 224 224),
+        rgb(99 100 99)
+      );
+      transform: skew(10deg);
+
+      img {
+        width: 96px;
+        height: 96px;
       }
     }
 

@@ -108,12 +108,12 @@
 
 <script lang="ts" setup>
   import { ref, computed } from 'vue';
-  import { Campaign } from '../../core/battle/campaign';
-  import { Army, BattleGroup } from '../../core/interfaces/combat';
+  import { Campaign } from '../../../core/battle/campaign';
+  import { Army, BattleGroup } from '../../../core/interfaces/combat';
   import SquadDistribution from './SquadDistribution.vue';
-  import { useCampaignStore } from '../../store/campaign';
+  import { useCampaignStore } from '../../../store/campaign';
   import sideArmiesList from './sideArmiesList.vue';
-  import { SideState } from '../../core/battle/SideState';
+  import { SideState } from '../../../core/battle/SideState';
 
   const campaignStore = useCampaignStore();
   const campaign = ref<Campaign | null>(null);
@@ -152,13 +152,6 @@
   });
 
   const backgroundImage = ref('/img/bg/battle.png');
-
-  const getTotalUnits = (army: Army): number => {
-    return army.squads.reduce(
-      (total, squad) => total + squad.members.length,
-      0
-    );
-  };
 
   const isPlayerBattleGroup = (group: BattleGroup): boolean => {
     return (

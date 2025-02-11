@@ -22,31 +22,29 @@
       </div>
     </div>
     <div class="list">
-      <check-character
+      <check-character-comp
         v-model:characters="recruitList"
         :width="70"
         :height="96"
-      ></check-character>
+      ></check-character-comp>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref, reactive, computed } from 'vue';
-  import { CharacterInterface } from '@/core/interfaces';
-  import CheckCharacter from './CheckCharacter.vue';
+  import { CheckCharacter } from '@/core/interfaces';
+  import CheckCharacterComp from './component/CheckCharacter.vue';
   import { generateCharacter } from '../../core/utils/utils';
   import { player } from '../../core/game';
-  import back from './back.vue';
+  import back from './component/back.vue';
   import { Character } from '../../core/entities/Character';
 
   const backgroundImage = '/img/bg/recruit.png';
-  const recruitList: (CharacterInterface & { checked: boolean })[] = reactive(
-    []
-  );
+  const recruitList: CheckCharacter[] = reactive([]);
   for (let i = 1; i <= 10; i += 1) {
     recruitList.push({
-      ...generateCharacter(),
+      character: generateCharacter(),
       checked: false,
     });
   }
@@ -65,7 +63,7 @@
       );
       const newMembers = recruitList
         .filter((character) => character.checked)
-        .map((character) => new Character(character));
+        .map((checkcharacter) => new Character(checkcharacter.character));
       player.members.splice(player.members.length, 0, ...newMembers);
       player.gold -= consume.value;
       recruitList.splice(1, recruitList.length, ...newRecruitList);

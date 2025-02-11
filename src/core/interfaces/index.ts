@@ -28,6 +28,11 @@ export interface CharacterInterface {
   equipment: Equipments;
 }
 
+export interface CheckCharacter {
+  character: CharacterInterface;
+  checked: boolean;
+}
+
 export interface Question {
   name: string;
   desc: string;

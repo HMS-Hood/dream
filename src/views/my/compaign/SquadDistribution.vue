@@ -9,8 +9,9 @@
 </template>
 
 <script setup lang="ts">
-  import { Army } from '../../core/interfaces/combat';
+  import { Army } from '../../../core/interfaces/combat';
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const props = defineProps<{
     army: Army;
   }>();

@@ -18,14 +18,20 @@
       :style="{ width: `${width}vw` }"
       class="character-row"
       :class="item.checked ? 'checked' : ''"
-      @click="check(item as any)"
+      @click="check(item)"
     >
-      <div :class="['team-avatar-container', 'parallelogram', item.quality]">
+      <div
+        :class="[
+          'team-avatar-container',
+          'parallelogram',
+          item.character.quality,
+        ]"
+      >
         <div class="avatar-bg">
           <div
             class="team-avatar"
             :style="{
-              'background-image': `url(${item.avatar.replace(
+              'background-image': `url(${item.character.avatar.replace(
                 '.png',
                 '_s.png'
               )})`,
@@ -35,64 +41,66 @@
         </div>
       </div>
       <div class="character-info parallelogram">
-        <h3 class="name">{{ item.name }}</h3>
-        <p class="method">Level: {{ item.level }}</p>
-        <p class="method">Method: {{ AttackMethod[item.attackMethod] }}</p>
+        <h3 class="name">{{ item.character.name }}</h3>
+        <p class="method">Level: {{ item.character.level }}</p>
+        <p class="method"
+          >Method: {{ AttackMethod[item.character.attackMethod] }}</p
+        >
       </div>
-      <div :class="['quality', item.quality]"
-        ><div class="quality-text">{{ item.quality }}</div></div
+      <div :class="['quality', item.character.quality]"
+        ><div class="quality-text">{{ item.character.quality }}</div></div
       >
       <div class="property">
-        <div class="property-value">{{ item.strength }}</div>
+        <div class="property-value">{{ item.character.strength }}</div>
       </div>
       <div class="property">
-        <div class="property-value">{{ item.agility }}</div>
+        <div class="property-value">{{ item.character.agility }}</div>
       </div>
       <div class="property">
-        <div class="property-value">{{ item.endurance }}</div>
+        <div class="property-value">{{ item.character.endurance }}</div>
       </div>
       <div class="property">
-        <div class="property-value">{{ item.intelligence }}</div>
+        <div class="property-value">{{ item.character.intelligence }}</div>
       </div>
       <div class="property">
-        <div class="property-value">{{ item.spirit }}</div>
+        <div class="property-value">{{ item.character.spirit }}</div>
       </div>
       <div class="property">
-        <div class="property-value">{{ item.perception }}</div>
+        <div class="property-value">{{ item.character.perception }}</div>
       </div>
       <div class="property">
-        <div class="property-value">{{ item.luck }}</div>
+        <div class="property-value">{{ item.character.luck }}</div>
       </div>
       <div class="property">
-        <div class="property-value">{{ item.charm }}</div>
+        <div class="property-value">{{ item.character.charm }}</div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-  import { computed, reactive, ref } from 'vue';
-  import { AttackMethod, qualityRankMap } from '../../core/enums';
-  import { CharacterInterface } from '../../core/interfaces';
+  import { AttackMethod, qualityRankMap } from '../../../core/enums';
+  import { CheckCharacter } from '../../../core/interfaces';
 
   defineProps<{
     width: number;
     height: number;
   }>();
 
-  const characters =
-    defineModel<(CharacterInterface & { checked: boolean })[]>('characters');
+  const characters = defineModel<CheckCharacter[]>('characters');
 
   const order = (field: string) => {
     if (field === 'quality' || !field) {
       return characters.value?.sort(
-        (a, b) => qualityRankMap[b.quality] - qualityRankMap[a.quality]
+        (a, b) =>
+          qualityRankMap[b.character.quality] -
+          qualityRankMap[a.character.quality]
       );
     }
     return characters.value?.sort((a, b) => b[field] - a[field]);
   };
 
-  const check = (item: CharacterInterface & { checked: boolean }) => {
+  const check = (item: CheckCharacter) => {
     item.checked = !item.checked;
   };
 </script>

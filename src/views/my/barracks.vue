@@ -53,15 +53,17 @@
         ><div class="text">物品</div></div
       >
     </div>
-    <character-manager v-if="showList === 'character'"></character-manager>
+    <div v-if="showList === 'character'" class="row character-list">
+      <character-list title="" :characters="player.members"></character-list>
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
   import { ref } from 'vue';
   import { player } from '../../core/game';
-  import CharacterManager from './CharacterManager.vue';
-  import back from './back.vue';
+  import back from './component/back.vue';
+  import CharacterList from './component/CharacterList.vue';
 
   const backgroundImage = ref('/img/bg/bg1.png');
 
@@ -195,5 +197,10 @@
     background-color: rgb(0 0 0 / 80%);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgb(0 0 0 / 50%);
+  }
+
+  .character-list {
+    display: flex;
+    flex-direction: column;
   }
 </style>
