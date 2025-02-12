@@ -57,10 +57,10 @@
       <img v-if="item.equipment.weapon" :src="item.equipment.weapon.img" />
     </div>
     <div class="equipment">
-      <img v-if="item.equipment.weapon" :src="item.equipment.weapon.img" />
+      <img v-if="item.equipment.shield" :src="item.equipment.shield.img" />
     </div>
     <div class="equipment">
-      <img v-if="item.equipment.weapon" :src="item.equipment.weapon.img" />
+      <img v-if="item.equipment.armor" :src="item.equipment.armor.img" />
     </div>
   </div>
   <a-modal

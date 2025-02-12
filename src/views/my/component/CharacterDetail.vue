@@ -163,6 +163,7 @@
 
 <style lang="less" scoped>
   .character-detail-card {
+    height: 1024px;
     background-color: rgb(0 0 0 / 60%);
     border-radius: 10px;
     box-shadow: 0 8px 16px rgb(0 0 0 / 30%);
