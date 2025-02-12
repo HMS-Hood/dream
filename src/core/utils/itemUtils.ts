@@ -57,8 +57,45 @@ import {
   getRandomInt,
 } from './utils';
 
+const getImgForWeapon: (
+  itemType:
+    | OneHandWeaponType
+    | TwoHandWeaponType
+    | MiddleRangeWeaponType
+    | LongRangeWeaponType
+) => string = (itemType) => {
+  switch (itemType) {
+    case OneHandWeaponType.SWORD:
+      return 'sword-';
+    case OneHandWeaponType.AXE:
+      return 'axe-';
+    case OneHandWeaponType.MACE:
+      return 'hammer-';
+    case TwoHandWeaponType.GREAT_SWORD:
+      return 'g-sword-';
+    case TwoHandWeaponType.GREAT_AXE:
+      return 'g-axe-';
+    case TwoHandWeaponType.GREAT_MACE:
+      return 'g-hammer-';
+    case MiddleRangeWeaponType.LANCE:
+      return 'spear-';
+    case MiddleRangeWeaponType.POLEARM:
+      return 'polearm-';
+    case MiddleRangeWeaponType.HALBERD:
+      return 'halberd-';
+    case LongRangeWeaponType.BOW:
+      return 'bow-';
+    case LongRangeWeaponType.CROSSBOW:
+      return 'crossbow-';
+    default:
+      return '';
+  }
+};
+
 export function createWeapon(
   quality: QualityLevel,
+  name: string,
+  imgPre: string,
   value: number,
   handType: WeaponHandType,
   qualityRanges: QualityRange,
@@ -70,10 +107,10 @@ export function createWeapon(
     | LongRangeWeaponType
 ): Weapon {
   const weapon: Weapon = {
-    name: namesOfQualitySword[quality],
+    name,
     value,
     quality,
-    img: '',
+    img: `/img/item/${imgPre}${quality.toString().toLowerCase()}.png`,
     keys: [],
     type: ItemType.WEAPON,
     handType,
@@ -96,11 +133,15 @@ function randomOneHandWeaponType(): OneHandWeaponType {
 }
 
 export function createOneHandWeapon(
+  name: string,
+  imgPre: string,
   quality?: QualityLevel,
   oneHandWeaponType?: OneHandWeaponType
 ): OneHandWeapon {
   return createWeapon(
     quality ?? generateQualityLevel(),
+    name,
+    imgPre,
     valueOfQualityOneHandWeapon[quality ?? generateQualityLevel()],
     WeaponHandType.ONE_HAND,
     qualityDamageRanges,
