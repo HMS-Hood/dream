@@ -433,6 +433,18 @@ export const valueOfQualityTwoHandWeapon: QualityNumber = {
   [QualityLevel.SSS]: 38400,
 };
 
+export const valueOfQualityStaffWeapon: QualityNumber = {
+  [QualityLevel.F]: 200,
+  [QualityLevel.E]: 400,
+  [QualityLevel.D]: 800,
+  [QualityLevel.C]: 1600,
+  [QualityLevel.B]: 3200,
+  [QualityLevel.A]: 6400,
+  [QualityLevel.S]: 12800,
+  [QualityLevel.SS]: 25600,
+  [QualityLevel.SSS]: 51200,
+};
+
 export const valueOfQualityMiddleRangeWeapon: QualityNumber = {
   [QualityLevel.F]: 150,
   [QualityLevel.E]: 300,

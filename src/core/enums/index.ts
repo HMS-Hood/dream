@@ -94,3 +94,11 @@ export const qualityRankMap: { [key in QualityLevel]: number } = {
   SS: 7,
   SSS: 8,
 };
+
+export enum MissionDifficulty {
+  EASY = 'EASY',
+  NORMAL = 'NORMAL',
+  HARD = 'HARD',
+  EPIC = 'EPIC',
+  LEGENDARY = 'LEGENDARY',
+}

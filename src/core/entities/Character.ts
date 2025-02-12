@@ -17,8 +17,6 @@ export class Character implements CharacterInterface {
 
   experience: number;
 
-  attackMethod: AttackMethod;
-
   health: number;
 
   strength: number;
@@ -48,7 +46,6 @@ export class Character implements CharacterInterface {
     this.avatar = initParam.avatar;
     this.level = initParam.level;
     this.experience = initParam.experience;
-    this.attackMethod = initParam.attackMethod;
     this.health = initParam.health;
     this.strength = initParam.strength;
     this.agility = initParam.agility;
@@ -60,6 +57,10 @@ export class Character implements CharacterInterface {
     this.charm = initParam.charm;
     this.skills = initParam.skills;
     this.equipment = initParam.equipment;
+  }
+
+  get attackMethod(): AttackMethod {
+    return this.equipment?.weapon?.attackMethod || AttackMethod.MELEE;
   }
 
   get quality(): QualityLevel {

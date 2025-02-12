@@ -1,4 +1,4 @@
-import { QualityLevel } from '../enums';
+import { CharacterLevel, QualityLevel } from '../enums';
 
 export type QualityWeight = {
   [key in QualityLevel]: number;
@@ -14,6 +14,14 @@ export type QualityString = {
 
 export type QualityNumber = {
   [key in QualityLevel]: number;
+};
+
+export type QualityCharacterLevel = {
+  [key in QualityLevel]: CharacterLevel;
+};
+
+export type QualityQuality = {
+  [key in QualityLevel]: QualityLevel;
 };
 
 /**

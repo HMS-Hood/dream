@@ -46,6 +46,60 @@ export function generateQualityLevel(): QualityLevel {
 }
 
 /**
+ * Generates a random QualityLevel that is not lower than minQuality.
+ */
+export function generateQualityLevelWithMin(
+  minQuality: QualityLevel
+): QualityLevel {
+  // Get all QualityLevels from the qualityWeights; assuming ordering is low-to-high.
+  const allQualities = Object.values(QualityLevel).filter(
+    (value) => typeof value === 'string' || typeof value === 'number'
+  ) as QualityLevel[];
+  const minIndex = allQualities.indexOf(minQuality);
+  // Only allow qualities not lower than the minQuality.
+  const validQualities = allQualities.slice(minIndex);
+  // Calculate total weight from the original qualityWeights (defined in param.ts).
+  const totalWeight = validQualities.reduce(
+    (sum, quality) => sum + qualityWeights[quality],
+    0
+  );
+  const randomNum = Math.random() * totalWeight;
+  let weightSum = 0;
+  for (let i = 0; i < validQualities.length; i += 1) {
+    const quality = validQualities[i];
+    weightSum += qualityWeights[quality];
+    if (randomNum <= weightSum) {
+      return quality;
+    }
+  }
+  return minQuality; // fallback
+}
+
+/**
+ * Generates a random CharacterLevel not lower than minLevel.
+ * Each level's weight is reduced by a factor of 10 per level higher than minLevel.
+ */
+export function generateRandomLevel(minLevel: CharacterLevel): CharacterLevel {
+  const allLevels = Object.values(CharacterLevel).filter(
+    (value) => typeof value === 'string' || typeof value === 'number'
+  ) as CharacterLevel[];
+  const minIndex = allLevels.indexOf(minLevel);
+  const validLevels = allLevels.slice(minIndex);
+  // Weight for level[i] = (0.1)^(i), where i=0 for minLevel.
+  const weights = validLevels.map((_, i) => 0.1 ** i);
+  const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+  const randomNum = Math.random() * totalWeight;
+  let weightSum = 0;
+  for (let i = 0; i < validLevels.length; i += 1) {
+    weightSum += weights[i];
+    if (randomNum <= weightSum) {
+      return validLevels[i];
+    }
+  }
+  return minLevel; // fallback
+}
+
+/**
  * Function to get a random integer within a range.
  */
 export function getRandomInt(min: number, max: number): number {
@@ -104,21 +158,6 @@ function adjustQualityLevel(
   return qualityLevels[newQualityIndex] as QualityLevel;
 }
 
-/**
- * Generates a random AttackMethod value.
- * @returns A randomly selected AttackMethod.
- */
-export function getRandomAttackMethod(): AttackMethod {
-  const enumValues = Object.values(AttackMethod);
-  const validEnumValues = enumValues.filter(
-    (value) => typeof value === 'number'
-  );
-  const randomIndex = Math.floor(Math.random() * validEnumValues.length);
-  // enumValues will contain both string keys and numerical values in reverse mapping by default
-  // We want to filter out the string keys to only pick from the enum members themselves
-  return validEnumValues[randomIndex] as AttackMethod; // Type assertion for safety
-}
-
 function generateName(): string {
   return characterNames[getRandomInt(0, characterNames.length - 1)];
 }
@@ -126,35 +165,33 @@ function generateName(): string {
 /**
  * Function to generate a team member.
  */
-export function generateCharacter(): Character {
-  // Generate qualities for each attribute independently
+export function generateCharacter(
+  minQuality: QualityLevel = QualityLevel.F,
+  minLevel: CharacterLevel = CharacterLevel.ROOKIE
+): Character {
+  // Generate each attribute quality with the minimum quality in mind.
   const qualities = {
-    strength: generateQualityLevel(),
-    agility: generateQualityLevel(),
-    endurance: generateQualityLevel(),
-    spirit: generateQualityLevel(),
-    intelligence: generateQualityLevel(),
-    charm: generateQualityLevel(),
-    luck: generateQualityLevel(),
-    perception: generateQualityLevel(),
+    strength: generateQualityLevelWithMin(minQuality),
+    agility: generateQualityLevelWithMin(minQuality),
+    endurance: generateQualityLevelWithMin(minQuality),
+    spirit: generateQualityLevelWithMin(minQuality),
+    intelligence: generateQualityLevelWithMin(minQuality),
+    charm: generateQualityLevelWithMin(minQuality),
+    luck: generateQualityLevelWithMin(minQuality),
+    perception: generateQualityLevelWithMin(minQuality),
   };
 
-  // Determine the highest quality
-  const highestQuality = Object.values(qualities).reduce<QualityLevel>(
-    (previous, current) => {
-      if (
-        Object.values(QualityLevel).indexOf(current) >
-        Object.values(QualityLevel).indexOf(previous)
-      ) {
-        return current;
-      }
-      return previous;
-    },
-    QualityLevel.F
-  );
+  // Determine the highest quality among the attributes.
+  const allQualities = Object.values(qualities);
+  const highestQuality = allQualities.reduce<QualityLevel>((prev, current) => {
+    return Object.values(QualityLevel).indexOf(current) >
+      Object.values(QualityLevel).indexOf(prev)
+      ? current
+      : prev;
+  }, QualityLevel.F);
   const teamMemberQuality: QualityLevel = highestQuality;
 
-  // Adjust other qualities based on the highest quality
+  // Determine quality adjustment as before.
   let qualityAdjustment = 0;
   if (teamMemberQuality === QualityLevel.A) {
     qualityAdjustment = 1;
@@ -165,7 +202,7 @@ export function generateCharacter(): Character {
     qualityAdjustment = 2;
   }
 
-  // Adjust all qualities
+  // Adjust all qualities.
   const adjustedQualities = {
     strength: adjustQualityLevel(qualities.strength, qualityAdjustment),
     agility: adjustQualityLevel(qualities.agility, qualityAdjustment),
@@ -177,12 +214,15 @@ export function generateCharacter(): Character {
     perception: adjustQualityLevel(qualities.perception, qualityAdjustment),
   };
 
+  // Generate a random level with the provided minimum.
+  const randomLevel = generateRandomLevel(minLevel);
+
   const character: CharacterInterface = {
     id: generateId(),
     name: generateName(),
     nickName: '',
     avatar: generateAvatarURL(),
-    level: CharacterLevel.ROOKIE,
+    level: randomLevel,
     experience: 0,
     quality: teamMemberQuality,
     health: 100,
@@ -194,7 +234,7 @@ export function generateCharacter(): Character {
     charm: generateAttributeValue(adjustedQualities.charm),
     luck: generateAttributeValue(adjustedQualities.luck),
     perception: generateAttributeValue(adjustedQualities.perception),
-    attackMethod: getRandomAttackMethod(),
+    attackMethod: AttackMethod.MELEE,
     skills: [],
     equipment: new Equipments(),
   };
@@ -204,7 +244,6 @@ export function generateCharacter(): Character {
 
 export function createSquad(
   position: SquadPosition,
-  attackMethod: AttackMethod,
   attackSpeed: number,
   members: CharacterInterface[]
 ): Squad {

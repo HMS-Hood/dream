@@ -65,6 +65,7 @@ import {
   namesOfQualityStaff,
   qualityStaffDamageRanges,
   qualityStaffIntellRanges,
+  valueOfQualityStaffWeapon,
 } from '../setting/param-item';
 import {
   generateAttributeValue,
@@ -279,7 +280,7 @@ export function createStaff(quality?: QualityLevel): Weapon {
   quality = quality ?? generateQualityLevel();
   const staff: StaffWeapon = {
     name: namesOfQualityStaff[quality],
-    value: 100,
+    value: valueOfQualityStaffWeapon[quality],
     quality,
     img: `/img/equipment/staff-${quality.toLowerCase()}.png`,
     keys: [],
