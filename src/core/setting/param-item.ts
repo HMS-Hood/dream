@@ -25,6 +25,30 @@ export const qualityTwoHandDamageRanges: QualityRange = {
   [QualityLevel.SSS]: [105, 119],
 };
 
+export const qualityStaffDamageRanges: QualityRange = {
+  [QualityLevel.F]: [1, 1],
+  [QualityLevel.E]: [2, 2],
+  [QualityLevel.D]: [3, 3],
+  [QualityLevel.C]: [4, 4],
+  [QualityLevel.B]: [5, 6],
+  [QualityLevel.A]: [7, 8],
+  [QualityLevel.S]: [9, 10],
+  [QualityLevel.SS]: [11, 12],
+  [QualityLevel.SSS]: [13, 15],
+};
+
+export const qualityStaffIntellRanges: QualityRange = {
+  [QualityLevel.F]: [1, 1],
+  [QualityLevel.E]: [2, 2],
+  [QualityLevel.D]: [3, 3],
+  [QualityLevel.C]: [4, 4],
+  [QualityLevel.B]: [5, 6],
+  [QualityLevel.A]: [7, 8],
+  [QualityLevel.S]: [9, 10],
+  [QualityLevel.SS]: [11, 12],
+  [QualityLevel.SSS]: [13, 15],
+};
+
 export const qualityShieldRanges: QualityRange = {
   [QualityLevel.F]: [2, 2],
   [QualityLevel.E]: [3, 3],
@@ -191,6 +215,18 @@ export const namesOfQualityDagger: QualityString = {
   [QualityLevel.S]: '暗夜之噬',
   [QualityLevel.SS]: '虚空之刺',
   [QualityLevel.SSS]: '永恒之痛',
+};
+
+export const namesOfQualityStaff: QualityString = {
+  [QualityLevel.F]: '木制法杖',
+  [QualityLevel.E]: '精灵法杖',
+  [QualityLevel.D]: '巫师法杖',
+  [QualityLevel.C]: '秘法法杖',
+  [QualityLevel.B]: '大法师法杖',
+  [QualityLevel.A]: '天界法杖',
+  [QualityLevel.S]: '星辰法杖',
+  [QualityLevel.SS]: '虚空法杖',
+  [QualityLevel.SSS]: '神之法杖',
 };
 
 export const namesOfQualityBow: QualityString = {

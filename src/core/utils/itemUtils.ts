@@ -7,6 +7,7 @@ import {
   MiddleRangeWeaponType,
   LongRangeWeaponType,
   QualityLevel,
+  StaffWeaponType,
 } from '../enums';
 import {
   Weapon,
@@ -19,6 +20,7 @@ import {
   OneHandWeapon,
   MiddleRangeWeapon,
   LongRangeWeapon,
+  StaffWeapon,
 } from '../interfaces/item';
 import { QualityRange } from '../setting/param';
 import {
@@ -50,47 +52,25 @@ import {
   valueOfQualityCloth,
   qualityClothIntellRanges,
   qualityLongRangeDamageRanges,
+  namesOfQualityAxe,
+  namesOfQualityMace,
+  namesOfQualitySpear,
+  namesOfQualityHalberd,
+  namesOfQualityPolearm,
+  namesOfQualityBow,
+  namesOfQualityCrossbow,
+  namesOfQualityGreatSword,
+  namesOfQualityGreatAxe,
+  namesOfQualityGreatMace,
+  namesOfQualityStaff,
+  qualityStaffDamageRanges,
+  qualityStaffIntellRanges,
 } from '../setting/param-item';
 import {
   generateAttributeValue,
   generateQualityLevel,
   getRandomInt,
 } from './utils';
-
-const getImgForWeapon: (
-  itemType:
-    | OneHandWeaponType
-    | TwoHandWeaponType
-    | MiddleRangeWeaponType
-    | LongRangeWeaponType
-) => string = (itemType) => {
-  switch (itemType) {
-    case OneHandWeaponType.SWORD:
-      return 'sword-';
-    case OneHandWeaponType.AXE:
-      return 'axe-';
-    case OneHandWeaponType.MACE:
-      return 'hammer-';
-    case TwoHandWeaponType.GREAT_SWORD:
-      return 'g-sword-';
-    case TwoHandWeaponType.GREAT_AXE:
-      return 'g-axe-';
-    case TwoHandWeaponType.GREAT_MACE:
-      return 'g-hammer-';
-    case MiddleRangeWeaponType.LANCE:
-      return 'spear-';
-    case MiddleRangeWeaponType.POLEARM:
-      return 'polearm-';
-    case MiddleRangeWeaponType.HALBERD:
-      return 'halberd-';
-    case LongRangeWeaponType.BOW:
-      return 'bow-';
-    case LongRangeWeaponType.CROSSBOW:
-      return 'crossbow-';
-    default:
-      return '';
-  }
-};
 
 export function createWeapon(
   quality: QualityLevel,
@@ -133,11 +113,27 @@ function randomOneHandWeaponType(): OneHandWeaponType {
 }
 
 export function createOneHandWeapon(
-  name: string,
-  imgPre: string,
   quality?: QualityLevel,
   oneHandWeaponType?: OneHandWeaponType
 ): OneHandWeapon {
+  let name: string;
+  let imgPre: string;
+  switch (oneHandWeaponType) {
+    case OneHandWeaponType.SWORD:
+      name = namesOfQualitySword[quality ?? generateQualityLevel()];
+      imgPre = 'sword-';
+      break;
+    case OneHandWeaponType.AXE:
+      name = namesOfQualityAxe[quality ?? generateQualityLevel()];
+      imgPre = 'axe-';
+      break;
+    case OneHandWeaponType.MACE:
+      name = namesOfQualityMace[quality ?? generateQualityLevel()];
+      imgPre = 'hammer-';
+      break;
+    default:
+      throw new Error('Invalid one hand weapon type');
+  }
   return createWeapon(
     quality ?? generateQualityLevel(),
     name,
@@ -164,8 +160,28 @@ export function createMiddleRangeWeapon(
   quality?: QualityLevel,
   middleRangeWeaponType?: MiddleRangeWeaponType
 ): MiddleRangeWeapon {
+  let name: string;
+  let imgPre: string;
+  switch (middleRangeWeaponType) {
+    case MiddleRangeWeaponType.LANCE:
+      name = namesOfQualitySpear[quality ?? generateQualityLevel()];
+      imgPre = 'spear-';
+      break;
+    case MiddleRangeWeaponType.HALBERD:
+      name = namesOfQualityHalberd[quality ?? generateQualityLevel()];
+      imgPre = 'changji-';
+      break;
+    case MiddleRangeWeaponType.POLEARM:
+      name = namesOfQualityPolearm[quality ?? generateQualityLevel()];
+      imgPre = 'changbing-';
+      break;
+    default:
+      throw new Error('Invalid middle range weapon type');
+  }
   return createWeapon(
     quality ?? generateQualityLevel(),
+    name,
+    imgPre,
     valueOfQualityMiddleRangeWeapon[quality ?? generateQualityLevel()],
     WeaponHandType.TWO_HAND,
     qualityTwoHandDamageRanges,
@@ -189,8 +205,24 @@ export function createLongRangeWeapon(
   quality?: QualityLevel,
   longRangeWeaponType?: LongRangeWeaponType
 ): LongRangeWeapon {
+  let name: string;
+  let imgPre: string;
+  switch (longRangeWeaponType) {
+    case LongRangeWeaponType.BOW:
+      name = namesOfQualityBow[quality ?? generateQualityLevel()];
+      imgPre = 'bow-';
+      break;
+    case LongRangeWeaponType.CROSSBOW:
+      name = namesOfQualityCrossbow[quality ?? generateQualityLevel()];
+      imgPre = 'cross-bow-';
+      break;
+    default:
+      throw new Error('Invalid long range weapon type');
+  }
   return createWeapon(
     quality ?? generateQualityLevel(),
+    name,
+    imgPre,
     valueOfQualityLongRangeWeapon[quality ?? generateQualityLevel()],
     WeaponHandType.TWO_HAND,
     qualityLongRangeDamageRanges,
@@ -213,14 +245,56 @@ export function createTwohandWeapon(
   quality?: QualityLevel,
   twoHandWeaponType?: TwoHandWeaponType
 ): TwoHandWeapon {
+  let name: string;
+  let imgPre: string;
+  switch (twoHandWeaponType) {
+    case TwoHandWeaponType.GREAT_SWORD:
+      name = namesOfQualityGreatSword[quality ?? generateQualityLevel()];
+      imgPre = 'g-sword-';
+      break;
+    case TwoHandWeaponType.GREAT_AXE:
+      name = namesOfQualityGreatAxe[quality ?? generateQualityLevel()];
+      imgPre = 'g-axe-';
+      break;
+    case TwoHandWeaponType.GREAT_MACE:
+      name = namesOfQualityGreatMace[quality ?? generateQualityLevel()];
+      imgPre = 'g-hammer-';
+      break;
+    default:
+      throw new Error('Invalid two hand weapon type');
+  }
   return createWeapon(
     quality ?? generateQualityLevel(),
+    name,
+    imgPre,
     valueOfQualityTwoHandWeapon[quality ?? generateQualityLevel()],
     WeaponHandType.TWO_HAND,
     qualityTwoHandDamageRanges,
     AttackMethod.MELEE,
     twoHandWeaponType ?? randomTwoHandWeaponType()
   ) as TwoHandWeapon;
+}
+
+export function createStaff(quality?: QualityLevel): Weapon {
+  quality = quality ?? generateQualityLevel();
+  const staff: StaffWeapon = {
+    name: namesOfQualityStaff[quality],
+    value: 100,
+    quality,
+    img: `/img/equipment/staff-${quality.toLowerCase()}.png`,
+    keys: [],
+    type: ItemType.WEAPON,
+    handType: WeaponHandType.TWO_HAND,
+    minDamage: generateAttributeValue(quality, qualityStaffDamageRanges) - 1,
+    maxDamage: generateAttributeValue(quality, qualityStaffDamageRanges) + 1,
+    attackMethod: AttackMethod.MELEE,
+    weaponType: StaffWeaponType.STAFF,
+    intelligenceIncrease: generateAttributeValue(
+      quality,
+      qualityStaffIntellRanges
+    ),
+  };
+  return staff;
 }
 
 export function createShield(quality?: QualityLevel): Shield {

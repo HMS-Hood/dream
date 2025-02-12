@@ -81,6 +81,7 @@
     MiddleRangeWeaponType,
     OneHandWeaponType,
     QualityLevel,
+    StaffWeaponType,
     TwoHandWeaponType,
   } from '../../core/enums';
   import {
@@ -97,6 +98,7 @@
   import {
     createNormalStandardArmor,
     createNormalStandardWeapon,
+    createStaff,
   } from '../../core/utils/itemUtils';
 
   const weaponList: {
@@ -107,7 +109,8 @@
       | OneHandWeaponType
       | TwoHandWeaponType
       | MiddleRangeWeaponType
-      | LongRangeWeaponType;
+      | LongRangeWeaponType
+      | StaffWeaponType;
     num: number;
   }[] = reactive([
     {
@@ -231,6 +234,20 @@
     },
     {
       name: '优质制式长戟',
+      value: valueOfQualityMiddleRangeWeapon[QualityLevel.E],
+      quality: QualityLevel.E,
+      weaponType: MiddleRangeWeaponType.HALBERD,
+      num: 0,
+    },
+    {
+      name: '木制法杖',
+      value: valueOfQualityMiddleRangeWeapon[QualityLevel.F],
+      quality: QualityLevel.F,
+      weaponType: MiddleRangeWeaponType.HALBERD,
+      num: 0,
+    },
+    {
+      name: '精灵法杖',
       value: valueOfQualityMiddleRangeWeapon[QualityLevel.E],
       quality: QualityLevel.E,
       weaponType: MiddleRangeWeaponType.HALBERD,
@@ -392,10 +409,10 @@
     if (player.gold >= consume.value) {
       weaponList.forEach((item) => {
         if (item.num > 0) {
-          const weapon = createNormalStandardWeapon(
-            item.quality,
-            item.weaponType
-          );
+          const weapon =
+            item.weaponType !== StaffWeaponType.STAFF
+              ? createNormalStandardWeapon(item.quality, item.weaponType)
+              : createStaff(item.quality);
           player.items.push(weapon);
           player.gold -= item.num * item.value;
         }

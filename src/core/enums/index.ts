@@ -35,6 +35,10 @@ export enum TwoHandWeaponType {
   GREAT_MACE,
 }
 
+export enum StaffWeaponType {
+  STAFF,
+}
+
 export enum MiddleRangeWeaponType {
   LANCE,
   POLEARM,
