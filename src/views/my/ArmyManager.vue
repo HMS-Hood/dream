@@ -80,9 +80,18 @@
 
   const handleChecked = (checkedIds: string[]) => {
     if (hoverItem.value) {
+      members.value = members.value.concat(
+        hoverItem.value.members.map(
+          (member) => new Character(member.getCharacter())
+        )
+      );
+      hoverItem.value.members.splice(0);
       hoverItem.value.members = members.value
         .filter((member) => checkedIds.includes(member.id))
         .map((member) => new CombatUnit(member));
+      members.value = members.value.filter(
+        (member) => !checkedIds.includes(member.id)
+      );
     }
   };
 
