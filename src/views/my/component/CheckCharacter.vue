@@ -106,7 +106,7 @@
 </script>
 
 <style lang="less" scoped>
-  @import url('../../assets/style/dream.less');
+  @import url('../../../assets/style/dream.less');
 
   .character-list {
     display: flex;

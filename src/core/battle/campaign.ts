@@ -134,7 +134,7 @@ export class Campaign implements IRefactoredCampaign {
 
   // 战斗执行方法：采用行动调度器模拟各单位按照攻击速度行动，
   // 并在战斗过程中根据伤亡情况动态调整战团，同时判断后备部队是否可以上场
-  public executeBattle(): void {
+  public executeBattle(): 'side1' | 'side2' | 'draw' | null {
     const scheduler = new ActionScheduler(this.config.standardInterval);
     // 初始化所有上场部队
     const allArmies = this.battleGroups.flatMap((group) => [
@@ -218,7 +218,26 @@ export class Campaign implements IRefactoredCampaign {
       }
     }
     this.battleStateHandler.getBattleState().isOver = true;
+
     console.log('Battle execution complete, simulation time:', simulationTime);
+
+    // 判断side1和side2的部队剩下的人数
+    const side1Remaining = this.side1Armies
+      .flatMap((army) => army.squads)
+      .flatMap((squad) => squad.members)
+      .filter((unit) => !unit.isDead).length;
+    const side2Remaining = this.side2Armies
+      .flatMap((army) => army.squads)
+      .flatMap((squad) => squad.members)
+      .filter((unit) => !unit.isDead).length;
+
+    if (side1Remaining > side2Remaining) {
+      return 'side1';
+    }
+    if (side2Remaining > side1Remaining) {
+      return 'side2';
+    }
+    return 'draw';
   }
 
   // 判定双方是否均有存活单位

@@ -32,7 +32,6 @@ export function calculateAttributeModifier(value: number): number {
 }
 
 export const defaultBattleConfig: BattleConfig = {
-  maxRounds: 10,
   battlefieldWidth: 3, // 每方最多3支部队同时参战
   battleTimeLimit: 100, // 战斗时限
   standardInterval: 40,

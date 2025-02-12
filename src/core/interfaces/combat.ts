@@ -1,11 +1,12 @@
 import { SquadPosition } from '../enums';
 import { CombatUnit } from '../battle/CombatUnit';
+import { CombatStats } from '.';
 
 export interface Squad {
   id: string;
   position: SquadPosition;
   attackSpeed: number;
-  members: CombatUnit[];
+  members: CombatStats[];
   targetIds: string[];
   isDead: boolean;
 }

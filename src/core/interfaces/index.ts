@@ -40,7 +40,6 @@ export interface Question {
 }
 
 export interface BattleConfig {
-  maxRounds: number;
   battlefieldWidth: number; // 战场宽度，决定每方最多上场部队数
   battleTimeLimit: number; // 每场战斗的时间限制
   standardInterval: number;
@@ -53,7 +52,6 @@ export interface BattleConfig {
 }
 
 export interface CombatStats {
-  name: string;
   currentHealth: number;
   isDead: boolean;
   maxHealth: number;
@@ -67,4 +65,11 @@ export interface CombatStats {
   criticalDamage: number;
   attackSpeed: number;
   moveSpeed: number;
+
+  takeDamage(damage: number): void;
+  heal(amount: number): void;
+  getAttackRange(): number;
+  getCharacter(): CharacterInterface;
+  updateStats(): void;
+  name: string;
 }

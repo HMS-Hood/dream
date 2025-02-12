@@ -93,7 +93,7 @@
     { title: 'Item 1', image: '/img/avatar/1.png' },
     { title: 'Item 2', image: '/img/avatar/2.png' },
     { title: 'Item 3', image: '/img/avatar/3.png' },
-    { title: 'Item 4', image: '/img/avatar/4.png' },
+    { title: '部队', image: '/img/avatar/4.png', url: '/army-manager' },
     { title: '征兵所', image: '/img/bg/military-camp.png', url: '/recruit' },
     { title: '兵营', image: '/img/bg/barracks.png', url: '/barracks' },
     { title: '商店', image: '/img/bg/store.png', url: '/shop' },

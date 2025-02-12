@@ -147,7 +147,6 @@
         battlefieldWidth: config.battleTeamLimit,
         standardInterval: 40,
         battleTimeLimit: 100,
-        maxRounds: 10,
         positionWeight: {
           front: 0.4,
           middle: 0.3,

@@ -16,12 +16,12 @@
 
 <script setup lang="ts">
   import { computed, reactive } from 'vue';
-  import { Character } from '../../core/entities/Character';
+  import { CharacterInterface } from '../../core/interfaces';
   import CheckCharacter from './component/CheckCharacter.vue';
 
   const props = defineProps<{
     checkedIds?: string[];
-    characters: Character[];
+    characters: CharacterInterface[];
   }>();
 
   const emit = defineEmits<{
@@ -30,14 +30,14 @@
 
   const visible = defineModel<boolean>('visible');
 
-  const displayList = computed(() => [
-    ...props.characters.map((item) =>
+  const displayList = computed(() =>
+    props.characters.map((item) =>
       reactive({
         character: item,
         checked: props.checkedIds?.includes(item.id) ?? false,
       })
-    ),
-  ]);
+    )
+  );
 
   const handleBeforeOk = () => {
     const returnList = displayList.value

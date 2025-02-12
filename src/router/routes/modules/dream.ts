@@ -49,6 +49,14 @@ const DASHBOARD: AppRouteRecordRaw[] = [
       requiresAuth: false,
     },
   },
+  {
+    path: '/army-manager',
+    name: 'armyManager',
+    component: () => import('@/views/my/ArmyManager.vue'),
+    meta: {
+      requiresAuth: false,
+    },
+  },
 ];
 
 export default DASHBOARD;

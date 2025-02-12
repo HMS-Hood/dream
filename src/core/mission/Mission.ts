@@ -6,6 +6,8 @@ import {
   missionDifficultyMagnification,
   missionQualityBaseReward,
   missionQualityRewardMagnification,
+  missionDropCountWeight,
+  luckAndPerMissionDropRate,
 } from '../setting/param-mission';
 import {
   generateCharacter,
@@ -14,186 +16,23 @@ import {
 } from '../utils/utils';
 import { validateArmyFormation } from '../utils/armyUtils';
 import {
+  createChain,
+  createCloth,
+  createLeather,
   createLongRangeWeapon,
   createMiddleRangeWeapon,
   createNormalStandardArmor,
   createOneHandWeapon,
+  createPlate,
   createShield,
+  createStaff,
   createTwohandWeapon,
 } from '../utils/itemUtils';
 import { CombatUnit } from '../battle/CombatUnit';
 import { CharacterInterface } from '../interfaces';
-
-export class Mission {
-  name: string;
-
-  desc: string;
-
-  quality: QualityLevel;
-
-  difficulty: MissionDifficulty;
-
-  constructor(
-    name: string,
-    desc: string,
-    quality: QualityLevel,
-    difficulty: MissionDifficulty
-  ) {
-    this.name = name;
-    this.desc = desc;
-    this.quality = quality;
-    this.difficulty = difficulty;
-  }
-}
-
-/**
- * Generates an enemy Army for this mission.
- */
-export function generateEnemyArmy(this: Mission): Army {
-  // 1. Get the base enemy count from missionQualityEnimyCount.
-  const baseCount: number = missionQualityEnimyCount[this.quality];
-
-  // 2. Get the multiplier range from missionDifficultyMagnification and compute an average multiplier.
-  const [multMin, multMax] = missionDifficultyMagnification[this.difficulty];
-  const multiplier = (multMin + multMax) / 2;
-
-  // 3. Compute the final enemy count.
-  const enemyCount = Math.round(baseCount * multiplier);
-
-  // 4. Determine enemy personnel quality lower limit according to missionQualityLowQuality.
-  const enemyQualityFloor: QualityLevel =
-    missionQualityLowQuality[this.quality];
-
-  // 5. Generate enemy personnel. (generateCharacter returns a Character.)
-  const enemyMembers: CharacterInterface[] = [];
-  for (let i = 0; i < enemyCount; i += 1) {
-    enemyMembers.push(generateCharacter(enemyQualityFloor));
-  }
-
-  // 6. Group every 10 personnel into a squad.
-  const squads: any[] = [];
-  for (let i = 0; i < enemyMembers.length; i += 10) {
-    const group = enemyMembers.slice(i, i + 10);
-    // Sort the group by quality descending.
-    group.sort((a, b) => Number(b.quality) - Number(a.quality));
-    // Wrap each character into a CombatUnit.
-    const combatUnits = group.map((member) => new CombatUnit(member));
-
-    const squad = {
-      id: generateId(),
-      position: SquadPosition.MIDDLE, // temporary; will be reassigned below.
-      attackSpeed:
-        combatUnits.reduce((sum, unit) => sum + (unit.attackSpeed || 1), 0) /
-        combatUnits.length,
-      members: combatUnits,
-      targetIds: [],
-      isDead: false,
-    };
-    squads.push(squad);
-  }
-
-  // 7. Combine squads into an Army object.
-  const enemyArmy: Army = {
-    id: generateId(),
-    name: '敌人',
-    squads,
-    reserveSquads: [],
-    isDead: false,
-  };
-
-  // 8. Distribute squads into formation positions.
-  const totalSquads = squads.length;
-  const frontCount = Math.ceil(totalSquads / 3);
-  const middleCount = Math.ceil(totalSquads / 3);
-
-  squads.forEach((squad, index) => {
-    if (index < frontCount) {
-      squad.position = SquadPosition.FRONT;
-    } else if (index < frontCount + middleCount) {
-      squad.position = SquadPosition.MIDDLE;
-    } else {
-      squad.position = SquadPosition.BACK;
-    }
-  });
-
-  // 9. Validate formation (optional).
-  if (!validateArmyFormation(enemyArmy)) {
-    // eslint-disable-next-line no-console
-    console.warn('Generated enemy army formation is invalid.');
-  }
-
-  // 10. For each squad, generate equipment based on formation.
-  squads.forEach((squad) => {
-    squad.members.forEach((unit: any) => {
-      // For each piece of equipment, first determine its random quality.
-      const equipQuality = generateQualityLevelWithMin(
-        missionQualityLowQuality[this.quality]
-      );
-
-      if (squad.position === SquadPosition.FRONT) {
-        if (Math.random() < 0.5) {
-          unit
-            .getCharacter()
-            .equipment.setWeapon(createOneHandWeapon(equipQuality));
-          unit.getCharacter().equipment.setShield(createShield(equipQuality));
-        } else {
-          unit
-            .getCharacter()
-            .equipment.setWeapon(createTwohandWeapon(equipQuality));
-        }
-        if (Math.random() < 0.5) {
-          unit
-            .getCharacter()
-            .equipment.setArmor(
-              createNormalStandardArmor(equipQuality, 'Plate')
-            );
-        } else {
-          unit
-            .getCharacter()
-            .equipment.setArmor(
-              createNormalStandardArmor(equipQuality, 'Chain')
-            );
-        }
-      } else if (squad.position === SquadPosition.MIDDLE) {
-        unit
-          .getCharacter()
-          .equipment.setWeapon(createMiddleRangeWeapon(equipQuality));
-        if (Math.random() < 0.5) {
-          unit
-            .getCharacter()
-            .equipment.setArmor(
-              createNormalStandardArmor(equipQuality, 'Chain')
-            );
-        } else {
-          unit
-            .getCharacter()
-            .equipment.setArmor(
-              createNormalStandardArmor(equipQuality, 'Leather')
-            );
-        }
-      } else if (squad.position === SquadPosition.BACK) {
-        unit
-          .getCharacter()
-          .equipment.setWeapon(createLongRangeWeapon(equipQuality));
-        if (Math.random() < 0.5) {
-          unit
-            .getCharacter()
-            .equipment.setArmor(
-              createNormalStandardArmor(equipQuality, 'Leather')
-            );
-        } else {
-          unit
-            .getCharacter()
-            .equipment.setArmor(
-              createNormalStandardArmor(equipQuality, 'Cloth')
-            );
-        }
-      }
-    });
-  });
-
-  return enemyArmy;
-}
+import { Player } from '../entities/Player';
+import { Campaign } from '../battle/campaign';
+import { defaultBattleConfig } from '../setting/param-combat';
 
 /**
  * Calculates the money reward after mission completion.
@@ -235,4 +74,360 @@ export function calculateMoneyReward(
 
   // 5. Final money reward.
   return preliminaryReward + actualFluctuation;
+}
+
+function getDropCountAddition(value: number): number {
+  const clampedValue = Math.min(Math.max(value, 10), 30);
+  const dropRate = luckAndPerMissionDropRate[clampedValue];
+  const totalWeight = Object.values(dropRate).reduce(
+    (sum, weight) => sum + weight,
+    0
+  );
+  let randomWeight = Math.random() * totalWeight;
+  let addition = 0;
+
+  const allDropRate = Object.entries(dropRate);
+  for (let i = 0; i < allDropRate.length; i += 1) {
+    const [count, weight] = allDropRate[i];
+    randomWeight -= weight;
+    if (randomWeight <= 0) {
+      addition = parseInt(count, 10);
+      break;
+    }
+  }
+
+  return addition;
+}
+
+export function calculateEquipmentReward(
+  missionQuality: QualityLevel,
+  enemyMultiplier: number,
+  luck: number,
+  perception: number,
+  missionDifficulty: MissionDifficulty
+): any[] {
+  // 获取任务难度对应的排除数量
+  const difficultyIndex =
+    Object.keys(MissionDifficulty).indexOf(missionDifficulty);
+  const dropCountOptions = Object.entries(missionDropCountWeight)
+    .sort((a, b) => a[1] - b[1])
+    .slice(difficultyIndex)
+    .map(([count]) => parseInt(count, 10));
+
+  // 按权重随机选择掉落数量
+  const totalWeight = dropCountOptions.reduce(
+    (sum, count) => sum + missionDropCountWeight[count],
+    0
+  );
+  let randomWeight = Math.random() * totalWeight;
+  let dropCount = dropCountOptions[0];
+
+  for (let i = 0; i < dropCountOptions.length; i += 1) {
+    const count = dropCountOptions[i];
+    randomWeight -= missionDropCountWeight[count];
+    if (randomWeight <= 0) {
+      dropCount = count;
+      break;
+    }
+  }
+
+  // 计算 luck 和 perception 产生的数量增量
+  const luckAddition = getDropCountAddition(luck);
+  const perceptionAddition = getDropCountAddition(perception);
+
+  const totalDropCount = dropCount + luckAddition + perceptionAddition;
+
+  const equipmentReward: any[] = [];
+  for (let i = 0; i < totalDropCount; i += 1) {
+    const equipQuality = generateQualityLevelWithMin(
+      missionQualityLowQuality[missionQuality]
+    );
+
+    // 随机生成武器或防具
+    if (Math.random() < 0.5) {
+      // 生成武器
+      const weaponType = Math.floor(Math.random() * 5);
+      let weapon;
+      switch (weaponType) {
+        case 0:
+          weapon = createOneHandWeapon(equipQuality);
+          break;
+        case 1:
+          weapon = createTwohandWeapon(equipQuality);
+          break;
+        case 2:
+          weapon = createMiddleRangeWeapon(equipQuality);
+          break;
+        case 3:
+          weapon = createLongRangeWeapon(equipQuality);
+          break;
+        case 4:
+          weapon = createStaff(equipQuality);
+          break;
+        default:
+          throw new Error('Invalid weapon type');
+      }
+      equipmentReward.push(weapon);
+    } else {
+      // 生成防具
+      const armorType = Math.floor(Math.random() * 5);
+      let armor;
+      switch (armorType) {
+        case 0:
+          armor = createShield(equipQuality);
+          break;
+        case 1:
+          armor = createPlate(equipQuality);
+          break;
+        case 2:
+          armor = createChain(equipQuality);
+          break;
+        case 3:
+          armor = createLeather(equipQuality);
+          break;
+        case 4:
+          armor = createCloth(equipQuality);
+          break;
+        default:
+          throw new Error('Invalid armor type');
+      }
+      equipmentReward.push(armor);
+    }
+  }
+
+  return equipmentReward;
+}
+
+export class Mission {
+  name: string;
+
+  desc: string;
+
+  quality: QualityLevel;
+
+  difficulty: MissionDifficulty;
+
+  constructor(
+    name: string,
+    desc: string,
+    quality: QualityLevel,
+    difficulty: MissionDifficulty
+  ) {
+    this.name = name;
+    this.desc = desc;
+    this.quality = quality;
+    this.difficulty = difficulty;
+  }
+
+  /**
+   * Completes the mission with the given player's army and player data.
+   * @param playerArmy - The player's army.
+   * @param player - The player's data.
+   * @returns Whether the mission was successful.
+   */
+  completeMission(playerArmy: Army, player: Player): boolean {
+    // 1. Generate enemy army and get the multiplier.
+    const { enemyArmy, multiplier } = this.generateEnemyArmy();
+
+    // 2. Create a campaign and let the player's army fight the enemy army.
+    const battleConfig = defaultBattleConfig;
+    battleConfig.battleTimeLimit = 5000;
+    const campaign = new Campaign(
+      battleConfig,
+      [],
+      [enemyArmy],
+      playerArmy,
+      true
+    );
+    const result = campaign.executeBattle();
+
+    // 3. If the player's army wins, generate rewards.
+    if (result === 'side1') {
+      // 从玩家部队中选取最高的 charm, luck 和 perception 数值
+      let maxCharm = 0;
+      let maxLuck = 0;
+      let maxPerception = 0;
+
+      playerArmy.squads.forEach((squad) => {
+        squad.members.forEach((unit) => {
+          const character = unit.getCharacter();
+          if (character.charm > maxCharm) maxCharm = character.charm;
+          if (character.luck > maxLuck) maxLuck = character.luck;
+          if (character.perception > maxPerception)
+            maxPerception = character.perception;
+        });
+      });
+
+      // Calculate money reward.
+      const moneyReward = calculateMoneyReward(
+        this.quality,
+        multiplier,
+        maxCharm
+      );
+      player.gold += moneyReward;
+
+      // Calculate equipment reward.
+      const equipmentReward = calculateEquipmentReward(
+        this.quality,
+        multiplier,
+        maxLuck,
+        maxPerception,
+        this.difficulty
+      );
+      player.items.push(...equipmentReward);
+
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
+   * Generates an enemy Army for this mission.
+   */
+  generateEnemyArmy(): { enemyArmy: Army; multiplier: number } {
+    // 1. Get the base enemy count from missionQualityEnimyCount.
+    const baseCount: number = missionQualityEnimyCount[this.quality];
+
+    // 2. Get the multiplier range from missionDifficultyMagnification and compute a random multiplier.
+    const [multMin, multMax] = missionDifficultyMagnification[this.difficulty];
+    const multiplier = Math.random() * (multMax - multMin) + multMin;
+
+    // 3. Compute the final enemy count.
+    const enemyCount = Math.round(baseCount * multiplier);
+
+    // 4. Determine enemy personnel quality lower limit according to missionQualityLowQuality.
+    const enemyQualityFloor: QualityLevel =
+      missionQualityLowQuality[this.quality];
+
+    // 5. Generate enemy personnel. (generateCharacter returns a Character.)
+    const enemyMembers: CharacterInterface[] = [];
+    for (let i = 0; i < enemyCount; i += 1) {
+      enemyMembers.push(generateCharacter(enemyQualityFloor));
+    }
+
+    // 6. Group every 10 personnel into a squad.
+    const squads: any[] = [];
+    for (let i = 0; i < enemyMembers.length; i += 10) {
+      const group = enemyMembers.slice(i, i + 10);
+      // Sort the group by quality descending.
+      group.sort((a, b) => Number(b.quality) - Number(a.quality));
+      // Wrap each character into a CombatUnit.
+      const combatUnits = group.map((member) => new CombatUnit(member));
+
+      const squad = {
+        id: generateId(),
+        position: SquadPosition.MIDDLE, // temporary; will be reassigned below.
+        attackSpeed:
+          combatUnits.reduce((sum, unit) => sum + (unit.attackSpeed || 1), 0) /
+          combatUnits.length,
+        members: combatUnits,
+        targetIds: [],
+        isDead: false,
+      };
+      squads.push(squad);
+    }
+
+    // 7. Combine squads into an Army object.
+    const enemyArmy: Army = {
+      id: generateId(),
+      name: '敌人',
+      squads,
+      reserveSquads: [],
+      isDead: false,
+    };
+
+    // 8. Distribute squads into formation positions.
+    const totalSquads = squads.length;
+    const frontCount = Math.ceil(totalSquads / 3);
+    const middleCount = Math.ceil(totalSquads / 3);
+
+    squads.forEach((squad, index) => {
+      if (index < frontCount) {
+        squad.position = SquadPosition.FRONT;
+      } else if (index < frontCount + middleCount) {
+        squad.position = SquadPosition.MIDDLE;
+      } else {
+        squad.position = SquadPosition.BACK;
+      }
+    });
+
+    // 9. Validate formation (optional).
+    if (!validateArmyFormation(enemyArmy)) {
+      // eslint-disable-next-line no-console
+      console.warn('Generated enemy army formation is invalid.');
+    }
+
+    // 10. For each squad, generate equipment based on formation.
+    squads.forEach((squad) => {
+      squad.members.forEach((unit: any) => {
+        // For each piece of equipment, first determine its random quality.
+        const equipQuality = generateQualityLevelWithMin(
+          missionQualityLowQuality[this.quality]
+        );
+
+        if (squad.position === SquadPosition.FRONT) {
+          if (Math.random() < 0.5) {
+            unit
+              .getCharacter()
+              .equipment.setWeapon(createOneHandWeapon(equipQuality));
+            unit.getCharacter().equipment.setShield(createShield(equipQuality));
+          } else {
+            unit
+              .getCharacter()
+              .equipment.setWeapon(createTwohandWeapon(equipQuality));
+          }
+          if (Math.random() < 0.5) {
+            unit
+              .getCharacter()
+              .equipment.setArmor(
+                createNormalStandardArmor(equipQuality, 'Plate')
+              );
+          } else {
+            unit
+              .getCharacter()
+              .equipment.setArmor(
+                createNormalStandardArmor(equipQuality, 'Chain')
+              );
+          }
+        } else if (squad.position === SquadPosition.MIDDLE) {
+          unit
+            .getCharacter()
+            .equipment.setWeapon(createMiddleRangeWeapon(equipQuality));
+          if (Math.random() < 0.5) {
+            unit
+              .getCharacter()
+              .equipment.setArmor(
+                createNormalStandardArmor(equipQuality, 'Chain')
+              );
+          } else {
+            unit
+              .getCharacter()
+              .equipment.setArmor(
+                createNormalStandardArmor(equipQuality, 'Leather')
+              );
+          }
+        } else if (squad.position === SquadPosition.BACK) {
+          unit
+            .getCharacter()
+            .equipment.setWeapon(createLongRangeWeapon(equipQuality));
+          if (Math.random() < 0.5) {
+            unit
+              .getCharacter()
+              .equipment.setArmor(
+                createNormalStandardArmor(equipQuality, 'Leather')
+              );
+          } else {
+            unit
+              .getCharacter()
+              .equipment.setArmor(
+                createNormalStandardArmor(equipQuality, 'Cloth')
+              );
+          }
+        }
+      });
+    });
+
+    return { enemyArmy, multiplier };
+  }
 }
