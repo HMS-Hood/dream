@@ -1,13 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable import/prefer-default-export */
 import { MissionDifficulty, QualityLevel } from '../enums';
+import { MissionInfo } from '../mission/Mission';
 
-export const missionsInfo: {
-  name: string;
-  desc: string;
-  quality: QualityLevel;
-  difficulty: MissionDifficulty;
-}[] = [
+export const missionsInfo: MissionInfo[] = [
   {
     name: '训练新兵',
     desc: '王城卫队需要有经验的教官训练一批精锐士兵。',

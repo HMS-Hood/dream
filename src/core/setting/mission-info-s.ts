@@ -1,13 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable import/prefer-default-export */
 import { MissionDifficulty, QualityLevel } from '../enums';
+import { MissionInfo } from '../mission/Mission';
 
-export const missionsInfo: {
-  name: string;
-  desc: string;
-  quality: QualityLevel;
-  difficulty: MissionDifficulty;
-}[] = [
+export const missionsInfo: MissionInfo[] = [
   // S级任务
   {
     name: '镇压混沌',

@@ -16,16 +16,11 @@ import {
 } from '../utils/utils';
 import { validateArmyFormation } from '../utils/armyUtils';
 import {
-  createChain,
-  createCloth,
-  createLeather,
   createLongRangeWeapon,
   createMiddleRangeWeapon,
   createNormalStandardArmor,
   createOneHandWeapon,
-  createPlate,
   createShield,
-  createStaff,
   createTwohandWeapon,
   generateRandomEquipment,
 } from '../utils/itemUtils';
@@ -35,6 +30,16 @@ import { Player } from '../entities/Player';
 import { Campaign } from '../battle/campaign';
 import { defaultBattleConfig } from '../setting/param-combat';
 import { Armor, Shield, Weapon } from '../interfaces/item';
+
+export interface MissionInfo {
+  name: string;
+
+  desc: string;
+
+  quality: QualityLevel;
+
+  difficulty: MissionDifficulty;
+}
 
 /**
  * Calculates the money reward after mission completion.
@@ -106,7 +111,7 @@ export function calculateEquipmentReward(
   luck: number,
   perception: number,
   missionDifficulty: MissionDifficulty
-): any[] {
+): (Weapon | Armor | Shield)[] {
   // 获取任务难度对应的排除数量
   const difficultyIndex =
     Object.keys(MissionDifficulty).indexOf(missionDifficulty);
@@ -148,6 +153,12 @@ export function calculateEquipmentReward(
   return equipmentReward;
 }
 
+export type MissionResult = {
+  success: boolean;
+  lost: number;
+  duration: number;
+};
+
 export class Mission {
   name: string;
 
@@ -157,31 +168,24 @@ export class Mission {
 
   difficulty: MissionDifficulty;
 
-  constructor(
-    name: string,
-    desc: string,
-    quality: QualityLevel,
-    difficulty: MissionDifficulty
-  ) {
-    this.name = name;
-    this.desc = desc;
-    this.quality = quality;
-    this.difficulty = difficulty;
+  moneyReward: number = 0;
+
+  equipmentReward: (Weapon | Armor | Shield)[] = [];
+
+  constructor(missionInfo: MissionInfo) {
+    this.name = missionInfo.name;
+    this.desc = missionInfo.desc;
+    this.quality = missionInfo.quality;
+    this.difficulty = missionInfo.difficulty;
   }
 
-  /**
-   * Completes the mission with the given player's army and player data.
-   * @param playerArmy - The player's army.
-   * @param player - The player's data.
-   * @returns Whether the mission was successful.
-   */
-  completeMission(playerArmy: Army, player: Player): boolean {
+  testMission(playerArmy: Army): MissionResult {
     // 1. Generate enemy army and get the multiplier.
-    const { enemyArmy, multiplier } = this.generateEnemyArmy();
+    const { enemyArmy } = this.generateEnemyArmy();
 
     // 2. Create a campaign and let the player's army fight the enemy army.
     const battleConfig = defaultBattleConfig;
-    battleConfig.battleTimeLimit = 5000;
+    battleConfig.battleTimeLimit = 1000;
     const campaign = new Campaign(
       battleConfig,
       [],
@@ -191,8 +195,64 @@ export class Mission {
     );
     const result = campaign.executeBattle();
 
+    let deadMemberCount = 0;
+    playerArmy.squads.forEach((squad) => {
+      squad.members.forEach((unit) => {
+        if (unit.isDead) {
+          deadMemberCount += 1;
+        }
+      });
+    });
+
+    return {
+      success: result.winner === 'side1',
+      lost: deadMemberCount,
+      duration: 10 - Math.floor(result.duration / 100),
+    };
+  }
+
+  /**
+   * Completes the mission with the given player's army and player data.
+   * @param playerArmy - The player's army.
+   * @param player - The player's data.
+   * @returns Whether the mission was successful.
+   */
+  completeMission(playerArmy: Army, player: Player): MissionResult {
+    // 1. Generate enemy army and get the multiplier.
+    const { enemyArmy, multiplier } = this.generateEnemyArmy();
+
+    // 2. Create a campaign and let the player's army fight the enemy army.
+    const battleConfig = defaultBattleConfig;
+    battleConfig.battleTimeLimit = 1000;
+    const campaign = new Campaign(
+      battleConfig,
+      [],
+      [enemyArmy],
+      playerArmy,
+      true
+    );
+    const result = campaign.executeBattle();
+
+    // remove dead member
+    let lostMemberCount = 0;
+    playerArmy.squads.forEach((squad) => {
+      squad.members.forEach((unit) => {
+        if (unit.isDead) {
+          const character = unit.getCharacter();
+          const index = player.members.findIndex(
+            (member) => member.id === character.id
+          );
+          if (index !== -1) {
+            lostMemberCount += 1;
+            const [deadMember] = player.members.splice(index);
+            player.deadMembers.push(deadMember);
+          }
+        }
+      });
+    });
+
     // 3. If the player's army wins, generate rewards.
-    if (result === 'side1') {
+    if (result.winner === 'side1') {
       // 从玩家部队中选取最高的 charm, luck 和 perception 数值
       let maxCharm = 0;
       let maxLuck = 0;
@@ -209,26 +269,37 @@ export class Mission {
       });
 
       // Calculate money reward.
-      const moneyReward = calculateMoneyReward(
+      this.moneyReward = calculateMoneyReward(
         this.quality,
         multiplier,
         maxCharm
       );
-      player.gold += moneyReward;
 
       // Calculate equipment reward.
-      const equipmentReward = calculateEquipmentReward(
+      this.equipmentReward = calculateEquipmentReward(
         this.quality,
         maxLuck,
         maxPerception,
         this.difficulty
       );
-      player.items.push(...equipmentReward);
 
-      return true;
+      return {
+        success: true,
+        lost: lostMemberCount,
+        duration: 10 - Math.floor(result.duration / 100),
+      };
     }
 
-    return false;
+    return {
+      success: false,
+      lost: lostMemberCount,
+      duration: 10 - Math.floor(result.duration / 100),
+    };
+  }
+
+  pickReward(player: Player) {
+    player.gold += this.moneyReward;
+    player.items.push(...this.equipmentReward);
   }
 
   /**

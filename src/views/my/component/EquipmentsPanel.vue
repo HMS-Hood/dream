@@ -4,6 +4,7 @@
     <div class="equipment-slots">
       <div class="equipment-slot" @click="openEquipmentModal(ItemType.WEAPON)">
         <div v-if="character.equipment?.weapon" class="equipped-item">
+          <div class="remove-btn"><icon-close></icon-close></div>
           <a-image
             :src="character.equipment.weapon.img"
             class="equipment-icon"
@@ -131,9 +132,18 @@
   }
 
   .equipped-item {
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
+
+    .remove-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+    }
   }
 
   .equipment-icon {

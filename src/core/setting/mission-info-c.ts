@@ -1,13 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable import/prefer-default-export */
 import { MissionDifficulty, QualityLevel } from '../enums';
+import { MissionInfo } from '../mission/Mission';
 
-export const missionsInfo: {
-  name: string;
-  desc: string;
-  quality: QualityLevel;
-  difficulty: MissionDifficulty;
-}[] = [
+export const missionsInfo: MissionInfo[] = [
   {
     name: '守卫要塞',
     desc: '边境要塞需要一队精锐士兵加强防守，预计会有敌军侦查活动。',

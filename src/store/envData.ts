@@ -1,7 +1,7 @@
 /* eslint-disable import/prefer-default-export */
 import { defineStore } from 'pinia';
 import { Weapon, Shield, Armor } from '@/core/interfaces/item';
-import { Mission } from '@/core/mission/Mission';
+import { MissionInfo } from '@/core/mission/Mission';
 import { CharacterInterface } from '@/core/interfaces';
 import { Calendar } from '@/core/entities/Calendar';
 import { calendar } from '@/core/game';
@@ -16,7 +16,7 @@ import { getRandomElements } from '@/core/utils/arrayUtils';
 
 type EnvDataState = {
   items: (Weapon | Shield | Armor)[];
-  missions: Mission[];
+  missionsInfo: MissionInfo[];
   recruit: CharacterInterface[];
   createDate: Calendar;
 };
@@ -37,34 +37,30 @@ const generateEquipment = () => {
   return result;
 };
 
-const generateMissions = (): Mission[] => {
+const generateMissions = (): MissionInfo[] => {
   // 从不同级别的任务池中随机抽取
-  const efMissions = getRandomElements(efMissionsInfo, 20);
-  const dMissions = getRandomElements(dMissionsInfo, 10);
-  const cMissions = getRandomElements(cMissionsInfo, 5);
-  const bMissions = getRandomElements(bMissionsInfo, 3);
+  const efCheckedMissionsInfo = getRandomElements(efMissionsInfo, 20);
+  const dCheckedMissionsInfo = getRandomElements(dMissionsInfo, 10);
+  const cCheckedMissionsInfo = getRandomElements(cMissionsInfo, 5);
+  const bCheckedMissionsInfo = getRandomElements(bMissionsInfo, 3);
 
   // 合并所有任务信息并转换为Mission对象
-  const allMissionInfos = [
-    ...efMissions,
-    ...dMissions,
-    ...cMissions,
-    ...bMissions,
+  const allMissionsInfo = [
+    ...efCheckedMissionsInfo,
+    ...dCheckedMissionsInfo,
+    ...cCheckedMissionsInfo,
+    ...bCheckedMissionsInfo,
   ];
 
   // 将任务信息转换为Mission对象并排序
-  return allMissionInfos
-    .map(
-      (info) => new Mission(info.name, info.desc, info.quality, info.difficulty)
-    )
-    .sort((a, b) => {
-      // 首先按品质排序（从高到低）
-      if (a.quality !== b.quality) {
-        return qualityRankMap[b.quality] - qualityRankMap[a.quality];
-      }
-      // 品质相同时按难度排序（从高到低）
-      return difficultyRankMap[b.difficulty] - difficultyRankMap[a.difficulty];
-    });
+  return allMissionsInfo.sort((a, b) => {
+    // 首先按品质排序（从高到低）
+    if (a.quality !== b.quality) {
+      return qualityRankMap[b.quality] - qualityRankMap[a.quality];
+    }
+    // 品质相同时按难度排序（从高到低）
+    return difficultyRankMap[b.difficulty] - difficultyRankMap[a.difficulty];
+  });
 };
 
 const renewData = (state: EnvDataState): void => {
@@ -88,7 +84,7 @@ const renewData = (state: EnvDataState): void => {
   }
 
   state.items = generateEquipment();
-  state.missions = generateMissions();
+  state.missionsInfo = generateMissions();
   state.recruit = generateRecruit();
   state.createDate = new Calendar(
     calendar.year,
@@ -100,7 +96,7 @@ const renewData = (state: EnvDataState): void => {
 export const useEnvDataStore = defineStore('Army', {
   state: (): EnvDataState => ({
     items: [],
-    missions: [],
+    missionsInfo: [],
     recruit: [],
     createDate: new Calendar(100),
   }),
@@ -110,8 +106,8 @@ export const useEnvDataStore = defineStore('Army', {
       this.items = items;
     },
 
-    setMissions(missions: Mission[]) {
-      this.missions = missions;
+    setMissions(missionsInfo: MissionInfo[]) {
+      this.missionsInfo = missionsInfo;
     },
 
     setRecruit(recruit: CharacterInterface[]) {
@@ -123,9 +119,9 @@ export const useEnvDataStore = defineStore('Army', {
       return this.items;
     },
 
-    getMissions(): Mission[] {
+    getMissions(): MissionInfo[] {
       renewData(this);
-      return this.missions;
+      return this.missionsInfo;
     },
 
     getRecruit(): CharacterInterface[] {

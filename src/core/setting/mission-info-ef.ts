@@ -1,13 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable import/prefer-default-export */
 import { MissionDifficulty, QualityLevel } from '../enums';
+import { MissionInfo } from '../mission/Mission';
 
-export const missionsInfo: {
-  name: string;
-  desc: string;
-  quality: QualityLevel;
-  difficulty: MissionDifficulty;
-}[] = [
+export const missionsInfo: MissionInfo[] = [
   {
     name: '清理老鼠',
     desc: '酒馆地窖里出现了一群老鼠，它们正在破坏储存的食物。需要有人帮忙清理。',

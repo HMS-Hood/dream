@@ -62,16 +62,29 @@
         </div>
       </a-card>
     </div>
+    <a-modal
+      v-model:visible="showArmyManager"
+      :modal-style="{ 'background-color': 'rgb(78, 78, 78, 0.8)' }"
+      :fullscreen="true"
+      :closable="false"
+      @before-ok="handleArmySet"
+    >
+      <army-manager></army-manager>
+    </a-modal>
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref, computed } from 'vue';
-  import { Message } from '@arco-design/web-vue';
-  import { Mission } from '@/core/mission/Mission';
+  import { Message, Modal } from '@arco-design/web-vue';
+  import { Mission, MissionInfo, MissionResult } from '@/core/mission/Mission';
   import { MissionDifficulty, QualityLevel } from '@/core/enums';
   import { useEnvDataStore } from '@/store/envData';
+  import { useArmyStore } from '@/store/army';
+  import { calendar, player } from '@/core/game';
+  import { Calendar } from '@/core/entities/Calendar';
   import back from './component/back.vue';
+  import ArmyManager from './ArmyManager.vue';
 
   const backgroundImage = '/img/bg/mission.png';
   const gameStore = useEnvDataStore();
@@ -82,11 +95,11 @@
   );
 
   // 获取任务列表
-  const missions = computed(() => gameStore.getMissions());
+  const missionsInfo = computed(() => gameStore.getMissions());
 
   // 过滤后的任务列表
   const filteredMissions = computed(() => {
-    return missions.value.filter((mission) => {
+    return missionsInfo.value.filter((mission) => {
       const qualityMatch =
         !qualityFilter.value ||
         (qualityFilter.value === 'EF'
@@ -124,18 +137,51 @@
   };
 
   // 获取任务卡片的样式类
-  const getMissionClass = (mission: Mission) => {
+  const getMissionClass = (missionInfo: MissionInfo) => {
     return {
-      [`quality-${QualityLevel[mission.quality].toLowerCase()}`]: true,
-      [`difficulty-${MissionDifficulty[mission.difficulty].toLowerCase()}`]:
+      [`quality-${QualityLevel[missionInfo.quality].toLowerCase()}`]: true,
+      [`difficulty-${MissionDifficulty[missionInfo.difficulty].toLowerCase()}`]:
         true,
     };
   };
 
   // 选择任务
-  const selectMission = (mission: Mission) => {
+  const curMissionInfo = ref<MissionInfo>();
+  const showArmyManager = ref(false);
+  const selectMission = (missionInfo: MissionInfo) => {
     // TODO: 实现任务选择逻辑
-    Message.success(`已接取任务：${mission.name}`);
+    curMissionInfo.value = missionInfo;
+    showArmyManager.value = true;
+    Message.success(`已接取任务：${missionInfo.name}`);
+  };
+
+  type DoingMission = {
+    mission: Mission;
+    result: MissionResult;
+    startDay: Calendar;
+  };
+  const missionResultList: DoingMission[] = [];
+  const armyStore = useArmyStore();
+  const handleArmySet = (done: (closed: boolean) => void) => {
+    const army = armyStore.getArmy();
+    if (!curMissionInfo.value || !army) return;
+    const mission = new Mission(curMissionInfo.value);
+    const missionResult = mission.testMission(army);
+    Modal.info({
+      title: `任务${missionResult.success ? '成功' : '失败'}`,
+      content: `预估时长: ${missionResult.duration}天（损失人数：${missionResult.lost}）`,
+      okText: '继续任务',
+      cancelText: '取消任务',
+      onOk: () => {
+        missionResultList.push({
+          mission,
+          result: mission.completeMission(army, player),
+          startDay: calendar,
+        });
+        done(true);
+      },
+      onCancel: () => done(false),
+    });
   };
 </script>
 

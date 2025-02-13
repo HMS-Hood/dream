@@ -1,13 +1,9 @@
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable import/prefer-default-export */
 import { MissionDifficulty, QualityLevel } from '../enums';
+import { MissionInfo } from '../mission/Mission';
 
-export const missionsInfo: {
-  name: string;
-  desc: string;
-  quality: QualityLevel;
-  difficulty: MissionDifficulty;
-}[] = [
+export const missionsInfo: MissionInfo[] = [
   {
     name: '守护世界树',
     desc: '世界树受到致命污染，需要最强的贤者们联手净化并守护，否则世界将陷入永久衰败。',
