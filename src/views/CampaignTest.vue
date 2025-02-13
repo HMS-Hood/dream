@@ -132,6 +132,8 @@
         id: `team_${i}`,
         squads: generateSquads(),
         reserveSquads: [],
+        name: `队伍${i + 1}`,
+        isDead: false,
       });
     }
 
@@ -140,6 +142,8 @@
       id: 'player_army',
       squads: generateSquads(),
       reserveSquads: [],
+      name: '玩家',
+      isDead: false,
     };
 
     const campaign = new Campaign(

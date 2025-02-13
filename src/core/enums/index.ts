@@ -102,3 +102,11 @@ export enum MissionDifficulty {
   EPIC = 'EPIC',
   LEGENDARY = 'LEGENDARY',
 }
+
+export const difficultyRankMap: { [key in MissionDifficulty]: number } = {
+  EASY: 0,
+  NORMAL: 1,
+  HARD: 2,
+  EPIC: 3,
+  LEGENDARY: 4,
+};
