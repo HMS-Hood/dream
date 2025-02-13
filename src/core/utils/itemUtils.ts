@@ -21,6 +21,7 @@ import {
   MiddleRangeWeapon,
   LongRangeWeapon,
   StaffWeapon,
+  Armor,
 } from '../interfaces/item';
 import { QualityRange } from '../setting/param';
 import {
@@ -70,6 +71,7 @@ import {
 import {
   generateAttributeValue,
   generateQualityLevel,
+  generateQualityLevelWithMin,
   getRandomInt,
 } from './utils';
 
@@ -434,4 +436,60 @@ export function createNormalStandardArmor(
     default:
       throw new Error('Invalid armor type');
   }
+}
+
+export function generateRandomEquipment(
+  lowQuality: QualityLevel
+): Weapon | Armor | Shield {
+  const equipQuality = generateQualityLevelWithMin(lowQuality);
+
+  // 随机生成武器或防具
+  if (Math.random() < 0.5) {
+    // 生成武器
+    const weaponType = Math.floor(Math.random() * 5);
+    let weapon: Weapon;
+    switch (weaponType) {
+      case 0:
+        weapon = createOneHandWeapon(equipQuality);
+        break;
+      case 1:
+        weapon = createTwohandWeapon(equipQuality);
+        break;
+      case 2:
+        weapon = createMiddleRangeWeapon(equipQuality);
+        break;
+      case 3:
+        weapon = createLongRangeWeapon(equipQuality);
+        break;
+      case 4:
+        weapon = createStaff(equipQuality);
+        break;
+      default:
+        throw new Error('Invalid weapon type');
+    }
+    return weapon;
+  }
+  // 生成防具
+  const armorType = Math.floor(Math.random() * 5);
+  let armor: Armor | Shield;
+  switch (armorType) {
+    case 0:
+      armor = createShield(equipQuality);
+      break;
+    case 1:
+      armor = createPlate(equipQuality);
+      break;
+    case 2:
+      armor = createChain(equipQuality);
+      break;
+    case 3:
+      armor = createLeather(equipQuality);
+      break;
+    case 4:
+      armor = createCloth(equipQuality);
+      break;
+    default:
+      throw new Error('Invalid armor type');
+  }
+  return armor;
 }

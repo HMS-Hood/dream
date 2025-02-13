@@ -59,6 +59,7 @@
   import { validateArmyFormation } from '../../core/utils/armyUtils';
   import { CombatUnit } from '../../core/battle/CombatUnit';
   import { Character } from '../../core/entities/Character';
+  import { useArmyStore } from '../../store/army';
 
   const hoverItem = ref<Squad | null>(null);
   const checkMemberModalVisible = ref<boolean>(false);
@@ -113,6 +114,8 @@
     squad.position = SquadPosition.BACK; // This line is just to trigger reactivity
   };
 
+  const armyStore = useArmyStore();
+
   const saveArmy = () => {
     const army: Army = {
       id: 'player_army',
@@ -129,7 +132,7 @@
     }
 
     // Save the army object for later use
-    console.log('Army saved:', army);
+    armyStore.setArmy(army);
   };
 </script>
 

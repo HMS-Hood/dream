@@ -1,10 +1,22 @@
 /* eslint-disable import/prefer-default-export */
 export class Calendar {
-  private year: number = 101;
+  public year: number = 101;
 
-  private month: number = 1;
+  public month: number = 1;
 
-  private day: number = 1;
+  public day: number = 1;
+
+  constructor(year?: number, month?: number, day?: number) {
+    if (year) {
+      this.year = year;
+    }
+    if (month) {
+      this.month = month;
+    }
+    if (day) {
+      this.day = day;
+    }
+  }
 
   nextDay() {
     this.nextSomeDate(1);
@@ -18,7 +30,7 @@ export class Calendar {
     this.nextSomeDate(30 - this.day);
   }
 
-  private nextSomeDate(some: number) {
+  public nextSomeDate(some: number) {
     this.day += some;
     while (this.day > 30) {
       this.month += 1;
@@ -28,6 +40,22 @@ export class Calendar {
       }
       this.day -= 30;
     }
+  }
+
+  public getPassedTime(comparedCalendar: Calendar): number {
+    return (
+      (this.year - comparedCalendar.year) * 360 +
+      (this.month - comparedCalendar.month) * 30 +
+      (this.day - comparedCalendar.day)
+    );
+  }
+
+  public equals(calendar: Calendar) {
+    return (
+      this.year === calendar.year &&
+      this.month === calendar.month &&
+      this.day === calendar.day
+    );
   }
 
   getDate() {

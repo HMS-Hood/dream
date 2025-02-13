@@ -27,12 +27,14 @@ import {
   createShield,
   createStaff,
   createTwohandWeapon,
+  generateRandomEquipment,
 } from '../utils/itemUtils';
 import { CombatUnit } from '../battle/CombatUnit';
 import { CharacterInterface } from '../interfaces';
 import { Player } from '../entities/Player';
 import { Campaign } from '../battle/campaign';
 import { defaultBattleConfig } from '../setting/param-combat';
+import { Armor, Shield, Weapon } from '../interfaces/item';
 
 /**
  * Calculates the money reward after mission completion.
@@ -101,7 +103,6 @@ function getDropCountAddition(value: number): number {
 
 export function calculateEquipmentReward(
   missionQuality: QualityLevel,
-  enemyMultiplier: number,
   luck: number,
   perception: number,
   missionDifficulty: MissionDifficulty
@@ -137,62 +138,11 @@ export function calculateEquipmentReward(
 
   const totalDropCount = dropCount + luckAddition + perceptionAddition;
 
-  const equipmentReward: any[] = [];
+  const equipmentReward: (Weapon | Armor | Shield)[] = [];
   for (let i = 0; i < totalDropCount; i += 1) {
-    const equipQuality = generateQualityLevelWithMin(
-      missionQualityLowQuality[missionQuality]
+    equipmentReward.push(
+      generateRandomEquipment(missionQualityLowQuality[missionQuality])
     );
-
-    // 随机生成武器或防具
-    if (Math.random() < 0.5) {
-      // 生成武器
-      const weaponType = Math.floor(Math.random() * 5);
-      let weapon;
-      switch (weaponType) {
-        case 0:
-          weapon = createOneHandWeapon(equipQuality);
-          break;
-        case 1:
-          weapon = createTwohandWeapon(equipQuality);
-          break;
-        case 2:
-          weapon = createMiddleRangeWeapon(equipQuality);
-          break;
-        case 3:
-          weapon = createLongRangeWeapon(equipQuality);
-          break;
-        case 4:
-          weapon = createStaff(equipQuality);
-          break;
-        default:
-          throw new Error('Invalid weapon type');
-      }
-      equipmentReward.push(weapon);
-    } else {
-      // 生成防具
-      const armorType = Math.floor(Math.random() * 5);
-      let armor;
-      switch (armorType) {
-        case 0:
-          armor = createShield(equipQuality);
-          break;
-        case 1:
-          armor = createPlate(equipQuality);
-          break;
-        case 2:
-          armor = createChain(equipQuality);
-          break;
-        case 3:
-          armor = createLeather(equipQuality);
-          break;
-        case 4:
-          armor = createCloth(equipQuality);
-          break;
-        default:
-          throw new Error('Invalid armor type');
-      }
-      equipmentReward.push(armor);
-    }
   }
 
   return equipmentReward;
@@ -269,7 +219,6 @@ export class Mission {
       // Calculate equipment reward.
       const equipmentReward = calculateEquipmentReward(
         this.quality,
-        multiplier,
         maxLuck,
         maxPerception,
         this.difficulty
