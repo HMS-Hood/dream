@@ -57,6 +57,14 @@ const DASHBOARD: AppRouteRecordRaw[] = [
       requiresAuth: false,
     },
   },
+  {
+    path: '/mission',
+    name: 'mission',
+    component: () => import('@/views/my/mission.vue'),
+    meta: {
+      requiresAuth: false,
+    },
+  },
 ];
 
 export default DASHBOARD;

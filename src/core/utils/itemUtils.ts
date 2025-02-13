@@ -121,6 +121,9 @@ export function createOneHandWeapon(
 ): OneHandWeapon {
   let name: string;
   let imgPre: string;
+  if (!oneHandWeaponType) {
+    oneHandWeaponType = randomOneHandWeaponType();
+  }
   switch (oneHandWeaponType) {
     case OneHandWeaponType.SWORD:
       name = namesOfQualitySword[quality ?? generateQualityLevel()];
@@ -165,6 +168,9 @@ export function createMiddleRangeWeapon(
 ): MiddleRangeWeapon {
   let name: string;
   let imgPre: string;
+  if (!middleRangeWeaponType) {
+    middleRangeWeaponType = randomMiddleRangeWeaponType();
+  }
   switch (middleRangeWeaponType) {
     case MiddleRangeWeaponType.LANCE:
       name = namesOfQualitySpear[quality ?? generateQualityLevel()];
@@ -197,8 +203,6 @@ function randomLongRangeWeaponType(): LongRangeWeaponType {
   const longRangeWeaponTypes = [
     LongRangeWeaponType.BOW,
     LongRangeWeaponType.CROSSBOW,
-    LongRangeWeaponType.THROWING_AXE,
-    LongRangeWeaponType.STONE,
   ];
   const randomNum = getRandomInt(0, longRangeWeaponTypes.length - 1);
   return longRangeWeaponTypes[randomNum];
@@ -210,6 +214,9 @@ export function createLongRangeWeapon(
 ): LongRangeWeapon {
   let name: string;
   let imgPre: string;
+  if (!longRangeWeaponType) {
+    longRangeWeaponType = randomLongRangeWeaponType();
+  }
   switch (longRangeWeaponType) {
     case LongRangeWeaponType.BOW:
       name = namesOfQualityBow[quality ?? generateQualityLevel()];
@@ -250,6 +257,9 @@ export function createTwohandWeapon(
 ): TwoHandWeapon {
   let name: string;
   let imgPre: string;
+  if (!twoHandWeaponType) {
+    twoHandWeaponType = randomTwoHandWeaponType();
+  }
   switch (twoHandWeaponType) {
     case TwoHandWeaponType.GREAT_SWORD:
       name = namesOfQualityGreatSword[quality ?? generateQualityLevel()];
