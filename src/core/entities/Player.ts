@@ -45,6 +45,23 @@ export class Player {
     this.members.push(protagonist);
   }
 
+  reload(loadData: Player) {
+    this.id = loadData.id;
+    this.name = loadData.name;
+    this.nickName = loadData.nickName;
+    this.title = loadData.title;
+    this.reputation = loadData.reputation;
+    this.familyEmblem = loadData.familyEmblem;
+    this.familyFlag = loadData.familyFlag;
+    this.gold = loadData.gold;
+    this.items = loadData.items;
+    this.members = loadData.members.map((member) => new Character(member));
+    this.deadMembers = loadData.deadMembers.map(
+      (member) => new Character(member)
+    );
+    this.protagonistId = loadData.protagonistId;
+  }
+
   addReputation(amount: number) {
     this.reputation += amount;
   }

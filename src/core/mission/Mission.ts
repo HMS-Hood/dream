@@ -29,7 +29,7 @@ import { CharacterInterface } from '../interfaces';
 import { Player } from '../entities/Player';
 import { Campaign } from '../battle/campaign';
 import { defaultBattleConfig } from '../setting/param-combat';
-import { Armor, Shield, Weapon } from '../interfaces/item';
+import { Armor, Item, Shield, Weapon } from '../interfaces/item';
 
 export interface MissionInfo {
   name: string;
@@ -157,6 +157,9 @@ export type MissionResult = {
   success: boolean;
   lost: number;
   duration: number;
+  moneyReward: number;
+  equipmentReward: Item[];
+  lostMembersId: string[];
 };
 
 export class Mission {
@@ -170,7 +173,7 @@ export class Mission {
 
   moneyReward: number = 0;
 
-  equipmentReward: (Weapon | Armor | Shield)[] = [];
+  equipmentReward: Item[] = [];
 
   constructor(missionInfo: MissionInfo) {
     this.name = missionInfo.name;
@@ -209,6 +212,9 @@ export class Mission {
       success: result.winner === 'side1',
       lost: deadMemberCount,
       duration: Math.ceil(result.duration / 100),
+      moneyReward: 0,
+      equipmentReward: [],
+      lostMembersId: [],
     };
   }
 
@@ -218,7 +224,7 @@ export class Mission {
    * @param player - The player's data.
    * @returns Whether the mission was successful.
    */
-  completeMission(playerArmy: Army, player: Player): MissionResult {
+  completeMission(playerArmy: Army): MissionResult {
     // 1. Generate enemy army and get the multiplier.
     const { enemyArmy, multiplier } = this.generateEnemyArmy();
 
@@ -236,18 +242,12 @@ export class Mission {
 
     // remove dead member
     let lostMemberCount = 0;
+    const lostMembersId: string[] = [];
     playerArmy.squads.forEach((squad) => {
       squad.members.forEach((unit) => {
         if (unit.isDead) {
-          const character = unit.getCharacter();
-          const index = player.members.findIndex(
-            (member) => member.id === character.id
-          );
-          if (index !== -1) {
-            lostMemberCount += 1;
-            const [deadMember] = player.members.splice(index);
-            player.deadMembers.push(deadMember);
-          }
+          lostMemberCount += 1;
+          lostMembersId.push(unit.getCharacter().id);
         }
       });
     });
@@ -288,6 +288,9 @@ export class Mission {
         success: true,
         lost: lostMemberCount,
         duration: 10 - Math.floor(result.duration / 100),
+        moneyReward: this.moneyReward,
+        equipmentReward: this.equipmentReward,
+        lostMembersId,
       };
     }
 
@@ -295,12 +298,10 @@ export class Mission {
       success: false,
       lost: lostMemberCount,
       duration: 10 - Math.floor(result.duration / 100),
+      moneyReward: this.moneyReward,
+      equipmentReward: this.equipmentReward,
+      lostMembersId,
     };
-  }
-
-  pickReward(player: Player) {
-    player.gold += this.moneyReward;
-    player.items.push(...this.equipmentReward);
   }
 
   /**

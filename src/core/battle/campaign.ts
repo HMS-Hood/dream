@@ -2,7 +2,7 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
 import { Army, BattleGroup } from '../interfaces/combat';
-import { BattleConfig } from '../interfaces';
+import { BattleConfig, CombatStats } from '../interfaces';
 import { getFrontWidth } from '../utils/armyUtils';
 import { generateId } from '../utils/utils';
 import { ActionScheduler } from './actionScheduler';
@@ -138,6 +138,13 @@ export class Campaign implements IRefactoredCampaign {
     winner: 'side1' | 'side2' | 'none';
     duration: number;
   } {
+    const assignments = this.assignActiveAndReserveArmies(
+      this.getBattleConfig().battlefieldWidth
+    );
+    const side1Assign = assignments[0];
+    const side2Assign = assignments[1];
+    // 使用分配出的上场部队匹配战团
+    this.matchBattleGroups(side1Assign.active, side2Assign.active);
     const scheduler = new ActionScheduler(this.config.standardInterval);
     // 初始化所有上场部队
     const allArmies = this.battleGroups.flatMap((group) => [
@@ -264,17 +271,37 @@ export class Campaign implements IRefactoredCampaign {
   }
 
   // 计算并结算攻击伤害，然后根据对方存活情况执行反击
-  private executeUnitAttack(attacker: any, target: any) {
-    const attackerDamage = attacker.attackSpeed * 5;
+  private executeUnitAttack(attacker: CombatStats, target: CombatStats) {
+    let attackerDamage = attacker.physicalAttack;
+    const hit = Math.random();
+    if (hit > attacker.hitRate - target.dodgeRate) {
+      attackerDamage = 0;
+    }
+    const critical = Math.random();
+    if (critical < attacker.criticalRate) {
+      attackerDamage *= attacker.criticalDamage;
+    }
     target.takeDamage(attackerDamage);
     console.log(
-      `Unit ${attacker.id} attacked ${target.id} for ${attackerDamage} damage`
+      `Unit ${attacker.getCharacter().name} attacked ${
+        target.getCharacter().name
+      } for ${attackerDamage} damage(${target.currentHealth}/${
+        target.maxHealth
+      })`
     );
     if (!target.isDead) {
-      const counterDamage = target.attackSpeed * 2;
+      let counterDamage = target.physicalAttack / 3;
+      const counterHit = Math.random();
+      if (counterHit > target.hitRate - attacker.dodgeRate) {
+        counterDamage = 0;
+      }
       attacker.takeDamage(counterDamage);
       console.log(
-        `Unit ${target.id} counterattacked ${attacker.id} for ${counterDamage} damage`
+        `Unit ${target.getCharacter().name} counterattacked ${
+          attacker.getCharacter().name
+        } for ${counterDamage} damage(${attacker.currentHealth}/${
+          attacker.maxHealth
+        })`
       );
     }
   }

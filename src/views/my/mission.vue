@@ -11,6 +11,10 @@
       <div class="info">
         <div class="tip"> <span>任务官艾伦：</span>{{ info }} </div>
         <div class="filters">
+          <div @click="showDoingMission = false">查看任务</div>
+          <div @click="showDoingMission = true">查看进行中任务</div>
+        </div>
+        <div class="filters">
           <a-select v-model="qualityFilter" placeholder="品质筛选">
             <a-option label="全部品质" value="" />
             <a-option label="E/F级" value="EF" />
@@ -35,32 +39,79 @@
     </div>
 
     <div class="mission-list">
-      <a-card
-        v-for="mission in filteredMissions"
-        :key="mission.name"
-        class="mission-card"
-        :class="getMissionClass(mission)"
-      >
-        <div class="mission-info">
-          <div class="mission-title">
-            <span class="mission-name">{{ mission.name }}</span>
-            <div class="mission-tags">
-              <span class="mission-quality">{{
-                getQualityText(mission.quality)
-              }}</span>
-              <span class="mission-difficulty">{{
-                getDifficultyText(mission.difficulty)
-              }}</span>
+      <template v-if="showDoingMission">
+        <a-card
+          v-for="(result, index) in missionResultList"
+          :key="result.name"
+          class="mission-card"
+          :class="getDoingMissionClass(result.quality, result.difficulty)"
+        >
+          <div class="mission-info">
+            <div class="mission-title">
+              <span class="mission-name">{{ result.name }}</span>
+              <div class="mission-tags">
+                <span class="mission-quality">{{
+                  getQualityText(result.quality)
+                }}</span>
+                <span class="mission-difficulty">{{
+                  getDifficultyText(result.difficulty)
+                }}</span>
+              </div>
+            </div>
+            <div class="mission-desc"
+              >{{ result.desc }}
+              <h1
+                v-if="
+                  calendar.getPassedTime(result.startDay) <
+                  result.result.duration
+                "
+                >进行中</h1
+              >
+              <h1 v-else-if="result.result.success">成功</h1>
+              <h1 v-else>失败</h1>
             </div>
           </div>
-          <div class="mission-desc">{{ mission.desc }}</div>
-        </div>
-        <div class="mission-actions">
-          <a-button type="primary" @click="selectMission(mission)"
-            >接取任务</a-button
-          >
-        </div>
-      </a-card>
+          <div class="mission-actions">
+            <a-button
+              :disabled="
+                calendar.getPassedTime(result.startDay) >=
+                result.result.duration
+              "
+              type="primary"
+              @click="collectResult(index)"
+              >任务结算</a-button
+            >
+          </div>
+        </a-card>
+      </template>
+      <template v-if="!showDoingMission">
+        <a-card
+          v-for="mission in filteredMissions"
+          :key="mission.name"
+          class="mission-card"
+          :class="getMissionClass(mission)"
+        >
+          <div class="mission-info">
+            <div class="mission-title">
+              <span class="mission-name">{{ mission.name }}</span>
+              <div class="mission-tags">
+                <span class="mission-quality">{{
+                  getQualityText(mission.quality)
+                }}</span>
+                <span class="mission-difficulty">{{
+                  getDifficultyText(mission.difficulty)
+                }}</span>
+              </div>
+            </div>
+            <div class="mission-desc">{{ mission.desc }}</div>
+          </div>
+          <div class="mission-actions">
+            <a-button type="primary" @click="selectMission(mission)"
+              >接取任务</a-button
+            >
+          </div>
+        </a-card>
+      </template>
     </div>
     <a-modal
       v-model:visible="showArmyManager"
@@ -77,12 +128,12 @@
 <script setup lang="ts">
   import { ref, computed } from 'vue';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { Mission, MissionInfo, MissionResult } from '@/core/mission/Mission';
+  import { Mission, MissionInfo } from '@/core/mission/Mission';
   import { MissionDifficulty, QualityLevel } from '@/core/enums';
   import { useEnvDataStore } from '@/store/envData';
   import { useArmyStore } from '@/store/army';
   import { calendar, player } from '@/core/game';
-  import { Calendar } from '@/core/entities/Calendar';
+  import { DoingMission, useDoingMissionStore } from '@/store/doingMission';
   import back from './component/back.vue';
   import ArmyManager from './ArmyManager.vue';
 
@@ -90,6 +141,7 @@
   const gameStore = useEnvDataStore();
   const qualityFilter = ref('');
   const difficultyFilter = ref('');
+  const showDoingMission = ref(false);
   const info = ref(
     '欢迎来到任务大厅,这里有各种各样的任务等待着你。记住,任务的难度和品质往往与报酬成正比。'
   );
@@ -145,6 +197,16 @@
     };
   };
 
+  const getDoingMissionClass = (
+    quality: QualityLevel,
+    difficulty: MissionDifficulty
+  ) => {
+    return {
+      [`quality-${QualityLevel[quality].toLowerCase()}`]: true,
+      [`difficulty-${MissionDifficulty[difficulty].toLowerCase()}`]: true,
+    };
+  };
+
   // 选择任务
   const curMissionInfo = ref<MissionInfo>();
   const showArmyManager = ref(false);
@@ -155,12 +217,23 @@
     Message.success(`已接取任务：${missionInfo.name}`);
   };
 
-  type DoingMission = {
-    mission: Mission;
-    result: MissionResult;
-    startDay: Calendar;
+  const doingMissionStore = useDoingMissionStore();
+  const missionResultList: DoingMission[] = doingMissionStore.getDoingMission();
+  const collectResult = (index: number) => {
+    const [endMission] = missionResultList.splice(index, 1);
+    player.gold += endMission.result.moneyReward;
+    player.items.push(...endMission.result.equipmentReward);
+    endMission.result.lostMembersId.forEach((id) => {
+      const deadMemberIndex = player.members.findIndex(
+        (member) => member.id === id
+      );
+      if (index > -1) {
+        player.deadMembers.push(player.members.splice(deadMemberIndex, 1)[0]);
+      }
+    });
+    doingMissionStore.setDoingMission(missionResultList);
+    Message.normal('任务结算完成');
   };
-  const missionResultList: DoingMission[] = [];
   const armyStore = useArmyStore();
   const handleArmySet = (done: (closed: boolean) => void) => {
     const army = armyStore.getArmy();
@@ -174,10 +247,14 @@
       cancelText: '取消任务',
       onOk: () => {
         missionResultList.push({
-          mission,
-          result: mission.completeMission(army, player),
+          name: mission.name,
+          quality: mission.quality,
+          difficulty: mission.difficulty,
+          desc: mission.desc,
+          result: mission.completeMission(army),
           startDay: calendar,
         });
+        doingMissionStore.setDoingMission(missionResultList);
         done(true);
       },
       onCancel: () => done(false),

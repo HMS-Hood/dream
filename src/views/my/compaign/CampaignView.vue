@@ -167,11 +167,11 @@
   const matchBattles = () => {
     if (campaign.value) {
       // 假定 assignActiveAndReserveArmies 方法根据配置进行部队上场及后备分配，此处以一个示例上场宽度参数 100
-      const assignments = campaign.value.assignActiveAndReserveArmies(100);
-      const side1Assign = assignments[0];
-      const side2Assign = assignments[1];
+      // const assignments = campaign.value.assignActiveAndReserveArmies(100);
+      // const side1Assign = assignments[0];
+      // const side2Assign = assignments[1];
       // 使用分配出的上场部队匹配战团
-      campaign.value.matchBattleGroups(side1Assign.active, side2Assign.active);
+      // campaign.value.matchBattleGroups(side1Assign.active, side2Assign.active);
       battleMatched.value = true;
     }
   };

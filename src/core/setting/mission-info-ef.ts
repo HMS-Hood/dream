@@ -1,5 +1,4 @@
 /* eslint-disable import/prefer-default-export */
-/* eslint-disable import/prefer-default-export */
 import { MissionDifficulty, QualityLevel } from '../enums';
 import { MissionInfo } from '../mission/Mission';
 

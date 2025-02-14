@@ -148,7 +148,7 @@
 
     const campaign = new Campaign(
       {
-        battlefieldWidth: config.battleTeamLimit,
+        battlefieldWidth: 20,
         standardInterval: 40,
         battleTimeLimit: 100,
         positionWeight: {

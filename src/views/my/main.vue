@@ -39,19 +39,16 @@
           </div>
         </div>
       </div>
-      <div
-        v-for="(item, index) in row1"
-        :key="index"
-        class="cell hold"
-        :style="{ backgroundImage: `url(${item.image})` }"
-        @mouseover="hoverItem = item"
-        @mouseleave="hoverItem = null"
-      >
+      <div class="cell hold">
+        <div class="cell-content"></div>
+      </div>
+      <div class="cell hold">
         <div class="cell-content">
-          <h3>{{ item.title }}</h3>
-          <p>asdfasdf</p>
-          <p>asdfasdf</p>
-          <p>asdfasdf</p>
+          <icon-right size="72" @click="calendar.nextDay()"></icon-right>
+          <icon-double-right
+            size="72"
+            @click="calendar.nextTenDay()"
+          ></icon-double-right>
         </div>
       </div>
     </div>
@@ -81,14 +78,11 @@
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { Message } from '@arco-design/web-vue';
-  import { player, calendar } from '../../core/game';
+  import { load, save } from '@/core/utils/systemUtils';
+  import { player, calendar } from '@/core/game';
 
   const backgroundImage = ref('/img/bg/bg1.png');
   const router = useRouter();
-  const row1 = ref([
-    { title: 'Item 1', image: '/img/avatar/10.png' },
-    { title: 'Item 2', image: '/img/avatar/11.png' },
-  ]);
   const row2 = ref([
     { title: 'Item 1', image: '/img/avatar/1.png' },
     { title: 'Item 2', image: '/img/avatar/2.png' },
@@ -103,7 +97,7 @@
 
   const saveGame = () => {
     try {
-      localStorage.setItem('player', JSON.stringify(player));
+      save();
       Message.success('游戏已保存');
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -114,15 +108,8 @@
 
   const loadGame = () => {
     try {
-      const data = localStorage.getItem('player');
-      if (data) {
-        const savedPlayer = JSON.parse(data);
-        // Update all properties in player. This assumes player is a reactive object.
-        Object.assign(player, savedPlayer);
-        Message.success('游戏已载入');
-      } else {
-        Message.warning('没有保存的游戏数据');
-      }
+      load();
+      Message.success('游戏已载入');
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('载入游戏失败', error);
@@ -187,6 +174,7 @@
 
     &.two .cell {
       height: 22vh;
+      cursor: pointer;
 
       &:hover {
         box-shadow: 0 0 10px rgb(0 0 0 / 30%);

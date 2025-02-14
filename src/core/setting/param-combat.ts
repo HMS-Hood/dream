@@ -8,8 +8,7 @@ export const baseCombatStats = {
   dodgeRate: 0.05,
   criticalRate: 0.05,
   criticalDamage: 1.5,
-  attackSpeed: 1.0,
-  moveSpeed: 1.0,
+  attackSpeed: 5.0,
 };
 
 // Level modifiers for combat stats (percentage)
@@ -32,7 +31,7 @@ export function calculateAttributeModifier(value: number): number {
 }
 
 export const defaultBattleConfig: BattleConfig = {
-  battlefieldWidth: 3, // 每方最多3支部队同时参战
+  battlefieldWidth: 20, // 每方最多3支部队同时参战
   battleTimeLimit: 100, // 战斗时限
   standardInterval: 40,
   positionWeight: {

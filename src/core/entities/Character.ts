@@ -37,7 +37,7 @@ export class Character implements CharacterInterface {
 
   skills: Skill[];
 
-  equipment: Equipments;
+  equipment: Equipments = new Equipments();
 
   constructor(initParam: CharacterInterface) {
     this.id = initParam.id;
@@ -56,7 +56,7 @@ export class Character implements CharacterInterface {
     this.luck = initParam.luck;
     this.charm = initParam.charm;
     this.skills = initParam.skills;
-    this.equipment = initParam.equipment;
+    this.equipment.reload(initParam.equipment);
   }
 
   get attackMethod(): AttackMethod {
