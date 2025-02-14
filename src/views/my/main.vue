@@ -39,19 +39,16 @@
           </div>
         </div>
       </div>
-      <div
-        v-for="(item, index) in row1"
-        :key="index"
-        class="cell hold"
-        :style="{ backgroundImage: `url(${item.image})` }"
-        @mouseover="hoverItem = item"
-        @mouseleave="hoverItem = null"
-      >
+      <div class="cell hold">
+        <div class="cell-content"></div>
+      </div>
+      <div class="cell hold">
         <div class="cell-content">
-          <h3>{{ item.title }}</h3>
-          <p>asdfasdf</p>
-          <p>asdfasdf</p>
-          <p>asdfasdf</p>
+          <icon-right size="72" @click="calendar.nextDay()"></icon-right>
+          <icon-double-right
+            size="72"
+            @click="calendar.nextTenDay()"
+          ></icon-double-right>
         </div>
       </div>
     </div>
@@ -86,10 +83,6 @@
 
   const backgroundImage = ref('/img/bg/bg1.png');
   const router = useRouter();
-  const row1 = ref([
-    { title: 'Item 1', image: '/img/avatar/10.png' },
-    { title: 'Item 2', image: '/img/avatar/11.png' },
-  ]);
   const row2 = ref([
     { title: 'Item 1', image: '/img/avatar/1.png' },
     { title: 'Item 2', image: '/img/avatar/2.png' },

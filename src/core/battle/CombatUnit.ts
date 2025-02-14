@@ -142,7 +142,10 @@ export class CombatUnit implements CombatStats {
 
   // 战斗相关方法
   public takeDamage(damage: number): void {
-    this.currentHealth = Math.max(0, this.currentHealth - damage);
+    this.currentHealth = Math.max(
+      0,
+      this.currentHealth - damage + this.physicalDefense
+    );
     this.isDead = this.currentHealth <= 0;
   }
 

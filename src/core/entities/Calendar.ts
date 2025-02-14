@@ -22,7 +22,7 @@ export class Calendar {
     this.nextSomeDate(1);
   }
 
-  nextTenDaty() {
+  nextTenDay() {
     this.nextSomeDate(10);
   }
 
