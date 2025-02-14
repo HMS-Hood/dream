@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia';
 import { MissionInfo } from '@/core/mission/Mission';
 
-export const useMissionInfoStore = defineStore('Army', {
+export const useMissionInfoStore = defineStore('mission', {
   state: (): {
     missionInfo: MissionInfo | undefined;
   } => ({

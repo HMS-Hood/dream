@@ -1,10 +1,11 @@
 /* eslint-disable import/prefer-default-export */
+import { CombatStats } from '../interfaces';
 import { Army, Squad } from '../interfaces/combat';
 import { CombatUnit } from './CombatUnit';
 
 interface ActionEvent {
   time: number;
-  unit: CombatUnit;
+  unit: CombatStats;
   squad: Squad;
   army: Army;
 }

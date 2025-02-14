@@ -93,7 +93,7 @@ const renewData = (state: EnvDataState): void => {
   );
 };
 
-export const useEnvDataStore = defineStore('Army', {
+export const useEnvDataStore = defineStore('envData', {
   state: (): EnvDataState => ({
     items: [],
     missionsInfo: [],

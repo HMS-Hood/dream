@@ -92,7 +92,7 @@
   const row2 = ref([
     { title: 'Item 1', image: '/img/avatar/1.png' },
     { title: 'Item 2', image: '/img/avatar/2.png' },
-    { title: 'Item 3', image: '/img/avatar/3.png' },
+    { title: 'Item 3', image: '/img/avatar/3.png', url: '/mission' },
     { title: '部队', image: '/img/avatar/4.png', url: '/army-manager' },
     { title: '征兵所', image: '/img/bg/military-camp.png', url: '/recruit' },
     { title: '兵营', image: '/img/bg/barracks.png', url: '/barracks' },

@@ -193,6 +193,7 @@ export class Mission {
       playerArmy,
       true
     );
+    campaign.matchBattleGroups([playerArmy], [enemyArmy]);
     const result = campaign.executeBattle();
 
     let deadMemberCount = 0;
@@ -207,7 +208,7 @@ export class Mission {
     return {
       success: result.winner === 'side1',
       lost: deadMemberCount,
-      duration: 10 - Math.floor(result.duration / 100),
+      duration: Math.ceil(result.duration / 100),
     };
   }
 

@@ -167,7 +167,7 @@
     if (!curMissionInfo.value || !army) return;
     const mission = new Mission(curMissionInfo.value);
     const missionResult = mission.testMission(army);
-    Modal.info({
+    Modal.confirm({
       title: `任务${missionResult.success ? '成功' : '失败'}`,
       content: `预估时长: ${missionResult.duration}天（损失人数：${missionResult.lost}）`,
       okText: '继续任务',
