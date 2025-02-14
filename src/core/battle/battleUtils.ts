@@ -1,9 +1,9 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
 import { Squad, Army } from '../interfaces/combat';
-import { CombatUnit } from './CombatUnit';
 import { SquadPosition } from '../enums';
 import { IRefactoredCampaign } from './IRefactoredCampaign';
+import { CombatStats } from '../interfaces';
 
 export class BattleUtils {
   private campaign: IRefactoredCampaign;
@@ -30,8 +30,8 @@ export class BattleUtils {
     attackerSquad: Squad,
     enemyArmies: Army[],
     maxDistance: number
-  ): CombatUnit | null {
-    const validUnits: { unit: CombatUnit; weight: number }[] = [];
+  ): CombatStats | null {
+    const validUnits: { unit: CombatStats; weight: number }[] = [];
     const enemySquads: Squad[] = enemyArmies.flatMap((army) => army.squads);
     for (let i = 0; i < enemySquads.length; i += 1) {
       const squad = enemySquads[i];

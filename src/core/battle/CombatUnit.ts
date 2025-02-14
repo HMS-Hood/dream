@@ -15,7 +15,7 @@ export class CombatUnit implements CombatStats {
   private character: CharacterInterface;
 
   // 战斗状态
-  public currentHealth: number;
+  public currentHealth: number = 0;
 
   public isDead: boolean = false;
 
@@ -40,8 +40,6 @@ export class CombatUnit implements CombatStats {
 
   public attackSpeed: number = 0;
 
-  public moveSpeed: number = 0;
-
   // Modifiers from different sources
   private levelModifier: number = 0;
 
@@ -53,14 +51,13 @@ export class CombatUnit implements CombatStats {
 
   constructor(character: CharacterInterface) {
     this.character = character;
-    this.currentHealth = character.health;
     this.calculateModifiers();
     this.calculateSecondaryStats();
   }
 
   private calculateModifiers(): void {
     // Level modifier
-    this.levelModifier = 1 + levelModifiers[this.character.level];
+    this.levelModifier = levelModifiers[this.character.level];
 
     // Attribute modifiers
     this.attributeModifiers = {
@@ -76,9 +73,14 @@ export class CombatUnit implements CombatStats {
   // 计算二级属性
   private calculateSecondaryStats(): void {
     // Base health modified by endurance and level
-    this.maxHealth =
+    this.maxHealth = Math.floor(
       baseCombatStats.health *
-      getTotalModifier(this.attributeModifiers.endurance, this.levelModifier);
+        getTotalModifier(
+          this.attributeModifiers.endurance * 2,
+          this.levelModifier
+        )
+    );
+    this.currentHealth = this.maxHealth;
 
     // Physical attack from weapon and strength
     const basePhysicalAttack = this.getWeaponDamage();
@@ -88,52 +90,54 @@ export class CombatUnit implements CombatStats {
 
     // Physical defense from armor and endurance
     const basePhysicalDefense = this.getArmorDefense();
-    this.physicalDefense =
-      basePhysicalDefense *
-      getTotalModifier(this.attributeModifiers.endurance, this.levelModifier);
+    this.physicalDefense = basePhysicalDefense;
 
     // Hit rate from base, perception and agility
     this.hitRate =
-      baseCombatStats.hitRate *
-      getTotalModifier(
-        this.attributeModifiers.perception * 0.5,
-        this.attributeModifiers.agility * 0.5,
-        this.levelModifier
-      );
+      baseCombatStats.hitRate +
+      this.attributeModifiers.perception *
+        0.4 *
+        getTotalModifier(this.levelModifier);
 
     // Other stats calculations following the same pattern...
     this.dodgeRate =
-      baseCombatStats.dodgeRate *
-      getTotalModifier(this.attributeModifiers.agility, this.levelModifier);
+      baseCombatStats.dodgeRate +
+      this.attributeModifiers.agility *
+        0.4 *
+        getTotalModifier(this.levelModifier);
 
     this.criticalRate =
-      baseCombatStats.criticalRate *
-      getTotalModifier(this.attributeModifiers.luck, this.levelModifier);
+      baseCombatStats.criticalRate +
+      (this.attributeModifiers.luck * 0.2 +
+        this.attributeModifiers.perception * 0.2) *
+        getTotalModifier(this.levelModifier);
 
     this.criticalDamage =
       baseCombatStats.criticalDamage *
-      getTotalModifier(this.attributeModifiers.strength);
+      getTotalModifier(
+        this.attributeModifiers.strength / 4,
+        this.attributeModifiers.luck / 4,
+        this.levelModifier / 2
+      );
 
     this.attackSpeed =
       baseCombatStats.attackSpeed *
-      getTotalModifier(this.attributeModifiers.agility);
-
-    this.moveSpeed =
-      baseCombatStats.moveSpeed *
-      getTotalModifier(this.attributeModifiers.agility);
+      getTotalModifier(this.attributeModifiers.agility, this.levelModifier / 4);
   }
 
   // 获取武器伤害
   private getWeaponDamage(): number {
     const { weapon } = this.character.equipment;
     if (!weapon) return Math.floor(this.character.strength * 0.25);
-    return (weapon.maxDamage + weapon.minDamage) / 2;
+    return (
+      weapon.minDamage + Math.random() * (weapon.maxDamage - weapon.minDamage)
+    );
   }
 
   // 获取护甲防御值
   private getArmorDefense(): number {
-    const { armor } = this.character.equipment;
-    return armor ? armor.defence : 0;
+    const { armor, shield } = this.character.equipment;
+    return (armor ? armor.defence : 0) + (shield ? shield.defence : 0);
   }
 
   // 战斗相关方法
