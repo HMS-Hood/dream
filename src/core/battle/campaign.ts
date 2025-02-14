@@ -365,10 +365,12 @@ export class Campaign implements IRefactoredCampaign {
    */
   private reassignVictoriousArmy(
     b: Army,
-    winningSide: 'side1' | 'side2'
+    winningSide: 'side1' | 'side2',
+    curGroupId: string
   ): void {
     // 在其它所有战团中筛选出己方有部队的候选战团
     const candidateGroups = this.battleGroups.filter((group) => {
+      if (group.id === curGroupId) return false;
       if (winningSide === 'side1') {
         return group.side1Armies.length > 0;
       }
@@ -452,7 +454,7 @@ export class Campaign implements IRefactoredCampaign {
       winningSide === 'side1' ? group.side1Armies : group.side2Armies;
     for (let i = 0; i < victoriousArmies.length; i += 1) {
       const b = victoriousArmies[i];
-      this.reassignVictoriousArmy(b, winningSide);
+      this.reassignVictoriousArmy(b, winningSide, group.id);
     }
     // 移除该已结束的战团
     this.battleGroups = this.battleGroups.filter((g) => g !== group);

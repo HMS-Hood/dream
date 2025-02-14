@@ -15,22 +15,33 @@ export class Equipments implements IEquipments {
 
   armor?: Armor;
 
-  setWeapon(weapon: Weapon) {
+  setWeapon(weapon: Weapon): (Weapon | Shield | Armor)[] {
+    const returnItem: (Weapon | Shield | Armor)[] = [];
     if (weapon.handType === WeaponHandType.TWO_HAND) {
+      if (this.shield) returnItem.push(this.shield);
       this.shield = undefined;
     }
+    if (this.weapon) returnItem.push(this.weapon);
     this.weapon = weapon;
+    return returnItem;
   }
 
-  setShield(shield: Shield) {
+  setShield(shield: Shield): (Weapon | Shield | Armor)[] {
+    const returnItem: (Weapon | Shield | Armor)[] = [];
     if (this.weapon?.handType === WeaponHandType.TWO_HAND) {
+      if (this.weapon) returnItem.push(this.weapon);
       this.weapon = undefined;
     }
+    if (this.shield) returnItem.push(this.shield);
     this.shield = shield;
+    return returnItem;
   }
 
-  setArmor(armor: Armor) {
+  setArmor(armor: Armor): (Weapon | Shield | Armor)[] {
+    const returnItem: (Weapon | Shield | Armor)[] = [];
+    if (this.armor) returnItem.push(this.armor);
     this.armor = armor;
+    return returnItem;
   }
 
   reload(loadData: IEquipments) {

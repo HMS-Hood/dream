@@ -458,14 +458,18 @@
             item.weaponType !== StaffWeaponType.STAFF
               ? createNormalStandardWeapon(item.quality, item.weaponType)
               : createStaff(item.quality);
-          player.items.push(weapon);
+          for (let i = 1; i <= item.num; i += 1) {
+            player.items.push(weapon);
+          }
           player.gold -= item.num * item.value;
         }
       });
       armorList.forEach((item) => {
         if (item.num > 0) {
           const armor = createNormalStandardArmor(item.quality, item.armorType);
-          player.items.push(armor);
+          for (let i = 1; i <= item.num; i += 1) {
+            player.items.push(armor);
+          }
           player.gold -= item.num * item.value;
         }
       });

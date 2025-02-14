@@ -1,6 +1,6 @@
 import { useEnvDataStore } from '@/store/envData';
 import { DoingMission, useDoingMissionStore } from '@/store/doingMission';
-import { player } from '../game';
+import { calendar, player } from '../game';
 import { CharacterInterface } from '../interfaces';
 import { MissionInfo } from '../mission/Mission';
 
@@ -9,6 +9,8 @@ const doingMissionStroe = useDoingMissionStore();
 
 export function save() {
   localStorage.setItem('player', JSON.stringify(player));
+  localStorage.setItem('calendar', JSON.stringify(calendar));
+
   const items = envData.getItems();
   localStorage.setItem('items', JSON.stringify(items));
 
@@ -28,6 +30,12 @@ export function load() {
     const savedPlayer = JSON.parse(playerData);
     player.reload(savedPlayer);
   }
+  const calendarData = localStorage.getItem('calendar');
+  if (calendarData) {
+    const loadCalendar = JSON.parse(calendarData);
+    calendar.reset(loadCalendar.year, loadCalendar.month, loadCalendar.day);
+  }
+
   const itemsData = localStorage.getItem('items');
   if (itemsData) {
     const savedItems = JSON.parse(itemsData);

@@ -80,7 +80,7 @@ export function calculateMoneyReward(
     ((charm * charm) / 900) * fluctuationUpperBound;
 
   // 5. Final money reward.
-  return preliminaryReward + actualFluctuation;
+  return Math.floor(preliminaryReward + actualFluctuation);
 }
 
 function getDropCountAddition(value: number): number {

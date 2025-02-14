@@ -65,7 +65,10 @@
                   calendar.getPassedTime(result.startDay) <
                   result.result.duration
                 "
-                >进行中</h1
+                >进行中{{
+                  calendar.getPassedTime(result.startDay) -
+                  result.result.duration
+                }}</h1
               >
               <h1 v-else-if="result.result.success">成功</h1>
               <h1 v-else>失败</h1>
@@ -74,8 +77,7 @@
           <div class="mission-actions">
             <a-button
               :disabled="
-                calendar.getPassedTime(result.startDay) >=
-                result.result.duration
+                calendar.getPassedTime(result.startDay) < result.result.duration
               "
               type="primary"
               @click="collectResult(index)"
@@ -239,7 +241,7 @@
     const army = armyStore.getArmy();
     if (!curMissionInfo.value || !army) return;
     const mission = new Mission(curMissionInfo.value);
-    const missionResult = mission.testMission(army);
+    const missionResult = mission.completeMission(army);
     Modal.confirm({
       title: `任务${missionResult.success ? '成功' : '失败'}`,
       content: `预估时长: ${missionResult.duration}天（损失人数：${missionResult.lost}）`,
@@ -251,7 +253,7 @@
           quality: mission.quality,
           difficulty: mission.difficulty,
           desc: mission.desc,
-          result: mission.completeMission(army),
+          result: missionResult,
           startDay: calendar,
         });
         doingMissionStore.setDoingMission(missionResultList);

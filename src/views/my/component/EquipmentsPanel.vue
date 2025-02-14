@@ -4,7 +4,9 @@
     <div class="equipment-slots">
       <div class="equipment-slot" @click="openEquipmentModal(ItemType.WEAPON)">
         <div v-if="character.equipment?.weapon" class="equipped-item">
-          <div class="remove-btn"><icon-close></icon-close></div>
+          <div class="remove-btn" @click="removeEquip('weapon')"
+            ><icon-close :stroke-width="10" size="20"></icon-close
+          ></div>
           <a-image
             :src="character.equipment.weapon.img"
             class="equipment-icon"
@@ -23,6 +25,9 @@
 
       <div class="equipment-slot" @click="openEquipmentModal(ItemType.SHIELD)">
         <div v-if="character.equipment?.shield" class="equipped-item">
+          <div class="remove-btn" @click="removeEquip('shield')"
+            ><icon-close :stroke-width="10" size="20"></icon-close
+          ></div>
           <a-image
             :src="character.equipment.shield.img"
             class="equipment-icon"
@@ -40,6 +45,9 @@
 
       <div class="equipment-slot" @click="openEquipmentModal(ItemType.ARMOR)">
         <div v-if="character.equipment?.armor" class="equipped-item">
+          <div class="remove-btn" @click="removeEquip('armor')"
+            ><icon-close :stroke-width="10" size="20"></icon-close
+          ></div>
           <a-image
             :src="character.equipment.armor.img"
             class="equipment-icon"
@@ -60,8 +68,9 @@
 
 <script setup lang="ts">
   import { defineProps } from 'vue';
-  import { CharacterInterface } from '../../../core/interfaces';
-  import { ItemType } from '../../../core/enums';
+  import { CharacterInterface } from '@/core/interfaces';
+  import { ItemType } from '@/core/enums';
+  import { player } from '@/core/game';
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const props = defineProps<{
@@ -74,6 +83,13 @@
 
   const openEquipmentModal = (slot: ItemType) => {
     emit('openEquipmentModal', slot);
+  };
+
+  const removeEquip = (slot: 'weapon' | 'shield' | 'armor') => {
+    // 未完成
+    if (slot === 'weapon' && props.character.equipment.weapon) {
+      player.items.push(props.character.equipment.weapon);
+    }
   };
 </script>
 
@@ -141,8 +157,10 @@
       position: absolute;
       top: 0;
       right: 0;
+      z-index: 10;
       width: 20px;
       height: 20px;
+      color: #000;
     }
   }
 
