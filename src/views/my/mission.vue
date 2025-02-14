@@ -42,24 +42,24 @@
       <template v-if="showDoingMission">
         <a-card
           v-for="(result, index) in missionResultList"
-          :key="result.mission.name"
+          :key="result.name"
           class="mission-card"
-          :class="getMissionClass(result.mission)"
+          :class="getDoingMissionClass(result.quality, result.difficulty)"
         >
           <div class="mission-info">
             <div class="mission-title">
-              <span class="mission-name">{{ result.mission.name }}</span>
+              <span class="mission-name">{{ result.name }}</span>
               <div class="mission-tags">
                 <span class="mission-quality">{{
-                  getQualityText(result.mission.quality)
+                  getQualityText(result.quality)
                 }}</span>
                 <span class="mission-difficulty">{{
-                  getDifficultyText(result.mission.difficulty)
+                  getDifficultyText(result.difficulty)
                 }}</span>
               </div>
             </div>
             <div class="mission-desc"
-              >{{ result.mission.desc }}
+              >{{ result.desc }}
               <h1
                 v-if="
                   calendar.getPassedTime(result.startDay) <
@@ -128,12 +128,12 @@
 <script setup lang="ts">
   import { ref, computed } from 'vue';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { Mission, MissionInfo, MissionResult } from '@/core/mission/Mission';
+  import { Mission, MissionInfo } from '@/core/mission/Mission';
   import { MissionDifficulty, QualityLevel } from '@/core/enums';
   import { useEnvDataStore } from '@/store/envData';
   import { useArmyStore } from '@/store/army';
   import { calendar, player } from '@/core/game';
-  import { Calendar } from '@/core/entities/Calendar';
+  import { DoingMission, useDoingMissionStore } from '@/store/doingMission';
   import back from './component/back.vue';
   import ArmyManager from './ArmyManager.vue';
 
@@ -197,6 +197,16 @@
     };
   };
 
+  const getDoingMissionClass = (
+    quality: QualityLevel,
+    difficulty: MissionDifficulty
+  ) => {
+    return {
+      [`quality-${QualityLevel[quality].toLowerCase()}`]: true,
+      [`difficulty-${MissionDifficulty[difficulty].toLowerCase()}`]: true,
+    };
+  };
+
   // 选择任务
   const curMissionInfo = ref<MissionInfo>();
   const showArmyManager = ref(false);
@@ -207,12 +217,8 @@
     Message.success(`已接取任务：${missionInfo.name}`);
   };
 
-  type DoingMission = {
-    mission: Mission;
-    result: MissionResult;
-    startDay: Calendar;
-  };
-  const missionResultList: DoingMission[] = [];
+  const doingMissionStore = useDoingMissionStore();
+  const missionResultList: DoingMission[] = doingMissionStore.getDoingMission();
   const collectResult = (index: number) => {
     const [endMission] = missionResultList.splice(index, 1);
     player.gold += endMission.result.moneyReward;
@@ -225,6 +231,7 @@
         player.deadMembers.push(player.members.splice(deadMemberIndex, 1)[0]);
       }
     });
+    doingMissionStore.setDoingMission(missionResultList);
     Message.normal('任务结算完成');
   };
   const armyStore = useArmyStore();
@@ -240,10 +247,14 @@
       cancelText: '取消任务',
       onOk: () => {
         missionResultList.push({
-          mission,
+          name: mission.name,
+          quality: mission.quality,
+          difficulty: mission.difficulty,
+          desc: mission.desc,
           result: mission.completeMission(army),
           startDay: calendar,
         });
+        doingMissionStore.setDoingMission(missionResultList);
         done(true);
       },
       onCancel: () => done(false),
