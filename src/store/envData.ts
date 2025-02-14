@@ -8,7 +8,8 @@ import { calendar } from '@/core/game';
 import { generateCharacter } from '@/core/utils/utils';
 import { difficultyRankMap, QualityLevel, qualityRankMap } from '@/core/enums';
 import { generateRandomEquipment } from '@/core/utils/itemUtils';
-import { missionsInfo as efMissionsInfo } from '@/core/setting/mission-info-ef';
+import { missionsInfo as fMissionsInfo } from '@/core/setting/mission-info-f';
+import { missionsInfo as eMissionsInfo } from '@/core/setting/mission-info-e';
 import { missionsInfo as dMissionsInfo } from '@/core/setting/mission-info-d';
 import { missionsInfo as cMissionsInfo } from '@/core/setting/mission-info-c';
 import { missionsInfo as bMissionsInfo } from '@/core/setting/mission-info-b';
@@ -39,14 +40,16 @@ const generateEquipment = () => {
 
 const generateMissions = (): MissionInfo[] => {
   // 从不同级别的任务池中随机抽取
-  const efCheckedMissionsInfo = getRandomElements(efMissionsInfo, 20);
+  const fCheckedMissionsInfo = getRandomElements(fMissionsInfo, 20);
+  const eCheckedMissionsInfo = getRandomElements(eMissionsInfo, 20);
   const dCheckedMissionsInfo = getRandomElements(dMissionsInfo, 10);
   const cCheckedMissionsInfo = getRandomElements(cMissionsInfo, 5);
   const bCheckedMissionsInfo = getRandomElements(bMissionsInfo, 3);
 
   // 合并所有任务信息并转换为Mission对象
   const allMissionsInfo = [
-    ...efCheckedMissionsInfo,
+    ...fCheckedMissionsInfo,
+    ...eCheckedMissionsInfo,
     ...dCheckedMissionsInfo,
     ...cCheckedMissionsInfo,
     ...bCheckedMissionsInfo,

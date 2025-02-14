@@ -241,6 +241,10 @@
       border-radius: 30px;
       transform: skewX(10deg);
 
+      &.S {
+        background-color: @quality-S-color;
+      }
+
       &.A {
         background-color: @quality-A-color;
       }

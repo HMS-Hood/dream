@@ -33,6 +33,7 @@
 
 <script setup lang="ts">
   import { ref, reactive, computed } from 'vue';
+  import { useEnvDataStore } from '@/store/envData';
   import { CheckCharacter } from '../../core/interfaces';
   import CheckCharacterComp from './component/CheckCharacter.vue';
   import { generateCharacter } from '../../core/utils/utils';
@@ -41,13 +42,14 @@
   import { Character } from '../../core/entities/Character';
 
   const backgroundImage = '/img/bg/recruit.png';
-  const recruitList: CheckCharacter[] = reactive([]);
-  for (let i = 1; i <= 10; i += 1) {
-    recruitList.push({
-      character: generateCharacter(),
+  const envData = useEnvDataStore();
+  const recruitListInStore = envData.getRecruit();
+  const recruitList: CheckCharacter[] = reactive(
+    recruitListInStore.map((character) => ({
+      character: new Character(character),
       checked: false,
-    });
-  }
+    }))
+  );
 
   const consume = computed(
     () => recruitList.filter((character) => character.checked).length * 100
@@ -67,6 +69,11 @@
       player.members.splice(player.members.length, 0, ...newMembers);
       player.gold -= consume.value;
       recruitList.splice(1, recruitList.length, ...newRecruitList);
+      recruitListInStore.splice(
+        1,
+        recruitList.length,
+        ...newRecruitList.map((checkCharacter) => checkCharacter.character)
+      );
     } else {
       info.value = '他们不会接受赊账的！';
     }

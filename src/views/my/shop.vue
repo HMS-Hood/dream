@@ -31,14 +31,23 @@
     </div>
     <div class="buy list">
       <div class="tag-list">
-        <div :class="showWeapon ? 'tag cur' : 'tag'" @click="showWeapon = true"
+        <div
+          :class="showWeapon === 'Weapon' ? 'tag cur' : 'tag'"
+          @click="showWeapon = 'Weapon'"
           >Weapon</div
         >
-        <div :class="showWeapon ? 'tag' : 'cur tag'" @click="showWeapon = false"
+        <div
+          :class="showWeapon === 'Armor' ? 'tag' : 'cur tag'"
+          @click="showWeapon = 'Armor'"
           >Armor</div
         >
+        <div
+          :class="showWeapon === 'Epic' ? 'tag' : 'cur tag'"
+          @click="showWeapon = 'Epic'"
+          >Epic</div
+        >
       </div>
-      <div v-if="showWeapon" class="item-list">
+      <div v-if="showWeapon === 'Weapon'" class="item-list">
         <div v-for="item in weaponList" :key="item.name" class="item">
           <div class="name" :class="item.quality">{{ item.name }}</div>
           <div class="num">
@@ -53,7 +62,7 @@
           <div class="value">{{ item.value }}</div>
         </div>
       </div>
-      <div v-if="!showWeapon" class="item-list">
+      <div v-if="showWeapon === 'Armor'" class="item-list">
         <div v-for="item in armorList" :key="item.name" class="item">
           <div class="name" :class="item.quality">{{ item.name }}</div>
           <div class="num">
@@ -68,14 +77,28 @@
           <div class="value">{{ item.value }}</div>
         </div>
       </div>
+      <div v-if="showWeapon === 'Epic'" class="item-list">
+        <div
+          v-for="item in epicItems"
+          :key="item.item.name"
+          :class="item.check ? 'checked item' : 'item'"
+          @click="checkEpicItem(item)"
+        >
+          <div class="name" :class="item.item.quality">{{
+            item.item.name
+          }}</div>
+          <div class="value">{{ item.item.value }}</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { ref, reactive, computed } from 'vue';
-  import { player } from '../../core/game';
-  import back from './component/back.vue';
+  import { useEnvDataStore } from '@/store/envData';
+  import { player } from '@/core/game';
+  import back from '@/views/my/component/back.vue';
   import {
     LongRangeWeaponType,
     MiddleRangeWeaponType,
@@ -83,7 +106,7 @@
     QualityLevel,
     StaffWeaponType,
     TwoHandWeaponType,
-  } from '../../core/enums';
+  } from '@/core/enums';
   import {
     valueOfQualityChain,
     valueOfQualityCloth,
@@ -94,12 +117,13 @@
     valueOfQualityPlate,
     valueOfQualityShield,
     valueOfQualityTwoHandWeapon,
-  } from '../../core/setting/param-item';
+  } from '@/core/setting/param-item';
   import {
     createNormalStandardArmor,
     createNormalStandardWeapon,
     createStaff,
-  } from '../../core/utils/itemUtils';
+  } from '@/core/utils/itemUtils';
+  import { Armor, Shield, Weapon } from '@/core/interfaces/item';
 
   const weaponList: {
     name: string;
@@ -390,6 +414,23 @@
     },
   ]);
 
+  type checkItem = {
+    item: Weapon | Shield | Armor;
+    check: boolean;
+  };
+  const epicItems: checkItem[] = useEnvDataStore()
+    .getItems()
+    .map((item) =>
+      reactive({
+        item,
+        check: false,
+      })
+    );
+
+  const checkEpicItem = (item: checkItem) => {
+    item.check = !item.check;
+  };
+
   const consume = computed(
     () =>
       weaponList.reduce<number>(
@@ -399,11 +440,15 @@
       armorList.reduce<number>(
         (coin: number, item) => coin + item.num * item.value,
         0
+      ) +
+      epicItems.reduce<number>(
+        (coin: number, item) => coin + (item.check ? item.item.value : 0),
+        0
       )
   );
   const info = ref('这里什么都有！不许瞎想 ~~~！');
 
-  const showWeapon = ref(true);
+  const showWeapon = ref<'Weapon' | 'Armor' | 'Epic'>('Weapon');
 
   const deal = () => {
     if (player.gold >= consume.value) {
@@ -424,6 +469,24 @@
           player.gold -= item.num * item.value;
         }
       });
+      const leftItems: (Weapon | Shield | Armor)[] = [];
+      epicItems.forEach((item) => {
+        if (item.check) {
+          const epicItem = item.item;
+          player.items.push(epicItem);
+        } else {
+          leftItems.push(item.item);
+        }
+      });
+      epicItems.splice(
+        0,
+        epicItems.length,
+        ...leftItems.map((item) => ({
+          item,
+          check: false,
+        }))
+      );
+      useEnvDataStore().setItems(leftItems);
     } else {
       info.value = '概不赊账的！';
     }
@@ -582,6 +645,10 @@
             width: 5em;
             text-align: right;
           }
+        }
+
+        .item.checked {
+          background-color: rgb(63 63 63 / 80%);
         }
       }
     }

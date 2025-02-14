@@ -138,6 +138,13 @@ export class Campaign implements IRefactoredCampaign {
     winner: 'side1' | 'side2' | 'none';
     duration: number;
   } {
+    const assignments = this.assignActiveAndReserveArmies(
+      this.getBattleConfig().battlefieldWidth
+    );
+    const side1Assign = assignments[0];
+    const side2Assign = assignments[1];
+    // 使用分配出的上场部队匹配战团
+    this.matchBattleGroups(side1Assign.active, side2Assign.active);
     const scheduler = new ActionScheduler(this.config.standardInterval);
     // 初始化所有上场部队
     const allArmies = this.battleGroups.flatMap((group) => [

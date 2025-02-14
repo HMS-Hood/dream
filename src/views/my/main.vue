@@ -81,7 +81,8 @@
   import { ref } from 'vue';
   import { useRouter } from 'vue-router';
   import { Message } from '@arco-design/web-vue';
-  import { player, calendar } from '../../core/game';
+  import { load, save } from '@/core/utils/systemUtils';
+  import { player, calendar } from '@/core/game';
 
   const backgroundImage = ref('/img/bg/bg1.png');
   const router = useRouter();
@@ -92,7 +93,7 @@
   const row2 = ref([
     { title: 'Item 1', image: '/img/avatar/1.png' },
     { title: 'Item 2', image: '/img/avatar/2.png' },
-    { title: 'Item 3', image: '/img/avatar/3.png' },
+    { title: 'Item 3', image: '/img/avatar/3.png', url: '/mission' },
     { title: '部队', image: '/img/avatar/4.png', url: '/army-manager' },
     { title: '征兵所', image: '/img/bg/military-camp.png', url: '/recruit' },
     { title: '兵营', image: '/img/bg/barracks.png', url: '/barracks' },
@@ -103,7 +104,7 @@
 
   const saveGame = () => {
     try {
-      localStorage.setItem('player', JSON.stringify(player));
+      save();
       Message.success('游戏已保存');
     } catch (error) {
       // eslint-disable-next-line no-console
@@ -114,15 +115,8 @@
 
   const loadGame = () => {
     try {
-      const data = localStorage.getItem('player');
-      if (data) {
-        const savedPlayer = JSON.parse(data);
-        // Update all properties in player. This assumes player is a reactive object.
-        Object.assign(player, savedPlayer);
-        Message.success('游戏已载入');
-      } else {
-        Message.warning('没有保存的游戏数据');
-      }
+      load();
+      Message.success('游戏已载入');
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error('载入游戏失败', error);
@@ -187,6 +181,7 @@
 
     &.two .cell {
       height: 22vh;
+      cursor: pointer;
 
       &:hover {
         box-shadow: 0 0 10px rgb(0 0 0 / 30%);
