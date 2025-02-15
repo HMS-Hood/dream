@@ -80,6 +80,7 @@
         <equipments-panel
           :character="character"
           @open-equipment-modal="openEquipmentModal"
+          @remove-equipment="removeEquipment"
         />
       </div>
     </div>
@@ -157,6 +158,14 @@
       showEquipmentModal.value = false;
       selectedSlot.value = null;
       selectedEquipment.value = null;
+    }
+  };
+
+  const removeEquipment = (position: string) => {
+    if (character.value) {
+      const removeItem = character.value?.equipment[position];
+      character.value.equipment[position] = undefined;
+      if (removeItem) player.items.push(removeItem);
     }
   };
 </script>

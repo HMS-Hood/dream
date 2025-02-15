@@ -79,17 +79,15 @@
 
   const emit = defineEmits<{
     (e: 'openEquipmentModal', slot: ItemType): void;
+    (e: 'removeEquipment', positiong: string): void;
   }>();
 
   const openEquipmentModal = (slot: ItemType) => {
     emit('openEquipmentModal', slot);
   };
 
-  const removeEquip = (slot: 'weapon' | 'shield' | 'armor') => {
-    // 未完成
-    if (slot === 'weapon' && props.character.equipment.weapon) {
-      player.items.push(props.character.equipment.weapon);
-    }
+  const removeEquip = (position: 'weapon' | 'shield' | 'armor') => {
+    emit('removeEquipment', position);
   };
 </script>
 

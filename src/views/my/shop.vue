@@ -34,17 +34,17 @@
         <div
           :class="showWeapon === 'Weapon' ? 'tag cur' : 'tag'"
           @click="showWeapon = 'Weapon'"
-          >Weapon</div
+          >制式武器</div
         >
         <div
           :class="showWeapon === 'Armor' ? 'tag' : 'cur tag'"
           @click="showWeapon = 'Armor'"
-          >Armor</div
+          >制式护具</div
         >
         <div
           :class="showWeapon === 'Epic' ? 'tag' : 'cur tag'"
           @click="showWeapon = 'Epic'"
-          >Epic</div
+          >限量精品</div
         >
       </div>
       <div v-if="showWeapon === 'Weapon'" class="item-list">
@@ -520,7 +520,7 @@
       margin-right: 20px;
       color: aliceblue;
       font-weight: bolder;
-      font-size: 2em;
+      font-size: @primary-title-font;
       background-color: rgb(127 127 127 / 50%);
       border-radius: 10px;
 
@@ -582,7 +582,7 @@
 
       .tag-list {
         display: flex;
-        font-size: 2.5em;
+        font-size: @secondary-title-font;
 
         .tag {
           margin: 0 2px;

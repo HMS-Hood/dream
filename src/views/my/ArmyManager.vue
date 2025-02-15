@@ -1,121 +1,85 @@
 <template>
-  <div class="row squad-list">
-    <div v-for="(item, index) in squads" :key="index" class="squad-cell cell">
-      <template v-for="(squadMember, i) in item.members" :key="i">
-        <template v-if="i === 0">
-          <avatar
-            :quality="squadMember.getCharacter().quality"
-            :avatar="squadMember.getCharacter().avatar"
-          ></avatar>
-          <div class="squad-info parallelogram">
-            <div class="squad-info">
-              <h3 class="name">{{ squadMember.getCharacter().name }}</h3>
-              <p class="quality"
-                >Leader: {{ squadMember.getCharacter().name }}</p
-              >
-              <p class="position">Position: {{ item.position }}</p>
-              <select
-                v-model="item.position"
-                @change="updatePosition($event, index)"
-              >
-                <option :value="SquadPosition.FRONT">Front</option>
-                <option :value="SquadPosition.MIDDLE">Middle</option>
-                <option :value="SquadPosition.BACK">Back</option>
-              </select>
-            </div>
-          </div>
-        </template>
-        <template v-else>
-          <Avatar
-            :quality="squadMember.getCharacter().quality"
-            :avatar="squadMember.getCharacter().avatar"
-          ></Avatar>
-        </template>
-      </template>
-      <div class="config-member" @click="checkMember(index)"
-        ><icon-plus :stroke-width="8" :size="72"></icon-plus
-      ></div>
+  <div class="army-manager-container">
+    <div class="squad-columns">
+      <!-- Front Column -->
+      <div class="squad-column front">
+        <squad-column
+          :all-members="allMembers"
+          :squads="squads"
+          :list-squads="frontSquads"
+          :position="SquadPosition.FRONT"
+          title="前排小队"
+          @change-members="changeMembers"
+        ></squad-column>
+      </div>
+
+      <!-- Middle Column -->
+      <div class="squad-column middle">
+        <squad-column
+          :all-members="allMembers"
+          :squads="squads"
+          :list-squads="middleSquads"
+          :position="SquadPosition.MIDDLE"
+          title="中排小队"
+          @change-members="changeMembers"
+        ></squad-column>
+      </div>
+
+      <!-- Back Column -->
+      <div class="squad-column back">
+        <squad-column
+          :all-members="allMembers"
+          :squads="squads"
+          :list-squads="backSquads"
+          :position="SquadPosition.BACK"
+          title="后排小队"
+          @change-members="changeMembers"
+        ></squad-column>
+      </div>
     </div>
-    <check-squad-member
-      v-model:visible="checkMemberModalVisible"
-      :checked-ids="
-        hoverItem?.members.map((member) => member.getCharacter().id) || []
-      "
-      :characters="allMembers"
-      @change-checked="handleChecked"
-    ></check-squad-member>
-    <button @click="addSquad">Add Squad</button>
-    <button @click="saveArmy">Save Army</button>
+    <div class="army-actions">
+      <a-button @click="loadTemplate">读取部队模板</a-button>
+      <a-button @click="saveTemplate">保存部队模板</a-button>
+      <a-button type="primary" @click="saveArmy">保存部队信息</a-button>
+    </div>
+    <!-- Modal for adjusting squad members -->
   </div>
 </template>
 
 <script setup lang="ts">
-  import { computed, ref } from 'vue';
-  import Avatar from './component/Avatar.vue';
-  import { player } from '../../core/game';
-  import { Squad, Army } from '../../core/interfaces/combat';
-  import CheckSquadMember from './CheckSquadMember.vue';
-  import { SquadPosition } from '../../core/enums';
-  import { validateArmyFormation } from '../../core/utils/armyUtils';
-  import { CombatUnit } from '../../core/battle/CombatUnit';
-  import { Character } from '../../core/entities/Character';
-  import { useArmyStore } from '../../store/army';
+  import { ref, computed } from 'vue';
+  import { Message, Modal } from '@arco-design/web-vue';
+  import { player } from '@/core/game'; // Assuming player is defined and holds available members
+  import { useArmyStyleStore } from '@/store/armyStyle';
+  import { CharacterInterface } from '@/core/interfaces';
+  import { Squad, Army } from '@/core/interfaces/combat';
+  import { SquadPosition } from '@/core/enums';
+  import { CombatUnit } from '@/core/battle/CombatUnit';
+  import { useArmyStore } from '@/store/army';
+  import { Character } from '@/core/entities/Character';
+  import { validateArmyFormation } from '@/core/utils/armyUtils';
+  import SquadColumn from './component/SquadColumn.vue';
 
-  const hoverItem = ref<Squad | null>(null);
-  const checkMemberModalVisible = ref<boolean>(false);
   const squads = ref<Squad[]>([]);
 
-  const checkMember = (index: number) => {
-    hoverItem.value = squads.value[index];
-    checkMemberModalVisible.value = true;
-  };
+  // Split squads into three groups by their position.
+  const frontSquads = computed(() =>
+    squads.value.filter((squad) => squad.position === SquadPosition.FRONT)
+  );
+  const middleSquads = computed(() =>
+    squads.value.filter((squad) => squad.position === SquadPosition.MIDDLE)
+  );
+  const backSquads = computed(() =>
+    squads.value.filter((squad) => squad.position === SquadPosition.BACK)
+  );
 
-  const members = ref(player.members);
-
-  const allMembers = computed(() => [
-    ...(hoverItem.value?.members.map(
-      (member) => new Character(member.getCharacter())
-    ) ?? []),
-    ...members.value,
-  ]);
-
-  const handleChecked = (checkedIds: string[]) => {
-    if (hoverItem.value) {
-      members.value = members.value.concat(
-        hoverItem.value.members.map(
-          (member) => new Character(member.getCharacter())
-        )
-      );
-      hoverItem.value.members.splice(0);
-      hoverItem.value.members = members.value
-        .filter((member) => checkedIds.includes(member.id))
-        .map((member) => new CombatUnit(member));
-      members.value = members.value.filter(
-        (member) => !checkedIds.includes(member.id)
-      );
-    }
-  };
-
-  const addSquad = () => {
-    const squadMembers: CombatUnit[] = [];
-    const newSquad: Squad = {
-      id: `squad_${squads.value.length + 1}`,
-      position: SquadPosition.FRONT,
-      attackSpeed: 1,
-      members: squadMembers,
-      targetIds: [],
-      isDead: false,
-    };
-    squads.value.push(newSquad);
-  };
-
-  const updatePosition = (e: Event, index: number) => {
-    const squad = squads.value[index];
-    squad.position = SquadPosition.BACK; // This line is just to trigger reactivity
+  // --- Squad Member Adjustment Feature ---
+  const allMembers = ref<CharacterInterface[]>(player.members || []); // Use player's available members
+  const changeMembers = (members: CharacterInterface[]) => {
+    allMembers.value = members;
   };
 
   const armyStore = useArmyStore();
-
   const saveArmy = () => {
     const army: Army = {
       id: 'player_army',
@@ -125,87 +89,99 @@
       isDead: false,
     };
 
-    // Validate army formation
     if (!validateArmyFormation(army)) {
-      alert('Army formation is invalid');
+      Message.warning('Army formation is invalid');
       return;
     }
 
-    // Save the army object for later use
     armyStore.setArmy(army);
+    Message.success('Army information saved.');
+  };
+
+  const armyStyleStore = useArmyStyleStore();
+  const saveTemplate = () => {
+    armyStyleStore.setArmyStyle(
+      squads.value.map((squad) => ({
+        position: squad.position,
+        membersId: squad.members.map((member) => member.getCharacter().id),
+      }))
+    );
+  };
+
+  const loadTemplate = () => {
+    Modal.confirm({
+      title: `载入部队模板警告`,
+      content: `载入部队模板将会丢失现有的配置，是否继续？`,
+      okText: '载入模板',
+      cancelText: '放弃载入',
+      onOk: () => {
+        const armyTemplate = armyStyleStore.getArmyStyle();
+        squads.value.forEach((squad) => {
+          allMembers.value.splice(
+            allMembers.value.length,
+            0,
+            ...squad.members.map(
+              (member) => new Character(member.getCharacter())
+            )
+          );
+        });
+        const newSquads: Squad[] = [];
+        armyTemplate.forEach((squadTemplate) => {
+          newSquads.push({
+            id: `squad_${Date.now()}`,
+            position: squadTemplate.position,
+            attackSpeed: 1,
+            members: allMembers.value
+              .filter((member) => squadTemplate.membersId.includes(member.id))
+              .map((member) => new CombatUnit(member)),
+            targetIds: [],
+            isDead: false,
+          });
+        });
+        squads.value = newSquads;
+        allMembers.value = allMembers.value.filter(
+          (member) =>
+            !squads.value
+              .flatMap((squad) => squad.members)
+              .map((unit) => unit.getCharacter().id)
+              .includes(member.id)
+        );
+      },
+    });
   };
 </script>
 
 <style lang="less" scoped>
-  .squad-list {
-    display: flex;
-    flex-direction: column;
+  @import url('@/assets/style/dream.less');
 
-    .squad-cell.cell {
+  .army-manager-container {
+    min-height: 100vh;
+    padding: 20px;
+    color: #fff;
+    background-image: url('/img/bg/bg1.png');
+    background-size: cover;
+
+    .squad-columns {
       display: flex;
-      width: 98vw;
-      height: 12vh; /* Adjusted height */
-      margin: 4px 0;
-      overflow: hidden;
-      background-color: rgb(0 0 0 / 60%); /* Slightly less opaque background */
-      background-image: linear-gradient(
-        to right,
-        #c7c9c9,
-        #f2f7f5,
-        0.5
-      ); /* Gradient background */
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
 
-      background-clip: padding-box, border-box;
-      background-origin: padding-box, border-box;
-      border: 2px solid transparent; /* Initial transparent border */
-      border-radius: 8px; /* Slightly smaller border-radius */
-      box-shadow: 0 4px 8px rgb(0 0 0 / 20%); /* More pronounced shadow */
-      transform: skewX(-10deg);
-      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    .squad-column {
+      position: relative;
+      flex: 1;
+      margin: 0 10px;
+      padding: 15px;
+      background-color: rgb(32 32 32 / 80%);
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
+    }
 
-      &.hovered,
-      &:hover {
-        /* Combined hover and hovered state */
-        border-color: #c9ffef; /* Highlighted border color */
-        box-shadow: 0 6px 12px rgb(0 0 0 / 30%); /* Stronger shadow on hover */
-        transform: skewX(-10deg) scale(1.01); /* Subtle scale on hover */
-      }
+    .army-actions {
+      text-align: center;
 
-      .squad-info.parallelogram {
-        // transform: skewX(-10deg); /* Skew for parallelogram */
-        display: flex;
-        flex: 1;
-        align-items: center;
-        height: 100%;
-        overflow: hidden;
-      }
-
-      .squad-info {
-        padding: 10px 20px;
-        color: #f2f7f5; /* Light text color */
-        transform: skewX(5deg); /* Counter skew for content */
-
-        .name {
-          margin-bottom: 5px;
-          color: #fff; /* Squad name in white */
-          font-size: 1.2em;
-          text-shadow: 1px 1px 2px rgb(0 0 0 / 80%); /* Text shadow for squad name */
-        }
-
-        .quality,
-        .position {
-          margin-bottom: 2px;
-          color: #d0e8e4; /* Subtler text color */
-          font-size: 0.9em;
-        }
-      }
-
-      .config-member {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 128px;
-        background-color: rgb(78 78 78);
+      :deep(button) {
+        margin: 10px;
       }
     }
   }
