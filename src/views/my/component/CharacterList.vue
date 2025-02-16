@@ -22,7 +22,9 @@
   >
     <avatar :quality="item.quality" :avatar="item.avatar"></avatar>
     <div class="character-info parallelogram">
-      <h3 class="name">{{ item.name }}</h3>
+      <h3 class="name">{{
+        item.nickName ? `“${item.nickName}”${item.name}` : item.name
+      }}</h3>
       <p class="method">Level: {{ item.level }}</p>
       <p class="method">Method: {{ AttackMethod[item.attackMethod] }}</p>
     </div>
@@ -66,13 +68,7 @@
   <a-modal
     v-if="selectedCharacter"
     v-model:visible="characterDetailModalVisible"
-    modal-class="modal-detail"
-    :modal-style="{
-      'background-color': 'rgb(0 0 0 / 60%)',
-      'border-radius': '10px',
-      'border': '0',
-      'box-shadow': '0 8px 16px rgb(0 0 0 / 30%)',
-    }"
+    class="dream-modal large"
     :body-style="{ padding: '0' }"
     :hide-title="true"
     :closable="false"

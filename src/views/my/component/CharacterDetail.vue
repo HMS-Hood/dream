@@ -17,65 +17,55 @@
           />
         </div>
         <a-card class="info-card">
-          <a-form :model="character" layout="vertical">
-            <a-form-item field="nickName" label="昵称">
-              <input
-                v-model="character.nickName"
-                class="nickName"
-                size="12"
-                type="text"
-                placeholder="请输入昵称"
-              />
-            </a-form-item>
+          <input
+            v-model="character.nickName"
+            class="nickName"
+            size="12"
+            type="text"
+            placeholder="请输入昵称"
+          />
 
-            <a-descriptions
-              :label-style="{ color: '#fff' }"
-              :value-style="{ color: '#fff' }"
-              :column="1"
-              title="角色信息"
-              class="descriptions"
-            >
-              <a-descriptions-item label="姓名">{{
-                character.name
-              }}</a-descriptions-item>
-              <a-descriptions-item label="等级">{{
-                character.level
-              }}</a-descriptions-item>
-              <a-descriptions-item label="经验">{{
-                character.experience
-              }}</a-descriptions-item>
-              <a-descriptions-item label="品质">{{
-                character.quality
-              }}</a-descriptions-item>
-              <a-descriptions-item label="攻击方式">{{
-                character.attackMethod
-              }}</a-descriptions-item>
-              <a-descriptions-item label="力量">{{
-                character.strength
-              }}</a-descriptions-item>
-              <a-descriptions-item label="敏捷">{{
-                character.agility
-              }}</a-descriptions-item>
-              <a-descriptions-item label="耐力">{{
-                character.endurance
-              }}</a-descriptions-item>
-              <a-descriptions-item label="智力">{{
-                character.intelligence
-              }}</a-descriptions-item>
-              <a-descriptions-item label="精神">{{
-                character.spirit
-              }}</a-descriptions-item>
-              <a-descriptions-item label="感知">{{
-                character.perception
-              }}</a-descriptions-item>
-              <a-descriptions-item label="幸运">{{
-                character.luck
-              }}</a-descriptions-item>
-              <a-descriptions-item label="魅力">{{
-                character.charm
-              }}</a-descriptions-item>
-            </a-descriptions>
-          </a-form>
+          <a-descriptions :column="1" title="角色信息" class="descriptions">
+            <a-descriptions-item label="姓名">{{
+              character.name
+            }}</a-descriptions-item>
+            <a-descriptions-item label="等级">{{
+              character.level
+            }}</a-descriptions-item>
+            <a-descriptions-item label="经验">{{
+              character.experience
+            }}</a-descriptions-item>
+            <a-descriptions-item label="品质">{{
+              character.quality
+            }}</a-descriptions-item>
+            <a-descriptions-item label="攻击方式">{{
+              character.attackMethod
+            }}</a-descriptions-item>
+            <a-descriptions-item label="力量">{{
+              character.strength
+            }}</a-descriptions-item>
+            <a-descriptions-item label="敏捷">{{
+              character.agility
+            }}</a-descriptions-item>
+            <a-descriptions-item label="耐力">{{
+              character.endurance
+            }}</a-descriptions-item>
+            <a-descriptions-item label="智力">{{
+              character.intelligence
+            }}</a-descriptions-item>
+            <a-descriptions-item label="精神">{{
+              character.spirit
+            }}</a-descriptions-item>
+            <a-descriptions-item label="感知">{{
+              character.perception
+            }}</a-descriptions-item>
+            <a-descriptions-item label="幸运">{{
+              character.luck
+            }}</a-descriptions-item>
+            <a-descriptions-item label="魅力">{{
+              character.charm
+            }}</a-descriptions-item>
+          </a-descriptions>
         </a-card>
       </div>
       <div class="right">
@@ -89,19 +79,19 @@
     </div>
     <a-modal
       v-model:visible="showEquipmentModal"
-      title="选择装备"
-      class="equipment-modal"
-      @ok="handleEquipmentSelect"
+      :closable="false"
+      :footer="false"
+      class="dream-modal"
     >
       <div class="equipment-list">
         <div
           v-for="item in availableEquipments"
           :key="item.name"
           class="equipment-item"
-          @click="selectEquipment(item)"
+          @click="handleEquipmentSelect(item)"
         >
-          <img :src="item.img" alt="Equipment Icon" class="equipment-icon" />
           <div class="equipment-name">{{ item.name }}</div>
+          <div class="equipment-name">{{ item.quality }}</div>
         </div>
       </div>
     </a-modal>
@@ -110,16 +100,16 @@
 
 <script setup lang="ts">
   import { ref, computed } from 'vue';
-  import { CharacterInterface } from '../../../core/interfaces';
+  import { CharacterInterface } from '@/core/interfaces';
+  import { ItemType } from '@/core/enums';
+  import { player } from '@/core/game';
+  import { Armor, Item, Shield, Weapon } from '@/core/interfaces/item';
   import EquipmentsPanel from './EquipmentsPanel.vue';
-  import { ItemType } from '../../../core/enums';
-  import { player } from '../../../core/game';
 
   const character = defineModel<CharacterInterface>('character');
 
   const showEquipmentModal = ref(false);
   const selectedSlot = ref<ItemType | null>(null);
-  const selectedEquipment = ref<any>(null);
 
   const availableEquipments = computed(() => {
     return selectedSlot.value
@@ -132,21 +122,23 @@
     showEquipmentModal.value = true;
   };
 
-  const selectEquipment = (item: any) => {
-    selectedEquipment.value = item;
-  };
-
-  const handleEquipmentSelect = () => {
-    if (selectedSlot.value && selectedEquipment.value) {
+  const handleEquipmentSelect = (item: Item) => {
+    if (selectedSlot.value && character.value && item) {
       switch (selectedSlot.value) {
         case ItemType.WEAPON:
-          character.value?.equipment.setWeapon(selectedEquipment.value);
+          player.items.push(
+            ...character.value.equipment.setWeapon(item as Weapon)
+          );
           break;
         case ItemType.SHIELD:
-          character.value?.equipment.setShield(selectedEquipment.value);
+          player.items.push(
+            ...character.value.equipment.setShield(item as Shield)
+          );
           break;
         case ItemType.ARMOR:
-          character.value?.equipment.setArmor(selectedEquipment.value);
+          player.items.push(
+            ...character.value.equipment.setArmor(item as Armor)
+          );
           break;
         default:
           break;
@@ -155,12 +147,11 @@
       //   `Equipped ${selectedEquipment.value.name} to ${selectedSlot.value} slot`
       // );
       player.items.splice(
-        player.items.findIndex((item) => item === selectedEquipment.value),
+        player.items.findIndex((findItem) => findItem === item),
         1
       );
       showEquipmentModal.value = false;
       selectedSlot.value = null;
-      selectedEquipment.value = null;
     }
   };
 
@@ -174,10 +165,11 @@
 </script>
 
 <style lang="less" scoped>
+  @import url('@/assets/style/dream.less');
+
   .character-detail-card {
     height: 1024px;
     background-color: rgb(0 0 0 / 60%);
-    border-radius: 10px;
     box-shadow: 0 8px 16px rgb(0 0 0 / 30%);
 
     .detail-content {
@@ -186,19 +178,25 @@
     }
   }
 
+  .left {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .avatar-container {
-    width: 120px;
-    height: 120px;
+    width: 256px;
+    height: 128px;
     margin-bottom: 20px;
     overflow: hidden;
-    border: 2px solid #fff;
+    border: 2px solid #ecc904;
     border-radius: 10px;
-    box-shadow: 0 2px 8px rgb(0 0 0 / 20%);
+    box-shadow: 0 0 3px 3px rgb(211 194 5 / 30%);
   }
 
   .avatar {
-    width: 100%;
-    height: 100%;
+    width: 256px;
+    height: 128px;
     object-fit: cover;
   }
 
@@ -212,6 +210,7 @@
     border-radius: 10px;
 
     .nickName {
+      margin-bottom: 0.5em;
       color: #f0de15;
       font-size: 1.5em;
       background-color: transparent;
@@ -227,64 +226,49 @@
   }
 
   .descriptions {
-    .ant-descriptions-header {
+    :deep(.arco-descriptions-title) {
       margin-bottom: 15px;
       color: #fff;
-      font-size: 1.3em;
+      font-size: @content-font;
     }
 
-    .ant-descriptions-item-label {
-      color: #eee;
-      font-weight: bold;
+    :deep(.arco-descriptions-item-label-block) {
+      color: bisque;
+      font-size: @secondary-content-font;
     }
 
-    .ant-descriptions-item-content {
-      color: #fff;
-    }
-  }
-
-  .equipment-modal {
-    .ant-modal-content {
-      color: #fff;
-      background-color: rgb(0 0 0 / 80%);
-      border-radius: 10px;
+    :deep(.arco-descriptions-item-value-block) {
+      color: antiquewhite;
+      font-size: @secondary-content-font;
     }
   }
 
   .equipment-list {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
-    justify-content: space-evenly;
+    justify-content: flex-start;
   }
 
   .equipment-item {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    width: 100px;
-    height: 120px;
-    margin: 10px;
-    border: 1px solid #444;
-    border-radius: 8px;
+    width: 100%;
+    padding: 1em;
+    border-bottom: 1px solid #444;
     cursor: pointer;
     transition: all 0.3s ease;
 
-    &:hover {
-      background-color: rgb(255 255 255 / 10%);
-      transform: scale(1.05);
+    .equipment-name {
+      font-size: 12px;
+      font-size: @content-font;
     }
-  }
 
-  .equipment-icon {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 5px;
-    object-fit: contain;
-  }
-
-  .equipment-name {
-    font-size: 12px;
-    text-align: center;
+    &:hover {
+      color: antiquewhite;
+      background-color: rgb(60 60 60 / 50%);
+    }
   }
 </style>
