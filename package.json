@@ -32,7 +32,7 @@
   "dependencies": {
     "@arco-design/web-vue": "^2.56.0",
     "@google/generative-ai": "^0.21.0",
-    "@vueuse/core": "^9.3.0",
+    "@vueuse/core": "^12.7.0",
     "arco-design-pro-vue": "^2.5.15",
     "axios": "^0.24.0",
     "dayjs": "^1.11.5",

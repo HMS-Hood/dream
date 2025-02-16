@@ -65,6 +65,14 @@ const DASHBOARD: AppRouteRecordRaw[] = [
       requiresAuth: false,
     },
   },
+  {
+    path: '/create',
+    name: 'create',
+    component: () => import('@/views/my/test/createPic.vue'),
+    meta: {
+      requiresAuth: false,
+    },
+  },
 ];
 
 export default DASHBOARD;
