@@ -1,5 +1,5 @@
 import { AttackMethod, CharacterLevel, QualityLevel } from '../enums';
-import { CharacterInterface, Skill } from '../interfaces';
+import { CharacterInitialData, CharacterInterface, Skill } from '../interfaces';
 import { qualityAttributeRanges } from '../setting/param';
 import { Equipments } from './Equipments';
 
@@ -39,7 +39,7 @@ export class Character implements CharacterInterface {
 
   equipment: Equipments = new Equipments();
 
-  constructor(initParam: CharacterInterface) {
+  constructor(initParam: CharacterInitialData) {
     this.id = initParam.id;
     this.name = initParam.name;
     this.nickName = initParam.nickName;

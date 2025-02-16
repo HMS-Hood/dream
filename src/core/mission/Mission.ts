@@ -159,6 +159,7 @@ export type MissionResult = {
   duration: number;
   moneyReward: number;
   equipmentReward: Item[];
+  executorsId: string[];
   lostMembersId: string[];
 };
 
@@ -182,42 +183,6 @@ export class Mission {
     this.difficulty = missionInfo.difficulty;
   }
 
-  testMission(playerArmy: Army): MissionResult {
-    // 1. Generate enemy army and get the multiplier.
-    const { enemyArmy } = this.generateEnemyArmy();
-
-    // 2. Create a campaign and let the player's army fight the enemy army.
-    const battleConfig = defaultBattleConfig;
-    battleConfig.battleTimeLimit = 1000;
-    const campaign = new Campaign(
-      battleConfig,
-      [],
-      [enemyArmy],
-      playerArmy,
-      true
-    );
-    campaign.matchBattleGroups([playerArmy], [enemyArmy]);
-    const result = campaign.executeBattle();
-
-    let deadMemberCount = 0;
-    playerArmy.squads.forEach((squad) => {
-      squad.members.forEach((unit) => {
-        if (unit.isDead) {
-          deadMemberCount += 1;
-        }
-      });
-    });
-
-    return {
-      success: result.winner === 'side1',
-      lost: deadMemberCount,
-      duration: Math.ceil(result.duration / 100),
-      moneyReward: 0,
-      equipmentReward: [],
-      lostMembersId: [],
-    };
-  }
-
   /**
    * Completes the mission with the given player's army and player data.
    * @param playerArmy - The player's army.
@@ -230,6 +195,7 @@ export class Mission {
 
     // 2. Create a campaign and let the player's army fight the enemy army.
     const battleConfig = defaultBattleConfig;
+    battleConfig.battlefieldWidth = 200;
     battleConfig.battleTimeLimit = 1000;
     const campaign = new Campaign(
       battleConfig,
@@ -291,6 +257,9 @@ export class Mission {
         moneyReward: this.moneyReward,
         equipmentReward: this.equipmentReward,
         lostMembersId,
+        executorsId: playerArmy.squads.flatMap((squad) =>
+          squad.members.map((member) => member.getCharacter().id)
+        ),
       };
     }
 
@@ -301,6 +270,9 @@ export class Mission {
       moneyReward: this.moneyReward,
       equipmentReward: this.equipmentReward,
       lostMembersId,
+      executorsId: playerArmy.squads.flatMap((squad) =>
+        squad.members.map((member) => member.getCharacter().id)
+      ),
     };
   }
 

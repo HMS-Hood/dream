@@ -6,6 +6,26 @@ export interface Skill {
   Effect: any;
 }
 
+export interface CharacterInitialData {
+  id: string;
+  name: string;
+  nickName: string;
+  avatar: string;
+  level: CharacterLevel;
+  experience: number;
+  health: number;
+  strength: number;
+  agility: number;
+  endurance: number;
+  intelligence: number;
+  spirit: number;
+  perception: number;
+  luck: number;
+  charm: number;
+  skills: Skill[];
+  equipment: Equipments;
+}
+
 export interface CharacterInterface {
   id: string;
   name: string;
@@ -26,6 +46,12 @@ export interface CharacterInterface {
   charm: number;
   skills: Skill[];
   equipment: Equipments;
+  getLevelUpExperience(): number;
+  canLevelUp(): boolean;
+  levelUp(): boolean;
+  addExperience(amount: number): void;
+  getNextLevelExperience(): number;
+  getLevelProgress(): number;
 }
 
 export interface CheckCharacter {

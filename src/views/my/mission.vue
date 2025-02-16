@@ -122,7 +122,10 @@
       :closable="false"
       @before-ok="handleArmySet"
     >
-      <army-manager></army-manager>
+      <army-manager
+        ref="armyManagerRef"
+        :idle-members="idleMembers"
+      ></army-manager>
     </a-modal>
   </div>
 </template>
@@ -135,6 +138,7 @@
   import { useEnvDataStore } from '@/store/envData';
   import { useArmyStore } from '@/store/army';
   import { calendar, player } from '@/core/game';
+  import { Calendar } from '@/core/entities/Calendar';
   import { DoingMission, useDoingMissionStore } from '@/store/doingMission';
   import back from './component/back.vue';
   import ArmyManager from './ArmyManager.vue';
@@ -233,15 +237,26 @@
         player.deadMembers.push(player.members.splice(deadMemberIndex, 1)[0]);
       }
     });
+    player.workingIds.splice(
+      0,
+      player.workingIds.length,
+      ...player.workingIds.filter(
+        (id) => !endMission.result.executorsId.includes(id)
+      )
+    );
     doingMissionStore.setDoingMission(missionResultList);
     Message.normal('任务结算完成');
   };
+  const armyManagerRef = ref<typeof ArmyManager>();
   const armyStore = useArmyStore();
   const handleArmySet = (done: (closed: boolean) => void) => {
     const army = armyStore.getArmy();
     if (!curMissionInfo.value || !army) return;
     const mission = new Mission(curMissionInfo.value);
     const missionResult = mission.completeMission(army);
+    const workingIds = army.squads.flatMap((squad) =>
+      squad.members.map((member) => member.getCharacter().id)
+    );
     Modal.confirm({
       title: `任务${missionResult.success ? '成功' : '失败'}`,
       content: `预估时长: ${missionResult.duration}天（损失人数：${missionResult.lost}）`,
@@ -254,14 +269,20 @@
           difficulty: mission.difficulty,
           desc: mission.desc,
           result: missionResult,
-          startDay: calendar,
+          startDay: new Calendar(calendar.year, calendar.month, calendar.day),
         });
         doingMissionStore.setDoingMission(missionResultList);
+        player.workingIds.push(...workingIds);
+        armyManagerRef.value?.reset();
         done(true);
       },
       onCancel: () => done(false),
     });
   };
+
+  const idleMembers = computed(() =>
+    player.members.filter((member) => !player.workingIds.includes(member.id))
+  );
 </script>
 
 <style lang="less" scoped>

@@ -41,6 +41,9 @@
               <a-descriptions-item label="等级">{{
                 character.level
               }}</a-descriptions-item>
+              <a-descriptions-item label="经验">{{
+                character.experience
+              }}</a-descriptions-item>
               <a-descriptions-item label="品质">{{
                 character.quality
               }}</a-descriptions-item>

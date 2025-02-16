@@ -46,7 +46,7 @@
   const recruitListInStore = envData.getRecruit();
   const recruitList: CheckCharacter[] = reactive(
     recruitListInStore.map((character) => ({
-      character: new Character(character),
+      character,
       checked: false,
     }))
   );
@@ -65,7 +65,7 @@
       );
       const newMembers = recruitList
         .filter((character) => character.checked)
-        .map((checkcharacter) => new Character(checkcharacter.character));
+        .map((checkcharacter) => checkcharacter.character);
       player.members.splice(player.members.length, 0, ...newMembers);
       player.gold -= consume.value;
       recruitList.splice(1, recruitList.length, ...newRecruitList);

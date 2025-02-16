@@ -282,6 +282,7 @@ export class Campaign implements IRefactoredCampaign {
       attackerDamage *= attacker.criticalDamage;
     }
     target.takeDamage(attackerDamage);
+    if (attackerDamage > 0) attacker.getCharacter().addExperience(1);
     console.log(
       `Unit ${attacker.getCharacter().name} attacked ${
         target.getCharacter().name
@@ -296,6 +297,7 @@ export class Campaign implements IRefactoredCampaign {
         counterDamage = 0;
       }
       attacker.takeDamage(counterDamage);
+      if (counterDamage > 0) target.getCharacter().addExperience(1);
       console.log(
         `Unit ${target.getCharacter().name} counterattacked ${
           attacker.getCharacter().name

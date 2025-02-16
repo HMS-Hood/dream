@@ -29,6 +29,8 @@ export class Player {
 
   deadMembers: Character[] = reactive([]);
 
+  workingIds: string[] = reactive([]);
+
   protagonistId: string;
 
   constructor(name: string, familyEmblem: Emblem, familyFlag: Flag) {

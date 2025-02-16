@@ -11,7 +11,7 @@ import {
   maxAvatarIndex,
   QualityRange,
 } from '../setting/param';
-import { CharacterInterface } from '../interfaces';
+import { CharacterInitialData, CharacterInterface } from '../interfaces';
 import { Squad, Army } from '../interfaces/combat';
 import { Character } from '../entities/Character';
 import { characterNames } from '../setting/names';
@@ -217,14 +217,13 @@ export function generateCharacter(
   // Generate a random level with the provided minimum.
   const randomLevel = generateRandomLevel(minLevel);
 
-  const character: CharacterInterface = {
+  const character: CharacterInitialData = {
     id: generateId(),
     name: generateName(),
     nickName: '',
     avatar: generateAvatarURL(),
     level: randomLevel,
     experience: 0,
-    quality: teamMemberQuality,
     health: 100,
     strength: generateAttributeValue(adjustedQualities.strength),
     agility: generateAttributeValue(adjustedQualities.agility),
@@ -234,7 +233,6 @@ export function generateCharacter(
     charm: generateAttributeValue(adjustedQualities.charm),
     luck: generateAttributeValue(adjustedQualities.luck),
     perception: generateAttributeValue(adjustedQualities.perception),
-    attackMethod: AttackMethod.MELEE,
     skills: [],
     equipment: new Equipments(),
   };

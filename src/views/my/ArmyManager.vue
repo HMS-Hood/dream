@@ -49,14 +49,12 @@
 <script setup lang="ts">
   import { ref, computed } from 'vue';
   import { Message, Modal } from '@arco-design/web-vue';
-  import { player } from '@/core/game'; // Assuming player is defined and holds available members
   import { useArmyStyleStore } from '@/store/armyStyle';
   import { CharacterInterface } from '@/core/interfaces';
   import { Squad, Army } from '@/core/interfaces/combat';
   import { SquadPosition } from '@/core/enums';
   import { CombatUnit } from '@/core/battle/CombatUnit';
   import { useArmyStore } from '@/store/army';
-  import { Character } from '@/core/entities/Character';
   import { validateArmyFormation } from '@/core/utils/armyUtils';
   import SquadColumn from './component/SquadColumn.vue';
 
@@ -73,8 +71,10 @@
     squads.value.filter((squad) => squad.position === SquadPosition.BACK)
   );
 
+  const props = defineProps<{ idleMembers: CharacterInterface[] }>();
+
   // --- Squad Member Adjustment Feature ---
-  const allMembers = ref<CharacterInterface[]>(player.members || []); // Use player's available members
+  const allMembers = ref<CharacterInterface[]>([...props.idleMembers]); // Use player's available members
   const changeMembers = (members: CharacterInterface[]) => {
     allMembers.value = members;
   };
@@ -120,9 +120,7 @@
           allMembers.value.splice(
             allMembers.value.length,
             0,
-            ...squad.members.map(
-              (member) => new Character(member.getCharacter())
-            )
+            ...squad.members.map((member) => member.getCharacter())
           );
         });
         const newSquads: Squad[] = [];
@@ -149,6 +147,12 @@
       },
     });
   };
+
+  const reset = () => {
+    squads.value = [];
+  };
+
+  defineExpose({ reset });
 </script>
 
 <style lang="less" scoped>
