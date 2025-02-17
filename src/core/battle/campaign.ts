@@ -274,37 +274,80 @@ export class Campaign implements IRefactoredCampaign {
   private executeUnitAttack(attacker: CombatStats, target: CombatStats) {
     let attackerDamage = attacker.physicalAttack;
     const hit = Math.random();
-    if (hit > attacker.hitRate - target.dodgeRate) {
-      attackerDamage = 0;
-    }
-    const critical = Math.random();
-    if (critical < attacker.criticalRate) {
-      attackerDamage *= attacker.criticalDamage;
-    }
-    target.takeDamage(attackerDamage);
-    if (attackerDamage > 0) attacker.getCharacter().addExperience(1);
-    console.log(
+    // 不同攻击结果，影响反击效果
+    let attackState: 'normal' | 'miss' | 'parry' | 'block' | 'critical' =
+      'normal';
+    const attackInfo: string[] = [
       `Unit ${attacker.getCharacter().name} attacked ${
         target.getCharacter().name
-      } for ${attackerDamage} damage(${target.currentHealth}/${
-        target.maxHealth
-      })`
-    );
+      }`,
+    ];
+    // hit and miss
+    if (hit > Math.max(0.05, attacker.hitRate - target.dodgeRate)) {
+      attackerDamage = 0;
+      attackInfo.push('miss');
+      attackState = 'miss';
+    }
+    const parry = Math.random();
+    const block = Math.random();
+    const critical = Math.random();
+    if (parry < target.parryRate) {
+      // parry
+      attackerDamage = 0;
+      attackInfo.push('parry');
+      attackState = 'parry';
+    } else if (block < target.blockRate) {
+      // block
+      attackerDamage = Math.max(0, attackerDamage - target.blockValue);
+      attackInfo.push(`block(${target.blockValue})`);
+      attackState = 'block';
+    } else if (critical < attacker.criticalRate) {
+      // critical
+      attackerDamage *= attacker.criticalDamage;
+      attackInfo.push('critical');
+      attackState = 'critical';
+    }
+    target.takeDamage(attackerDamage);
+    attackInfo.push(`do damage: ${attackerDamage}`);
+    if (attackerDamage > 0) attacker.getCharacter().addExperience(1);
     if (!target.isDead) {
-      let counterDamage = target.physicalAttack / 3;
-      const counterHit = Math.random();
-      if (counterHit > target.hitRate - attacker.dodgeRate) {
-        counterDamage = 0;
-      }
-      attacker.takeDamage(counterDamage);
-      if (counterDamage > 0) target.getCharacter().addExperience(1);
-      console.log(
+      // counter
+      attackInfo.push(
         `Unit ${target.getCharacter().name} counterattacked ${
           attacker.getCharacter().name
-        } for ${counterDamage} damage(${attacker.currentHealth}/${
-          attacker.maxHealth
-        })`
+        }`
       );
+      let counterDamage = 0;
+      // count base couterDamage by attackState
+      if (attackState === 'miss') {
+        counterDamage = target.physicalAttack;
+      } else if (attackState === 'parry' || attackState === 'block') {
+        counterDamage = target.physicalAttack / 0.5;
+      } else if (attackState === 'normal') {
+        counterDamage = target.physicalAttack / 0.1;
+      } else if (attackState === 'critical') {
+        counterDamage = 0;
+      }
+      const counterHit = Math.random();
+      if (counterHit > Math.max(0.05, target.hitRate - attacker.dodgeRate)) {
+        attackInfo.push('miss');
+        counterDamage = 0;
+      }
+      const countParry = Math.random();
+      const countBlock = Math.random();
+      if (countParry < attacker.parryRate) {
+        // parry
+        counterDamage = 0;
+        attackInfo.push('parry');
+      } else if (countBlock < attacker.blockRate) {
+        // block
+        counterDamage = Math.max(0, counterDamage - attacker.blockValue);
+        attackInfo.push(`block(${attacker.blockValue})`);
+      }
+      attacker.takeDamage(counterDamage);
+      attackInfo.push(`do damage: ${counterDamage}`);
+      if (counterDamage > 0) target.getCharacter().addExperience(1);
+      console.log(...attackInfo);
     }
   }
 

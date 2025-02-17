@@ -6,6 +6,8 @@ export const baseCombatStats = {
   health: 200,
   hitRate: 0.75,
   dodgeRate: 0.05,
+  blockRate: 0.3,
+  parryRate: 0.05,
   criticalRate: 0.05,
   criticalDamage: 1.5,
   attackSpeed: 5.0,

@@ -34,6 +34,12 @@ export class CombatUnit implements CombatStats {
 
   public dodgeRate: number = 0;
 
+  public blockRate: number = 0;
+
+  public blockValue: number = 0;
+
+  public parryRate: number = 0;
+
   public criticalRate: number = 0;
 
   public criticalDamage: number = 0;
@@ -105,6 +111,35 @@ export class CombatUnit implements CombatStats {
       this.attributeModifiers.agility *
         0.4 *
         getTotalModifier(this.levelModifier);
+
+    this.blockRate = this.getCharacter().equipment.shield
+      ? Math.max(
+          0.9,
+          baseCombatStats.blockRate +
+            this.attributeModifiers.agility *
+              0.2 *
+              getTotalModifier(this.levelModifier)
+        )
+      : 0;
+
+    const shieldDefence = this.getCharacter().equipment.shield?.defence ?? 0;
+    if (!shieldDefence) {
+      this.blockValue =
+        shieldDefence *
+        getTotalModifier(
+          2 * this.attributeModifiers.strength,
+          this.levelModifier
+        );
+    }
+
+    this.parryRate = Math.max(
+      0.75,
+      baseCombatStats.parryRate +
+        (this.attributeModifiers.strength * 0.1 +
+          this.attributeModifiers.agility * 0.1 +
+          this.attributeModifiers.perception * 0.1) *
+          getTotalModifier(this.levelModifier)
+    );
 
     this.criticalRate =
       baseCombatStats.criticalRate +

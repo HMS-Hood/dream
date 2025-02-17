@@ -86,6 +86,9 @@ export interface CombatStats {
   magicalAttack: number;
   magicalDefense: number;
   hitRate: number;
+  blockRate: number;
+  blockValue: number;
+  parryRate: number;
   dodgeRate: number;
   criticalRate: number;
   criticalDamage: number;
