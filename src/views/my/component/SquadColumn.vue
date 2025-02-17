@@ -48,21 +48,21 @@
 <script setup lang="ts">
   import { ref } from 'vue';
   import { SquadPosition } from '@/core/enums';
-  import { Squad } from '@/core/interfaces/combat';
+  import { ISquad } from '@/core/interfaces/combat';
   import { CombatUnit } from '@/core/battle/CombatUnit';
   import { CharacterInterface } from '@/core/interfaces';
   import CheckSquadMember from '../CheckSquadMember.vue';
 
   const checkMemberModalVisible = ref(false);
-  const selectedSquadForAdjustment = ref<Squad | null>(null);
+  const selectedSquadForAdjustment = ref<ISquad | null>(null);
 
   const props = defineProps<{
     title: string;
-    listSquads: Squad[];
+    listSquads: ISquad[];
     position: SquadPosition;
     allMembers: CharacterInterface[];
   }>();
-  const squads = defineModel<Squad[]>('squads', { required: true });
+  const squads = defineModel<ISquad[]>('squads', { required: true });
   // const allMembers = defineModel<CharacterInterface[]>('allMembers', {
   //   required: true,
   // });
@@ -72,7 +72,7 @@
   }>();
 
   const addSquad = () => {
-    const newSquad: Squad = {
+    const newSquad: ISquad = {
       id: `squad_${Date.now()}`,
       position: props.position,
       attackSpeed: 1,
@@ -84,7 +84,7 @@
   };
 
   const members = ref<CharacterInterface[]>([]);
-  const checkMember = (squad: Squad) => {
+  const checkMember = (squad: ISquad) => {
     members.value = [
       ...squad.members.map((unit) => unit.getCharacter()),
       ...props.allMembers,
@@ -94,7 +94,7 @@
   };
 
   // Compute weapon statistics for a squad based on its members' equipped weapon.
-  const getWeaponStats = (squad: Squad) => {
+  const getWeaponStats = (squad: ISquad) => {
     let melee = 0;
     let mid = 0;
     let ranged = 0;

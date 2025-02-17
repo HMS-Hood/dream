@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { CharacterInterface, CombatStats } from '../interfaces';
+import { CharacterInterface, ICombatUnit } from '../interfaces';
 import { AttackMethod } from '../enums';
 import {
   baseCombatStats,
@@ -11,7 +11,7 @@ function getTotalModifier(...modifiers: number[]): number {
   return modifiers.reduce((total, mod) => total * (1 + mod), 1);
 }
 
-export class CombatUnit implements CombatStats {
+export class CombatUnit implements ICombatUnit {
   private character: CharacterInterface;
 
   // 战斗状态

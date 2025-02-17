@@ -51,14 +51,14 @@
   import { Message, Modal } from '@arco-design/web-vue';
   import { useArmyStyleStore } from '@/store/armyStyle';
   import { CharacterInterface } from '@/core/interfaces';
-  import { Squad, Army } from '@/core/interfaces/combat';
+  import { ISquad, IArmy } from '@/core/interfaces/combat';
   import { SquadPosition } from '@/core/enums';
   import { CombatUnit } from '@/core/battle/CombatUnit';
   import { useArmyStore } from '@/store/army';
   import { validateArmyFormation } from '@/core/utils/armyUtils';
   import SquadColumn from './component/SquadColumn.vue';
 
-  const squads = ref<Squad[]>([]);
+  const squads = ref<ISquad[]>([]);
 
   // Split squads into three groups by their position.
   const frontSquads = computed(() =>
@@ -81,7 +81,7 @@
 
   const armyStore = useArmyStore();
   const saveArmy = () => {
-    const army: Army = {
+    const army: IArmy = {
       id: 'player_army',
       name: 'Player Army',
       squads: squads.value,
@@ -123,7 +123,7 @@
             ...squad.members.map((member) => member.getCharacter())
           );
         });
-        const newSquads: Squad[] = [];
+        const newSquads: ISquad[] = [];
         armyTemplate.forEach((squadTemplate) => {
           newSquads.push({
             id: `squad_${Date.now()}`,

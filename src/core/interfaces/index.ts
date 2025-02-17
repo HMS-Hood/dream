@@ -77,7 +77,7 @@ export interface BattleConfig {
   };
 }
 
-export interface CombatStats {
+export interface ICombatUnit {
   currentHealth: number;
   isDead: boolean;
   maxHealth: number;

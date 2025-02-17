@@ -1,6 +1,6 @@
 import { AttackMethod, CharacterLevel, QualityLevel } from '../enums';
 import { CharacterInitialData, CharacterInterface, Skill } from '../interfaces';
-import { qualityAttributeRanges } from '../setting/param';
+import { getQualityForValue } from '../utils/utils';
 import { Equipments } from './Equipments';
 
 /* eslint-disable import/prefer-default-export */
@@ -64,18 +64,6 @@ export class Character implements CharacterInterface {
   }
 
   get quality(): QualityLevel {
-    const getQualityForValue: (value: number) => QualityLevel = (value) => {
-      const qualityLevels = Object.values(QualityLevel);
-      // 从最高品质开始检查，一旦找到符合条件的就返回
-      for (let i = qualityLevels.length - 1; i >= 0; i -= 1) {
-        const quality = qualityLevels[i];
-        if (value >= qualityAttributeRanges[quality][0]) {
-          return quality;
-        }
-      }
-      return QualityLevel.F;
-    };
-
     const qualities = [
       getQualityForValue(this.strength),
       getQualityForValue(this.agility),

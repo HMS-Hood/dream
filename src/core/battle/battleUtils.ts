@@ -1,9 +1,9 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
-import { Squad, Army } from '../interfaces/combat';
+import { ISquad, IArmy } from '../interfaces/combat';
 import { SquadPosition } from '../enums';
 import { IRefactoredCampaign } from './IRefactoredCampaign';
-import { CombatStats } from '../interfaces';
+import { ICombatUnit } from '../interfaces';
 
 export class BattleUtils {
   private campaign: IRefactoredCampaign;
@@ -13,8 +13,8 @@ export class BattleUtils {
   }
 
   public static calculateAttackDistance(
-    attackerSquad: Squad,
-    targetSquad: Squad
+    attackerSquad: ISquad,
+    targetSquad: ISquad
   ): number {
     const order = [
       SquadPosition.FRONT,
@@ -27,12 +27,12 @@ export class BattleUtils {
   }
 
   public static selectTargetWithinRange(
-    attackerSquad: Squad,
-    enemyArmies: Army[],
+    attackerSquad: ISquad,
+    enemyArmies: IArmy[],
     maxDistance: number
-  ): CombatStats | null {
-    const validUnits: { unit: CombatStats; weight: number }[] = [];
-    const enemySquads: Squad[] = enemyArmies.flatMap((army) => army.squads);
+  ): ICombatUnit | null {
+    const validUnits: { unit: ICombatUnit; weight: number }[] = [];
+    const enemySquads: ISquad[] = enemyArmies.flatMap((army) => army.squads);
     for (let i = 0; i < enemySquads.length; i += 1) {
       const squad = enemySquads[i];
       const distance = BattleUtils.calculateAttackDistance(

@@ -1,16 +1,16 @@
 /* eslint-disable import/prefer-default-export */
-import { Squad } from '../interfaces/combat';
+import { ISquad } from '../interfaces/combat';
 import { UnitState } from './UnitState';
 import { SquadPosition } from '../enums';
 
 export class SquadState {
   unitsState: UnitState[];
 
-  squad: Squad;
+  squad: ISquad;
 
   initalUnitCount: number;
 
-  constructor(squad: Squad) {
+  constructor(squad: ISquad) {
     this.unitsState = squad.members.map((unit) => new UnitState(unit));
     this.squad = squad;
     this.initalUnitCount = squad.members.filter((unit) => !unit.isDead).length;

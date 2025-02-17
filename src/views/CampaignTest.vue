@@ -28,7 +28,7 @@
   import { useCampaignStore } from '../store/campaign';
   import { generateCharacter } from '../core/utils/utils';
   import { Character } from '../core/entities/Character';
-  import { Army, Squad } from '../core/interfaces/combat';
+  import { IArmy, ISquad } from '../core/interfaces/combat';
   import {
     SquadPosition,
     QualityLevel,
@@ -93,8 +93,8 @@
   };
 
   // 生成小队
-  const generateSquads = (): Squad[] => {
-    const squads: Squad[] = [];
+  const generateSquads = (): ISquad[] => {
+    const squads: ISquad[] = [];
     for (let i = 0; i < config.squadPerTeam; i += 1) {
       // 根据索引分配位置
       let position: SquadPosition;
@@ -126,7 +126,7 @@
 
   // 生成战役
   const generateCampaign = () => {
-    const teams: Army[] = [];
+    const teams: IArmy[] = [];
     for (let i = 0; i < config.teamCount; i += 1) {
       teams.push({
         id: `team_${i}`,
@@ -138,7 +138,7 @@
     }
 
     // 生成玩家的 Army
-    const playerArmy: Army = {
+    const playerArmy: IArmy = {
       id: 'player_army',
       squads: generateSquads(),
       reserveSquads: [],

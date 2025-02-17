@@ -1,15 +1,15 @@
 /* eslint-disable import/prefer-default-export */
-import { Army } from '../interfaces/combat';
+import { IArmy } from '../interfaces/combat';
 import { SquadState } from './SquadState';
 
 export class ArmyState {
   squadsState: SquadState[];
 
-  army: Army;
+  army: IArmy;
 
   initalSquadCount: number;
 
-  constructor(army: Army) {
+  constructor(army: IArmy) {
     this.squadsState = army.squads.map((squad) => new SquadState(squad));
     this.army = army;
     this.initalSquadCount = army.squads.filter((squad) => !squad.isDead).length;

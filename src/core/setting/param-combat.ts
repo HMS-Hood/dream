@@ -1,5 +1,6 @@
-import { CharacterLevel } from '../enums';
+import { CharacterLevel, QualityLevel } from '../enums';
 import { BattleConfig } from '../interfaces';
+import { QualityNumber } from './param';
 
 // Base values for combat stats
 export const baseCombatStats = {
@@ -40,4 +41,32 @@ export const defaultBattleConfig: BattleConfig = {
     middle: 2,
     back: 1,
   },
+};
+
+export const baseMemberList = 10;
+
+export const charmQualityAdjustMemberLimit: QualityNumber = {
+  [QualityLevel.F]: 0,
+  [QualityLevel.E]: 0,
+  [QualityLevel.D]: 0,
+  [QualityLevel.C]: 1,
+  [QualityLevel.B]: 2,
+  [QualityLevel.A]: 4,
+  [QualityLevel.S]: 10,
+  [QualityLevel.SS]: 15,
+  [QualityLevel.SSS]: 20,
+};
+
+export const baseSquadLimit = 9;
+
+export const charmQualityAdjustSquadLimit: QualityNumber = {
+  [QualityLevel.F]: 0,
+  [QualityLevel.E]: 0,
+  [QualityLevel.D]: 0,
+  [QualityLevel.C]: 0,
+  [QualityLevel.B]: 1,
+  [QualityLevel.A]: 3,
+  [QualityLevel.S]: 6,
+  [QualityLevel.SS]: 11,
+  [QualityLevel.SSS]: 21,
 };

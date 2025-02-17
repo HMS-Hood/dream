@@ -1,28 +1,51 @@
 import { SquadPosition } from '../enums';
 import { CombatUnit } from '../battle/CombatUnit';
-import { CombatStats } from '.';
+import { ICombatUnit } from '.';
 
-export interface Squad {
+export interface ISquadData {
+  id?: string;
+  leaderId?: string;
+  position?: SquadPosition;
+  members?: ICombatUnit[];
+  memberLimit?: number;
+  targetIds?: string[];
+  isDead?: boolean;
+}
+
+export interface ISquad extends ISquadData {
   id: string;
+  leaderId: string;
   position: SquadPosition;
-  attackSpeed: number;
-  members: CombatStats[];
+  members: ICombatUnit[];
+  memberLimit: number;
   targetIds: string[];
   isDead: boolean;
 }
 
-export interface Army {
+export interface IArmyData {
+  id?: string; // Unique ID for each army
+  name: string;
+  leaderId?: string;
+  squads?: ISquad[];
+  squadLimit?: number;
+  reserveSquads?: ISquad[];
+  isDead?: boolean;
+}
+
+export interface IArmy extends IArmyData {
   id: string; // Unique ID for each army
   name: string;
-  squads: Squad[];
-  reserveSquads: Squad[];
+  leaderId: string;
+  squads: ISquad[];
+  squadLimit: number;
+  reserveSquads: ISquad[];
   isDead: boolean;
 }
 
 export interface BattleGroup {
   id: string;
-  side1Armies: Army[];
-  side2Armies: Army[];
+  side1Armies: IArmy[];
+  side2Armies: IArmy[];
   battleState: {
     timeElapsed: number;
     isOver: boolean;
@@ -32,8 +55,8 @@ export interface BattleGroup {
 export interface BattleSide {
   id: string;
   name: string;
-  armies: Army[]; // 当前上场部队
-  reserveArmies: Army[]; // 后备部队
+  armies: IArmy[]; // 当前上场部队
+  reserveArmies: IArmy[]; // 后备部队
   isPlayerSide: boolean;
 }
 

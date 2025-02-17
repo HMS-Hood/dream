@@ -1,13 +1,13 @@
 /* eslint-disable import/prefer-default-export */
-import { CombatStats } from '../interfaces';
-import { Army, Squad } from '../interfaces/combat';
+import { ICombatUnit } from '../interfaces';
+import { IArmy, ISquad } from '../interfaces/combat';
 import { CombatUnit } from './CombatUnit';
 
 interface ActionEvent {
   time: number;
-  unit: CombatStats;
-  squad: Squad;
-  army: Army;
+  unit: ICombatUnit;
+  squad: ISquad;
+  army: IArmy;
 }
 
 export class ActionScheduler {
@@ -20,7 +20,7 @@ export class ActionScheduler {
   }
 
   // 将所有上场部队的单位加入队列（初始化）
-  public initialize(armies: Army[]): void {
+  public initialize(armies: IArmy[]): void {
     armies.forEach((army) => {
       army.squads.forEach((squad) => {
         squad.members.forEach((unit) => {
