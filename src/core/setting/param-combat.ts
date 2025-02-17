@@ -26,8 +26,7 @@ export const levelModifiers: { [key in CharacterLevel]: number } = {
 export function calculateAttributeModifier(value: number): number {
   // Using a sigmoid-like function for non-linear scaling
   // Assuming max attribute is 20 (from qualityAttributeRanges)
-  const normalized = value / 20;
-  return 2 / (1 + Math.exp(-4 * (normalized - 0.5)));
+  return (value * value + 10 * value) / 300;
 }
 
 export const defaultBattleConfig: BattleConfig = {
