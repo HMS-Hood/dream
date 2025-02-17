@@ -1,3 +1,12 @@
+export const profession: string[] = [
+  'princess',
+  'female warrior',
+  'female mage',
+  'queen',
+];
+
+export const pantyhoseColor: string[] = ['dark brown', 'gray', 'dark'];
+
 export const hairColor: string[] = [
   'pink',
   'light pink',
@@ -38,8 +47,8 @@ export const hairStyleWithLength: string[] = [
 ];
 
 export const hairFrontStyle: string[] = [
-  'curtain bangs',
-  'the bottleneck bangs',
+  ' and curtain bangs',
+  ' and the bottleneck bangs',
 ];
 
 export const hairStyle: string[] = [
