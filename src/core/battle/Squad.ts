@@ -36,6 +36,16 @@ export class Squad implements ISquad {
     this.isDead = initData.isDead ?? false;
   }
 
+  checkLimit(): boolean {
+    if (this.leaderId === '' && this.members.length > 0) {
+      this.leaderId = this.members[0].getCharacter().id;
+    }
+    if (this.members.length > this.memberLimit) {
+      return false;
+    }
+    return true;
+  }
+
   get memberLimit() {
     if (this.leaderId) {
       const leader = this.members.find(
@@ -45,7 +55,23 @@ export class Squad implements ISquad {
         const charmQuality = getQualityForValue(leader.getCharacter().charm);
         return baseMemberList + charmQualityAdjustMemberLimit[charmQuality];
       }
+      if (this.members.length > 0) {
+        this.leaderId = this.members[0].getCharacter().id;
+        const charmQuality = getQualityForValue(
+          this.members[0].getCharacter().charm
+        );
+        return baseMemberList + charmQualityAdjustMemberLimit[charmQuality];
+      }
+      this.leaderId = '';
     }
     return baseMemberList;
+  }
+
+  setLeaderId(leaderId: string) {
+    if (this.members.some((member) => member.getCharacter().id === leaderId)) {
+      this.leaderId = leaderId;
+    } else {
+      throw new Error(`id [${leaderId}] is not exist in members`);
+    }
   }
 }

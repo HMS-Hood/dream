@@ -8,6 +8,7 @@
   >
     <check-character
       v-model:characters="displayList"
+      :multi="multi"
       :width="95"
       :height="91"
     ></check-character>
@@ -22,6 +23,7 @@
   const props = defineProps<{
     checkedIds?: string[];
     characters: CharacterInterface[];
+    multi: boolean;
   }>();
 
   const emit = defineEmits<{

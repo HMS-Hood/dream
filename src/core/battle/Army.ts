@@ -34,6 +34,20 @@ export class Army implements IArmy {
     this.isDead = initData.isDead ?? false;
   }
 
+  checkLimit(): boolean {
+    if (
+      this.leaderId === '' &&
+      this.squads.length > 0 &&
+      this.squads[0].memberLimit
+    ) {
+      this.leaderId = this.squads[0].leaderId;
+    }
+    if (this.squads.length > this.squadLimit) {
+      return false;
+    }
+    return true;
+  }
+
   get squadLimit() {
     if (this.leaderId) {
       const leader = this.squads
@@ -49,5 +63,17 @@ export class Army implements IArmy {
       }
     }
     return baseSquadLimit;
+  }
+
+  setLeaderId(leaderId: string) {
+    if (
+      this.squads.some(
+        (squad) => squad.memberLimit && squad.leaderId === leaderId
+      )
+    ) {
+      this.leaderId = leaderId;
+    } else {
+      throw new Error(`id [${leaderId}] is not exist in members`);
+    }
   }
 }

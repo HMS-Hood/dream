@@ -24,9 +24,11 @@
 <script setup lang="ts">
   import { ref, reactive } from 'vue';
   import { useRouter } from 'vue-router';
+  import { Army } from '@/core/battle/Army';
+  import { Squad } from '@/core/battle/Squad';
   import back from './my/component/back.vue';
   import { useCampaignStore } from '../store/campaign';
-  import { generateCharacter } from '../core/utils/utils';
+  import { generateCharacter } from '../core/utils/dataUtils';
   import { Character } from '../core/entities/Character';
   import { IArmy, ISquad } from '../core/interfaces/combat';
   import {
@@ -112,14 +114,13 @@
         members.reduce((sum, member) => sum + member.attackSpeed, 0) /
         members.length;
 
-      squads.push({
-        id: `squad_${i}`,
-        position,
-        members,
-        attackSpeed: averageSpeed,
-        targetIds: [],
-        isDead: false,
-      });
+      squads.push(
+        new Squad({
+          id: `squad_${i}`,
+          position,
+          members,
+        })
+      );
     }
     return squads;
   };
@@ -128,23 +129,25 @@
   const generateCampaign = () => {
     const teams: IArmy[] = [];
     for (let i = 0; i < config.teamCount; i += 1) {
-      teams.push({
-        id: `team_${i}`,
-        squads: generateSquads(),
-        reserveSquads: [],
-        name: `队伍${i + 1}`,
-        isDead: false,
-      });
+      teams.push(
+        new Army({
+          id: `team_${i}`,
+          squads: generateSquads(),
+          reserveSquads: [],
+          name: `队伍${i + 1}`,
+          isDead: false,
+        })
+      );
     }
 
     // 生成玩家的 Army
-    const playerArmy: IArmy = {
+    const playerArmy: IArmy = new Army({
       id: 'player_army',
       squads: generateSquads(),
       reserveSquads: [],
       name: '玩家',
       isDead: false,
-    };
+    });
 
     const campaign = new Campaign(
       {

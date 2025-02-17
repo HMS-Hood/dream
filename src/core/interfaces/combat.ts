@@ -7,7 +7,7 @@ export interface ISquadData {
   leaderId?: string;
   position?: SquadPosition;
   members?: ICombatUnit[];
-  memberLimit?: number;
+  readonly memberLimit?: number;
   targetIds?: string[];
   isDead?: boolean;
 }
@@ -17,9 +17,11 @@ export interface ISquad extends ISquadData {
   leaderId: string;
   position: SquadPosition;
   members: ICombatUnit[];
-  memberLimit: number;
+  readonly memberLimit: number;
   targetIds: string[];
   isDead: boolean;
+  checkLimit: () => boolean;
+  setLeaderId: (leaderId: string) => void;
 }
 
 export interface IArmyData {
@@ -27,7 +29,7 @@ export interface IArmyData {
   name: string;
   leaderId?: string;
   squads?: ISquad[];
-  squadLimit?: number;
+  readonly squadLimit?: number;
   reserveSquads?: ISquad[];
   isDead?: boolean;
 }
@@ -37,9 +39,11 @@ export interface IArmy extends IArmyData {
   name: string;
   leaderId: string;
   squads: ISquad[];
-  squadLimit: number;
+  readonly squadLimit: number;
   reserveSquads: ISquad[];
   isDead: boolean;
+  checkLimit: () => boolean;
+  setLeaderId: (leaderId: string) => void;
 }
 
 export interface BattleGroup {

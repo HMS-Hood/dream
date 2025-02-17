@@ -2,7 +2,7 @@
 import { reactive } from 'vue';
 import { Emblem } from './Emblem';
 import { Flag } from './Flag';
-import { generateCharacter } from '../utils/utils';
+import { generateCharacter } from '../utils/dataUtils';
 import { Character } from './Character';
 import { Item } from '../interfaces/item';
 

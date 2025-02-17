@@ -4,19 +4,30 @@
     <a-card class="squad-card" hoverable>
       <div class="squad-header">
         <span v-if="squad.members.length" class="leader-name">
-          {{ squad.members[0].getCharacter().name }}
+          {{
+            squad.members
+              .find((member) => member.getCharacter().id === squad.leaderId)
+              ?.getCharacter().name
+          }}
         </span>
         <a-image
           v-if="squad.members.length"
           height="128px"
           class="avatar"
+          :preview="false"
           :src="
-            squad.members[0].getCharacter().avatar.replace('.png', '_s.png')
+            squad.members
+              .find((member) => member.getCharacter().id === squad.leaderId)
+              ?.getCharacter()
+              .avatar.replace('.png', '_s.png')
           "
         ></a-image>
       </div>
       <div class="squad-body">
-        <div class="member-detail">成员数量: {{ squad.members.length }}</div>
+        <div
+          :class="squad.checkLimit() ? 'member-detail' : 'member-detail error'"
+          >成员数量: {{ squad.members.length }} / {{ squad.memberLimit }}</div
+        >
         <div class="weapon-stats">
           <span>近战: {{ getWeaponStats(squad).melee }}</span>
           <span>中程: {{ getWeaponStats(squad).mid }}</span>
@@ -40,8 +51,24 @@
           )
         : []
     "
+    :multi="true"
     :characters="members"
     @change-checked="handleChecked"
+  />
+  <check-squad-member
+    v-model:visible="checkLeaderModalVisible"
+    :checked-ids="
+      selectedSquadForAdjustment ? [selectedSquadForAdjustment.leaderId] : []
+    "
+    :multi="false"
+    :characters="
+      selectedSquadForAdjustment
+        ? selectedSquadForAdjustment.members.map((member) =>
+            member.getCharacter()
+          )
+        : []
+    "
+    @change-checked="handleLeaderChecked"
   />
 </template>
 
@@ -51,6 +78,7 @@
   import { ISquad } from '@/core/interfaces/combat';
   import { CombatUnit } from '@/core/battle/CombatUnit';
   import { CharacterInterface } from '@/core/interfaces';
+  import { Squad } from '@/core/battle/Squad';
   import CheckSquadMember from '../CheckSquadMember.vue';
 
   const checkMemberModalVisible = ref(false);
@@ -72,14 +100,10 @@
   }>();
 
   const addSquad = () => {
-    const newSquad: ISquad = {
+    const newSquad: ISquad = new Squad({
       id: `squad_${Date.now()}`,
       position: props.position,
-      attackSpeed: 1,
-      members: [],
-      targetIds: [],
-      isDead: false,
-    };
+    });
     squads.value.push(newSquad);
   };
 
@@ -127,6 +151,18 @@
     }
     checkMemberModalVisible.value = false;
   };
+
+  const handleLeaderChecked = (newLeaderIds: string[]) => {
+    if (selectedSquadForAdjustment.value) {
+      [selectedSquadForAdjustment.value.leaderId] = newLeaderIds;
+    }
+  };
+
+  const checkLeaderModalVisible = ref(false);
+  const pickSquadLeader = (squad: ISquad) => {
+    selectedSquadForAdjustment.value = squad;
+    checkLeaderModalVisible.value = true;
+  };
 </script>
 
 <style lang="less" scoped>
@@ -162,6 +198,7 @@
       flex-direction: column;
       gap: 10px;
       align-items: flex-start;
+      cursor: pointer;
 
       .leader-name {
         color: #373737;
@@ -183,6 +220,10 @@
       flex-grow: 1;
       margin: 0 2em;
       padding: 10px 0;
+
+      .error {
+        color: red;
+      }
 
       .member-detail {
         font-size: @content-font;

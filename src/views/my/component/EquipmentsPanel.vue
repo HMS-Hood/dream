@@ -9,6 +9,7 @@
           ></div>
           <a-image
             :src="character.equipment.weapon.img"
+            :preview="false"
             class="equipment-icon"
             :title="character.equipment.weapon.name"
             :description="`攻: ${character.equipment.weapon.minDamage} -
@@ -30,6 +31,7 @@
           ></div>
           <a-image
             :src="character.equipment.shield.img"
+            :preview="false"
             class="equipment-icon"
             :title="character.equipment.shield.name"
             width="128"
@@ -50,6 +52,7 @@
           ></div>
           <a-image
             :src="character.equipment.armor.img"
+            :preview="false"
             class="equipment-icon"
             :title="character.equipment.armor.name"
             :description="`防: ${character.equipment.armor.defence}`"

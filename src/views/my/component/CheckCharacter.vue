@@ -82,9 +82,10 @@
   import { AttackMethod, qualityRankMap } from '../../../core/enums';
   import { CheckCharacter } from '../../../core/interfaces';
 
-  defineProps<{
+  const props = defineProps<{
     width: number;
     height: number;
+    multi: boolean;
   }>();
 
   const characters = defineModel<CheckCharacter[]>('characters');
@@ -101,7 +102,14 @@
   };
 
   const check = (item: CheckCharacter) => {
-    item.checked = !item.checked;
+    if (props.multi) {
+      item.checked = !item.checked;
+    } else {
+      characters.value?.forEach((character) => {
+        character.checked = false;
+      });
+      item.checked = !item.checked;
+    }
   };
 </script>
 

@@ -1,14 +1,6 @@
 <template>
   <div>{{ description }}</div>
   <div class="large" @click="renewDesc">生成</div>
-  <div
-    class="large"
-    @click="
-      copy(description);
-      Message.info('copy');
-    "
-    >复制
-  </div>
 </template>
 
 <script setup lang="ts">
@@ -46,13 +38,16 @@
       armorColor[Math.floor(Math.random() * armorColor.length)];
     const desc =
       backgroundDesc[Math.floor(Math.random() * backgroundDesc.length)];
-    description.value = `A full-body portrait of a ${randomProfession} standing gracefully. 
-    She wears a ${armorMain} glamorous armor with ${armorBorder} border, paires ${randomPantyhoseColor} pantyhose. 
-    Her high-heeled boots, expertly designed and crafted, peek out from beneath 
-    the armor, accentuating her every step. The heels are sturdy yet stylish, 
-    melding seamlessly with the armor to create an impression of both grace and power. 
-    Her ${randomHairColor} hair was styled with ${randomHairLength} ${randomHairStyle}${randomFrontStyle}. Digital fantasy art style and 
-    Japanese anime style ${desc}`;
+    let suitDesc = ` She wears a ${armorMain} glamorous armor with ${armorBorder} border, paires ${randomPantyhoseColor} pantyhose.`;
+    if (Math.random() > 0.6) {
+      suitDesc = '';
+    }
+    description.value = `/image model:⭐ FLUX.1.1 Pro prompt:A full-body portrait of a ${randomProfession} standing gracefully.${suitDesc} 
+Her footwear consists of expertly designed and crafted high-heeled boots. The heels are sturdy yet stylish, accentuating her every step with an impression of both grace and power.
+Her ${randomHairColor} hair was styled with ${randomHairLength} ${randomHairStyle}${randomFrontStyle}. Digital fantasy art style and 
+Japanese anime style ${desc}`;
+    copy(description.value);
+    Message.info('copy');
   };
 </script>
 

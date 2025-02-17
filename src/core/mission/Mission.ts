@@ -9,11 +9,8 @@ import {
   missionDropCountWeight,
   luckAndPerMissionDropRate,
 } from '../setting/param-mission';
-import {
-  generateCharacter,
-  generateId,
-  generateQualityLevelWithMin,
-} from '../utils/utils';
+import { generateId, generateQualityLevelWithMin } from '../utils/utils';
+import { generateCharacter } from '../utils/dataUtils';
 import { validateArmyFormation } from '../utils/armyUtils';
 import {
   createLongRangeWeapon,
@@ -26,10 +23,10 @@ import {
 } from '../utils/itemUtils';
 import { CombatUnit } from '../battle/CombatUnit';
 import { CharacterInterface } from '../interfaces';
-import { Player } from '../entities/Player';
 import { Campaign } from '../battle/campaign';
 import { defaultBattleConfig } from '../setting/param-combat';
 import { Armor, Item, Shield, Weapon } from '../interfaces/item';
+import { Army } from '../battle/Army';
 
 export interface MissionInfo {
   name: string;
@@ -323,13 +320,11 @@ export class Mission {
     }
 
     // 7. Combine squads into an Army object.
-    const enemyArmy: IArmy = {
+    const enemyArmy: IArmy = new Army({
       id: generateId(),
       name: '敌人',
       squads,
-      reserveSquads: [],
-      isDead: false,
-    };
+    });
 
     // 8. Distribute squads into formation positions.
     const totalSquads = squads.length;

@@ -49,6 +49,13 @@ export const hairStyleWithLength: string[] = [
 export const hairFrontStyle: string[] = [
   ' and curtain bangs',
   ' and the bottleneck bangs',
+  ' and Blunt Bangs',
+  ' and Wispy Bangs',
+  ' and Side-Swept Bangs',
+  ' and Micro Bangs',
+  ' and Layered Bangs',
+  ' and Asymmetrical Bangs',
+  ' and Choppy Bangs',
 ];
 
 export const hairStyle: string[] = [

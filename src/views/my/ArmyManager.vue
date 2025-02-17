@@ -56,6 +56,8 @@
   import { CombatUnit } from '@/core/battle/CombatUnit';
   import { useArmyStore } from '@/store/army';
   import { validateArmyFormation } from '@/core/utils/armyUtils';
+  import { Squad } from '@/core/battle/Squad';
+  import { Army } from '@/core/battle/Army';
   import SquadColumn from './component/SquadColumn.vue';
 
   const squads = ref<ISquad[]>([]);
@@ -81,19 +83,21 @@
 
   const armyStore = useArmyStore();
   const saveArmy = () => {
-    const army: IArmy = {
-      id: 'player_army',
-      name: 'Player Army',
-      squads: squads.value,
-      reserveSquads: [],
-      isDead: false,
-    };
-
-    if (!validateArmyFormation(army)) {
-      Message.warning('Army formation is invalid');
+    if (squads.value.some((squad) => !squad.checkLimit())) {
+      Modal.warning({ content: '有小队队员人数超出限制！' });
       return;
     }
 
+    const army: IArmy = new Army({
+      id: 'player_army',
+      name: 'Player Army',
+      squads: squads.value,
+    });
+
+    if (!validateArmyFormation(army)) {
+      Modal.warning({ content: '部队阵型不合规定！' });
+      return;
+    }
     armyStore.setArmy(army);
     Message.success('Army information saved.');
   };
@@ -125,16 +129,15 @@
         });
         const newSquads: ISquad[] = [];
         armyTemplate.forEach((squadTemplate) => {
-          newSquads.push({
-            id: `squad_${Date.now()}`,
-            position: squadTemplate.position,
-            attackSpeed: 1,
-            members: allMembers.value
-              .filter((member) => squadTemplate.membersId.includes(member.id))
-              .map((member) => new CombatUnit(member)),
-            targetIds: [],
-            isDead: false,
-          });
+          newSquads.push(
+            new Squad({
+              id: `squad_${Date.now()}`,
+              position: squadTemplate.position,
+              members: allMembers.value
+                .filter((member) => squadTemplate.membersId.includes(member.id))
+                .map((member) => new CombatUnit(member)),
+            })
+          );
         });
         squads.value = newSquads;
         allMembers.value = allMembers.value.filter(

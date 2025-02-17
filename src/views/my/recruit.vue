@@ -24,6 +24,7 @@
     <div class="list">
       <check-character-comp
         v-model:characters="recruitList"
+        :multi="true"
         :width="70"
         :height="96"
       ></check-character-comp>

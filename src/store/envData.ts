@@ -5,7 +5,7 @@ import { MissionInfo } from '@/core/mission/Mission';
 import { CharacterInterface } from '@/core/interfaces';
 import { Calendar } from '@/core/entities/Calendar';
 import { calendar } from '@/core/game';
-import { generateCharacter } from '@/core/utils/utils';
+import { generateCharacter } from '@/core/utils/dataUtils';
 import { difficultyRankMap, QualityLevel, qualityRankMap } from '@/core/enums';
 import { generateRandomEquipment } from '@/core/utils/itemUtils';
 import { missionsInfo as fMissionsInfo } from '@/core/setting/mission-info-f';
