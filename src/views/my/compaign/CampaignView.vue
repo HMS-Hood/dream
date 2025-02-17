@@ -109,7 +109,7 @@
 <script lang="ts" setup>
   import { ref, computed } from 'vue';
   import { Campaign } from '../../../core/battle/campaign';
-  import { Army, BattleGroup } from '../../../core/interfaces/combat';
+  import { IArmy, BattleGroup } from '../../../core/interfaces/combat';
   import SquadDistribution from './SquadDistribution.vue';
   import { useCampaignStore } from '../../../store/campaign';
   import sideArmiesList from './sideArmiesList.vue';
@@ -160,7 +160,7 @@
     );
   };
 
-  const isPlayerArmy = (army: Army): boolean => {
+  const isPlayerArmy = (army: IArmy): boolean => {
     return playerSide.value?.includes(army) || false;
   };
 

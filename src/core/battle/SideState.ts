@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { Army } from '../interfaces/combat';
+import { IArmy } from '../interfaces/combat';
 import { ArmyState } from './ArmyState';
 
 export class SideState {
@@ -7,7 +7,7 @@ export class SideState {
 
   initalArmyCount: number;
 
-  constructor(armies: Army[]) {
+  constructor(armies: IArmy[]) {
     this.armiesState = armies.map((army) => new ArmyState(army));
     this.initalArmyCount = armies.filter((army) => !army.isDead).length;
   }

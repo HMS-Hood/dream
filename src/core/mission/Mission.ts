@@ -1,5 +1,5 @@
 import { QualityLevel, MissionDifficulty, SquadPosition } from '../enums';
-import { Army } from '../interfaces/combat';
+import { IArmy } from '../interfaces/combat';
 import {
   missionQualityEnimyCount,
   missionQualityLowQuality,
@@ -189,7 +189,7 @@ export class Mission {
    * @param player - The player's data.
    * @returns Whether the mission was successful.
    */
-  completeMission(playerArmy: Army): MissionResult {
+  completeMission(playerArmy: IArmy): MissionResult {
     // 1. Generate enemy army and get the multiplier.
     const { enemyArmy, multiplier } = this.generateEnemyArmy();
 
@@ -279,7 +279,7 @@ export class Mission {
   /**
    * Generates an enemy Army for this mission.
    */
-  generateEnemyArmy(): { enemyArmy: Army; multiplier: number } {
+  generateEnemyArmy(): { enemyArmy: IArmy; multiplier: number } {
     // 1. Get the base enemy count from missionQualityEnimyCount.
     const baseCount: number = missionQualityEnimyCount[this.quality];
 
@@ -323,7 +323,7 @@ export class Mission {
     }
 
     // 7. Combine squads into an Army object.
-    const enemyArmy: Army = {
+    const enemyArmy: IArmy = {
       id: generateId(),
       name: '敌人',
       squads,

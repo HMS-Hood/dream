@@ -77,7 +77,7 @@ export interface BattleConfig {
   };
 }
 
-export interface CombatStats {
+export interface ICombatUnit {
   currentHealth: number;
   isDead: boolean;
   maxHealth: number;
@@ -86,6 +86,9 @@ export interface CombatStats {
   magicalAttack: number;
   magicalDefense: number;
   hitRate: number;
+  blockRate: number;
+  blockValue: number;
+  parryRate: number;
   dodgeRate: number;
   criticalRate: number;
   criticalDamage: number;

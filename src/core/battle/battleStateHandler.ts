@@ -1,7 +1,7 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
 import { BattleConfig } from '../interfaces';
-import { Army } from '../interfaces/combat';
+import { IArmy } from '../interfaces/combat';
 import { BattleState } from './battleState';
 
 export class BattleStateHandler {
@@ -11,8 +11,8 @@ export class BattleStateHandler {
 
   constructor(
     config: BattleConfig,
-    side1Armies: Army[],
-    side2Armies: Army[],
+    side1Armies: IArmy[],
+    side2Armies: IArmy[],
     isPlayerOnSide1: boolean
   ) {
     this.config = config;

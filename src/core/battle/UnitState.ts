@@ -1,11 +1,11 @@
 import { reactive } from 'vue';
-import { CombatStats } from '../interfaces';
+import { ICombatUnit } from '../interfaces';
 
 /* eslint-disable import/prefer-default-export */
 export class UnitState {
-  combatUnit: CombatStats;
+  combatUnit: ICombatUnit;
 
-  constructor(combatUnit: CombatStats) {
+  constructor(combatUnit: ICombatUnit) {
     this.combatUnit = reactive(combatUnit);
   }
 

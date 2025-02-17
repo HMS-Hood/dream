@@ -36,10 +36,8 @@
   import { useEnvDataStore } from '@/store/envData';
   import { CheckCharacter } from '../../core/interfaces';
   import CheckCharacterComp from './component/CheckCharacter.vue';
-  import { generateCharacter } from '../../core/utils/utils';
   import { player } from '../../core/game';
   import back from './component/back.vue';
-  import { Character } from '../../core/entities/Character';
 
   const backgroundImage = '/img/bg/recruit.png';
   const envData = useEnvDataStore();

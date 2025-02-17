@@ -1,11 +1,14 @@
-import { CharacterLevel } from '../enums';
+import { CharacterLevel, QualityLevel } from '../enums';
 import { BattleConfig } from '../interfaces';
+import { QualityNumber } from './param';
 
 // Base values for combat stats
 export const baseCombatStats = {
   health: 200,
   hitRate: 0.75,
   dodgeRate: 0.05,
+  blockRate: 0.3,
+  parryRate: 0.05,
   criticalRate: 0.05,
   criticalDamage: 1.5,
   attackSpeed: 5.0,
@@ -26,8 +29,7 @@ export const levelModifiers: { [key in CharacterLevel]: number } = {
 export function calculateAttributeModifier(value: number): number {
   // Using a sigmoid-like function for non-linear scaling
   // Assuming max attribute is 20 (from qualityAttributeRanges)
-  const normalized = value / 20;
-  return 2 / (1 + Math.exp(-4 * (normalized - 0.5)));
+  return (value * value + 10 * value) / 300;
 }
 
 export const defaultBattleConfig: BattleConfig = {
@@ -39,4 +41,32 @@ export const defaultBattleConfig: BattleConfig = {
     middle: 2,
     back: 1,
   },
+};
+
+export const baseMemberList = 10;
+
+export const charmQualityAdjustMemberLimit: QualityNumber = {
+  [QualityLevel.F]: 0,
+  [QualityLevel.E]: 0,
+  [QualityLevel.D]: 0,
+  [QualityLevel.C]: 1,
+  [QualityLevel.B]: 2,
+  [QualityLevel.A]: 4,
+  [QualityLevel.S]: 10,
+  [QualityLevel.SS]: 15,
+  [QualityLevel.SSS]: 20,
+};
+
+export const baseSquadLimit = 9;
+
+export const charmQualityAdjustSquadLimit: QualityNumber = {
+  [QualityLevel.F]: 0,
+  [QualityLevel.E]: 0,
+  [QualityLevel.D]: 0,
+  [QualityLevel.C]: 0,
+  [QualityLevel.B]: 1,
+  [QualityLevel.A]: 3,
+  [QualityLevel.S]: 6,
+  [QualityLevel.SS]: 11,
+  [QualityLevel.SSS]: 21,
 };
