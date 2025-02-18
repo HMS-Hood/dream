@@ -4,7 +4,6 @@ import {
   AttackMethod,
   OneHandWeaponType,
   TwoHandWeaponType,
-  MiddleRangeWeaponType,
   LongRangeWeaponType,
   QualityLevel,
   StaffWeaponType,
@@ -18,7 +17,6 @@ import {
   Robe,
   TwoHandWeapon,
   OneHandWeapon,
-  MiddleRangeWeapon,
   LongRangeWeapon,
   StaffWeapon,
   Armor,
@@ -42,7 +40,6 @@ import {
   namesOfQualityChain,
   namesOfQualityLeather,
   valueOfQualityOneHandWeapon,
-  valueOfQualityMiddleRangeWeapon,
   valueOfQualityLongRangeWeapon,
   valueOfQualityTwoHandWeapon,
   valueOfQualityShield,
@@ -55,9 +52,8 @@ import {
   qualityLongRangeDamageRanges,
   namesOfQualityAxe,
   namesOfQualityMace,
-  namesOfQualitySpear,
+  namesOfQualityLance,
   namesOfQualityHalberd,
-  namesOfQualityPolearm,
   namesOfQualityBow,
   namesOfQualityCrossbow,
   namesOfQualityGreatSword,
@@ -83,11 +79,7 @@ export function createWeapon(
   handType: WeaponHandType,
   qualityRanges: QualityRange,
   attackMethod: AttackMethod,
-  weaponType:
-    | OneHandWeaponType
-    | TwoHandWeaponType
-    | MiddleRangeWeaponType
-    | LongRangeWeaponType
+  weaponType: OneHandWeaponType | TwoHandWeaponType | LongRangeWeaponType
 ): Weapon {
   const weapon: Weapon = {
     name,
@@ -152,53 +144,6 @@ export function createOneHandWeapon(
   ) as OneHandWeapon;
 }
 
-function randomMiddleRangeWeaponType(): MiddleRangeWeaponType {
-  const middleRangeWeaponTypes = [
-    MiddleRangeWeaponType.LANCE,
-    MiddleRangeWeaponType.HALBERD,
-    MiddleRangeWeaponType.POLEARM,
-  ];
-  const randomNum = getRandomInt(0, middleRangeWeaponTypes.length - 1);
-  return middleRangeWeaponTypes[randomNum];
-}
-
-export function createMiddleRangeWeapon(
-  quality?: QualityLevel,
-  middleRangeWeaponType?: MiddleRangeWeaponType
-): MiddleRangeWeapon {
-  let name: string;
-  let imgPre: string;
-  if (!middleRangeWeaponType) {
-    middleRangeWeaponType = randomMiddleRangeWeaponType();
-  }
-  switch (middleRangeWeaponType) {
-    case MiddleRangeWeaponType.LANCE:
-      name = namesOfQualitySpear[quality ?? generateQualityLevel()];
-      imgPre = 'spear-';
-      break;
-    case MiddleRangeWeaponType.HALBERD:
-      name = namesOfQualityHalberd[quality ?? generateQualityLevel()];
-      imgPre = 'changji-';
-      break;
-    case MiddleRangeWeaponType.POLEARM:
-      name = namesOfQualityPolearm[quality ?? generateQualityLevel()];
-      imgPre = 'changbing-';
-      break;
-    default:
-      throw new Error('Invalid middle range weapon type');
-  }
-  return createWeapon(
-    quality ?? generateQualityLevel(),
-    name,
-    imgPre,
-    valueOfQualityMiddleRangeWeapon[quality ?? generateQualityLevel()],
-    WeaponHandType.TWO_HAND,
-    qualityTwoHandDamageRanges,
-    AttackMethod.MEDIUM_RANGE,
-    middleRangeWeaponType ?? randomMiddleRangeWeaponType()
-  ) as MiddleRangeWeapon;
-}
-
 function randomLongRangeWeaponType(): LongRangeWeaponType {
   const longRangeWeaponTypes = [
     LongRangeWeaponType.BOW,
@@ -246,6 +191,8 @@ function randomTwoHandWeaponType(): TwoHandWeaponType {
     TwoHandWeaponType.GREAT_SWORD,
     TwoHandWeaponType.GREAT_AXE,
     TwoHandWeaponType.GREAT_MACE,
+    TwoHandWeaponType.LANCE,
+    TwoHandWeaponType.HALBERD,
   ];
   const randomNum = getRandomInt(0, twoHandWeaponTypes.length - 1);
   return twoHandWeaponTypes[randomNum];
@@ -272,6 +219,14 @@ export function createTwohandWeapon(
     case TwoHandWeaponType.GREAT_MACE:
       name = namesOfQualityGreatMace[quality ?? generateQualityLevel()];
       imgPre = 'g-hammer-';
+      break;
+    case TwoHandWeaponType.LANCE:
+      name = namesOfQualityLance[quality ?? generateQualityLevel()];
+      imgPre = 'lance-';
+      break;
+    case TwoHandWeaponType.HALBERD:
+      name = namesOfQualityHalberd[quality ?? generateQualityLevel()];
+      imgPre = 'halberd-';
       break;
     default:
       throw new Error('Invalid two hand weapon type');
@@ -390,11 +345,7 @@ export function createCloth(quality?: QualityLevel): Robe {
 
 export function createNormalStandardWeapon(
   quality: QualityLevel,
-  weaponType:
-    | OneHandWeaponType
-    | TwoHandWeaponType
-    | MiddleRangeWeaponType
-    | LongRangeWeaponType
+  weaponType: OneHandWeaponType | TwoHandWeaponType | LongRangeWeaponType
 ): Weapon {
   switch (weaponType) {
     case OneHandWeaponType.SWORD:
@@ -409,12 +360,10 @@ export function createNormalStandardWeapon(
       return createTwohandWeapon(quality, TwoHandWeaponType.GREAT_AXE);
     case TwoHandWeaponType.GREAT_MACE:
       return createTwohandWeapon(quality, TwoHandWeaponType.GREAT_MACE);
-    case MiddleRangeWeaponType.HALBERD:
-      return createMiddleRangeWeapon(quality, MiddleRangeWeaponType.HALBERD);
-    case MiddleRangeWeaponType.POLEARM:
-      return createMiddleRangeWeapon(quality, MiddleRangeWeaponType.POLEARM);
-    case MiddleRangeWeaponType.LANCE:
-      return createMiddleRangeWeapon(quality, MiddleRangeWeaponType.LANCE);
+    case TwoHandWeaponType.HALBERD:
+      return createTwohandWeapon(quality, TwoHandWeaponType.HALBERD);
+    case TwoHandWeaponType.LANCE:
+      return createTwohandWeapon(quality, TwoHandWeaponType.LANCE);
     case LongRangeWeaponType.BOW:
       return createLongRangeWeapon(quality, LongRangeWeaponType.BOW);
     case LongRangeWeaponType.CROSSBOW:
@@ -463,10 +412,8 @@ export function generateRandomEquipment(
         weapon = createOneHandWeapon(equipQuality);
         break;
       case 1:
-        weapon = createTwohandWeapon(equipQuality);
-        break;
       case 2:
-        weapon = createMiddleRangeWeapon(equipQuality);
+        weapon = createTwohandWeapon(equipQuality);
         break;
       case 3:
         weapon = createLongRangeWeapon(equipQuality);

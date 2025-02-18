@@ -14,7 +14,6 @@ import { generateCharacter } from '../utils/dataUtils';
 import { validateArmyFormation } from '../utils/armyUtils';
 import {
   createLongRangeWeapon,
-  createMiddleRangeWeapon,
   createNormalStandardArmor,
   createOneHandWeapon,
   createShield,
@@ -308,7 +307,7 @@ export class Mission {
 
       const squad = {
         id: generateId(),
-        position: SquadPosition.MIDDLE, // temporary; will be reassigned below.
+        position: SquadPosition.FRONT, // temporary; will be reassigned below.
         attackSpeed:
           combatUnits.reduce((sum, unit) => sum + (unit.attackSpeed || 1), 0) /
           combatUnits.length,
@@ -328,14 +327,11 @@ export class Mission {
 
     // 8. Distribute squads into formation positions.
     const totalSquads = squads.length;
-    const frontCount = Math.ceil(totalSquads / 3);
-    const middleCount = Math.ceil(totalSquads / 3);
+    const frontCount = Math.ceil(totalSquads / 2);
 
     squads.forEach((squad, index) => {
       if (index < frontCount) {
         squad.position = SquadPosition.FRONT;
-      } else if (index < frontCount + middleCount) {
-        squad.position = SquadPosition.MIDDLE;
       } else {
         squad.position = SquadPosition.BACK;
       }
@@ -377,23 +373,6 @@ export class Mission {
               .getCharacter()
               .equipment.setArmor(
                 createNormalStandardArmor(equipQuality, 'Chain')
-              );
-          }
-        } else if (squad.position === SquadPosition.MIDDLE) {
-          unit
-            .getCharacter()
-            .equipment.setWeapon(createMiddleRangeWeapon(equipQuality));
-          if (Math.random() < 0.5) {
-            unit
-              .getCharacter()
-              .equipment.setArmor(
-                createNormalStandardArmor(equipQuality, 'Chain')
-              );
-          } else {
-            unit
-              .getCharacter()
-              .equipment.setArmor(
-                createNormalStandardArmor(equipQuality, 'Leather')
               );
           }
         } else if (squad.position === SquadPosition.BACK) {

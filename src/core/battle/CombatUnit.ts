@@ -193,8 +193,6 @@ export class CombatUnit implements ICombatUnit {
     switch (this.character.attackMethod) {
       case AttackMethod.MELEE:
         return 1;
-      case AttackMethod.MEDIUM_RANGE:
-        return 2;
       case AttackMethod.LONG_RANGE:
         return 3;
       default:

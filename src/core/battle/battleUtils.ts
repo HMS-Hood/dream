@@ -13,40 +13,54 @@ export class BattleUtils {
   }
 
   public static calculateAttackDistance(
+    attackArmy: IArmy,
     attackerSquad: ISquad,
+    targetArmy: IArmy,
     targetSquad: ISquad
   ): number {
-    const order = [
-      SquadPosition.FRONT,
-      SquadPosition.MIDDLE,
-      SquadPosition.BACK,
-    ];
-    const attackerIndex = order.indexOf(attackerSquad.position);
-    const targetIndex = order.indexOf(targetSquad.position);
-    return Math.abs(attackerIndex - targetIndex);
+    let distince = 1;
+    if (attackerSquad.position === SquadPosition.BACK) {
+      distince += attackArmy.squads.some(
+        (squad) => squad.position === SquadPosition.FRONT && !squad.isDead
+      )
+        ? 1
+        : 0;
+    }
+    if (targetSquad.position === SquadPosition.BACK) {
+      distince += targetArmy.squads.some(
+        (squad) => squad.position === SquadPosition.FRONT && !squad.isDead
+      )
+        ? 1
+        : 0;
+    }
+    return distince;
   }
 
   public static selectTargetWithinRange(
+    attackerArmy: IArmy,
     attackerSquad: ISquad,
-    enemyArmies: IArmy[],
+    targetArmies: IArmy[],
     maxDistance: number
-  ): ICombatUnit | null {
-    const validUnits: { unit: ICombatUnit; weight: number }[] = [];
-    const enemySquads: ISquad[] = enemyArmies.flatMap((army) => army.squads);
-    for (let i = 0; i < enemySquads.length; i += 1) {
-      const squad = enemySquads[i];
-      const distance = BattleUtils.calculateAttackDistance(
-        attackerSquad,
-        squad
-      );
-      if (distance <= maxDistance) {
-        // 根据距离计算权重：若距离为0，权重1，否则权重为 0.5^(距离)
-        const weight = distance === 0 ? 1 : 0.5 ** distance;
-        squad.members
-          .filter((unit) => !unit.isDead)
-          .forEach((unit) => validUnits.push({ unit, weight }));
-      }
-    }
+  ): { unit: ICombatUnit; distance: number } | null {
+    type UnitWeight = { unit: ICombatUnit; weight: number; distance: number };
+    const validUnits: UnitWeight[] = targetArmies.flatMap((targetArmy) => {
+      return targetArmy.squads.flatMap((targetSquad): UnitWeight[] => {
+        const distance = BattleUtils.calculateAttackDistance(
+          attackerArmy,
+          attackerSquad,
+          targetArmy,
+          targetSquad
+        );
+        if (distance <= maxDistance) {
+          // 根据距离计算权重：若距离为0，权重1，否则权重为 0.5
+          const weight = targetSquad.position === SquadPosition.FRONT ? 1 : 0.5;
+          return targetSquad.members
+            .filter((unit) => !unit.isDead)
+            .map((unit) => ({ unit, weight, distance }));
+        }
+        return [];
+      });
+    });
 
     if (validUnits.length === 0) {
       return null;
@@ -60,9 +74,9 @@ export class BattleUtils {
     for (let i = 0; i < validUnits.length; i += 1) {
       random -= validUnits[i].weight;
       if (random <= 0) {
-        return validUnits[i].unit;
+        return { unit: validUnits[i].unit, distance: validUnits[i].distance };
       }
     }
-    return validUnits[0].unit;
+    return { unit: validUnits[0].unit, distance: validUnits[0].distance };
   }
 }

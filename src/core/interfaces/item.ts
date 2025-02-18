@@ -5,7 +5,6 @@ import {
   WeaponHandType,
   OneHandWeaponType,
   TwoHandWeaponType,
-  MiddleRangeWeaponType,
   LongRangeWeaponType,
   StaffWeaponType,
 } from '../enums';
@@ -35,7 +34,6 @@ export interface Weapon extends Item {
   weaponType:
     | OneHandWeaponType
     | TwoHandWeaponType
-    | MiddleRangeWeaponType
     | LongRangeWeaponType
     | StaffWeaponType;
 }
@@ -57,12 +55,6 @@ export interface StaffWeapon extends Weapon {
   attackMethod: AttackMethod.MELEE;
   weaponType: StaffWeaponType;
   intelligenceIncrease: number;
-}
-
-export interface MiddleRangeWeapon extends Weapon {
-  handType: WeaponHandType.TWO_HAND;
-  attackMethod: AttackMethod.MEDIUM_RANGE;
-  weaponType: MiddleRangeWeaponType;
 }
 
 export interface LongRangeWeapon extends Weapon {

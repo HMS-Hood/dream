@@ -7,7 +7,6 @@ import { getFrontWidth } from '../utils/armyUtils';
 import { generateId } from '../utils/utils';
 import { ActionScheduler } from './actionScheduler';
 import { BattleUtils } from './battleUtils';
-import { AttackMethod } from '../enums';
 import { IRefactoredCampaign } from './IRefactoredCampaign';
 import { BattleState } from './battleState';
 import { BattleStateHandler } from './battleStateHandler';
@@ -178,26 +177,22 @@ export class Campaign implements IRefactoredCampaign {
         enemyArmies = group.side1Armies;
       }
 
-      // 根据攻击者武器类型确定攻击范围
-      let attackRange = 1;
-      const weaponType =
-        action.unit.getCharacter().equipment.weapon?.attackMethod; // 假设 unit.weaponType 属性存在
-      if (weaponType === AttackMethod.MEDIUM_RANGE) {
-        attackRange = 2;
-      } else if (weaponType === AttackMethod.LONG_RANGE) {
-        attackRange = 5;
-      } else {
-        attackRange = 1;
-      }
+      // 攻击者攻击范围
+      const attackRange = action.unit.getAttackRange();
 
       // 使用 BattleUtils.selectTargetWithinRange 筛选出攻击范围内的目标队员，并直接进行攻击
-      const targetUnit = BattleUtils.selectTargetWithinRange(
+      const targetInfo = BattleUtils.selectTargetWithinRange(
+        action.army,
         action.squad,
         enemyArmies,
         attackRange
       );
-      if (targetUnit) {
-        this.executeUnitAttack(action.unit, targetUnit);
+      if (targetInfo) {
+        this.executeUnitAttack(
+          action.unit,
+          targetInfo.unit,
+          targetInfo.distance
+        );
       }
 
       // 攻击后重新计算对方存活单位
@@ -271,7 +266,11 @@ export class Campaign implements IRefactoredCampaign {
   }
 
   // 计算并结算攻击伤害，然后根据对方存活情况执行反击
-  private executeUnitAttack(attacker: ICombatUnit, target: ICombatUnit) {
+  private executeUnitAttack(
+    attacker: ICombatUnit,
+    target: ICombatUnit,
+    distance: number
+  ) {
     let attackerDamage = attacker.physicalAttack;
     const hit = Math.random();
     // 不同攻击结果，影响反击效果
@@ -310,7 +309,7 @@ export class Campaign implements IRefactoredCampaign {
     target.takeDamage(attackerDamage);
     attackInfo.push(`do damage: ${attackerDamage}`);
     if (attackerDamage > 0) attacker.getCharacter().addExperience(1);
-    if (!target.isDead) {
+    if (!target.isDead && target.getAttackRange() >= distance) {
       // counter
       attackInfo.push(
         `Unit ${target.getCharacter().name} counterattacked ${

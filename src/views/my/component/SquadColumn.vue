@@ -74,7 +74,12 @@
 
 <script setup lang="ts">
   import { ref } from 'vue';
-  import { SquadPosition } from '@/core/enums';
+  import {
+    LongRangeWeaponType,
+    OneHandWeaponType,
+    SquadPosition,
+    TwoHandWeaponType,
+  } from '@/core/enums';
   import { ISquad } from '@/core/interfaces/combat';
   import { CombatUnit } from '@/core/battle/CombatUnit';
   import { CharacterInterface } from '@/core/interfaces';
@@ -124,13 +129,13 @@
     let ranged = 0;
     squad.members.forEach((member) => {
       const weapon = member.getCharacter().equipment?.weapon;
-      if (weapon && weapon.name) {
-        const name = weapon.name.toLowerCase();
-        if (name.includes('sword')) {
+      if (weapon && weapon.weaponType) {
+        const type = weapon.weaponType;
+        if (Object.values(OneHandWeaponType).includes(type as any)) {
           melee += 1;
-        } else if (name.includes('lance')) {
+        } else if (Object.values(TwoHandWeaponType).includes(type as any)) {
           mid += 1;
-        } else if (name.includes('bow')) {
+        } else if (Object.values(LongRangeWeaponType).includes(type as any)) {
           ranged += 1;
         }
       }

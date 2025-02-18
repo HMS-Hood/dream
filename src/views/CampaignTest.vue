@@ -35,7 +35,6 @@
     SquadPosition,
     QualityLevel,
     OneHandWeaponType,
-    MiddleRangeWeaponType,
     LongRangeWeaponType,
   } from '../core/enums';
   import {
@@ -62,8 +61,6 @@
     switch (position) {
       case SquadPosition.FRONT:
         return createNormalStandardWeapon(quality, OneHandWeaponType.SWORD);
-      case SquadPosition.MIDDLE:
-        return createNormalStandardWeapon(quality, MiddleRangeWeaponType.LANCE);
       case SquadPosition.BACK:
         return createNormalStandardWeapon(quality, LongRangeWeaponType.BOW);
       default:
@@ -100,20 +97,13 @@
     for (let i = 0; i < config.squadPerTeam; i += 1) {
       // 根据索引分配位置
       let position: SquadPosition;
-      if (i < config.squadPerTeam / 3) {
-        position = SquadPosition.FRONT;
-      } else if (i < (config.squadPerTeam * 2) / 3) {
-        position = SquadPosition.MIDDLE;
-      } else {
+      if (i < config.squadPerTeam / 2) {
         position = SquadPosition.BACK;
+      } else {
+        position = SquadPosition.FRONT;
       }
 
       const members = generateSquadMembers(position);
-      // 计算小队的平均攻击速度
-      const averageSpeed =
-        members.reduce((sum, member) => sum + member.attackSpeed, 0) /
-        members.length;
-
       squads.push(
         new Squad({
           id: `squad_${i}`,

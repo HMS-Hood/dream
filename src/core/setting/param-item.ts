@@ -373,7 +373,7 @@ export const namesOfQualityGreatMace: QualityString = {
   [QualityLevel.SSS]: '诸神之力',
 };
 
-export const namesOfQualitySpear: QualityString = {
+export const namesOfQualityLance: QualityString = {
   [QualityLevel.F]: '铁制长矛',
   [QualityLevel.E]: '精钢长矛',
   [QualityLevel.D]: '战争长矛',
@@ -383,18 +383,6 @@ export const namesOfQualitySpear: QualityString = {
   [QualityLevel.S]: '破晓之矛',
   [QualityLevel.SS]: '苍穹之矛',
   [QualityLevel.SSS]: '命运之矛',
-};
-
-export const namesOfQualityPolearm: QualityString = {
-  [QualityLevel.F]: '铁制长戟',
-  [QualityLevel.E]: '精钢长戟',
-  [QualityLevel.D]: '守卫长戟',
-  [QualityLevel.C]: '皇家长戟',
-  [QualityLevel.B]: '将军之戟',
-  [QualityLevel.A]: '龙纹长戟',
-  [QualityLevel.S]: '天威之戟',
-  [QualityLevel.SS]: '帝王之戟',
-  [QualityLevel.SSS]: '九天神戟',
 };
 
 export const namesOfQualityHalberd: QualityString = {
@@ -443,18 +431,6 @@ export const valueOfQualityStaffWeapon: QualityNumber = {
   [QualityLevel.S]: 12800,
   [QualityLevel.SS]: 25600,
   [QualityLevel.SSS]: 51200,
-};
-
-export const valueOfQualityMiddleRangeWeapon: QualityNumber = {
-  [QualityLevel.F]: 150,
-  [QualityLevel.E]: 300,
-  [QualityLevel.D]: 600,
-  [QualityLevel.C]: 1200,
-  [QualityLevel.B]: 2400,
-  [QualityLevel.A]: 4800,
-  [QualityLevel.S]: 9600,
-  [QualityLevel.SS]: 19200,
-  [QualityLevel.SSS]: 38400,
 };
 
 export const valueOfQualityLongRangeWeapon: QualityNumber = {

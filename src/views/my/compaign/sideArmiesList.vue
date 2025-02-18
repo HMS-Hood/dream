@@ -29,14 +29,6 @@
               </div>
               <div class="position-stat">
                 <span
-                  >Middle:
-                  {{
-                    getSquadsByPosition(armyState, SquadPosition.MIDDLE)
-                  }}</span
-                >
-              </div>
-              <div class="position-stat">
-                <span
                   >Back:
                   {{ getSquadsByPosition(armyState, SquadPosition.BACK) }}</span
                 >

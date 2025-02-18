@@ -13,18 +13,6 @@
         ></squad-column>
       </div>
 
-      <!-- Middle Column -->
-      <div class="squad-column middle">
-        <squad-column
-          :all-members="allMembers"
-          :squads="squads"
-          :list-squads="middleSquads"
-          :position="SquadPosition.MIDDLE"
-          title="中排小队"
-          @change-members="changeMembers"
-        ></squad-column>
-      </div>
-
       <!-- Back Column -->
       <div class="squad-column back">
         <squad-column
@@ -65,9 +53,6 @@
   // Split squads into three groups by their position.
   const frontSquads = computed(() =>
     squads.value.filter((squad) => squad.position === SquadPosition.FRONT)
-  );
-  const middleSquads = computed(() =>
-    squads.value.filter((squad) => squad.position === SquadPosition.MIDDLE)
   );
   const backSquads = computed(() =>
     squads.value.filter((squad) => squad.position === SquadPosition.BACK)

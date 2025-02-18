@@ -1,12 +1,10 @@
 export enum SquadPosition {
   FRONT = 'FRONT',
-  MIDDLE = 'MIDDLE',
   BACK = 'BACK',
 }
 
 export enum AttackMethod {
   MELEE = 'MELEE',
-  MEDIUM_RANGE = 'MEDIUM_RANGE',
   LONG_RANGE = 'LONG_RANGE',
 }
 
@@ -26,23 +24,18 @@ export enum OneHandWeaponType {
   SWORD = 'SWORD',
   AXE = 'AXE',
   MACE = 'MACE',
-  DAGGER = 'DAGGER',
 }
 
 export enum TwoHandWeaponType {
   GREAT_SWORD = 'GREAT_SWORD',
   GREAT_AXE = 'GREAT_AXE',
   GREAT_MACE = 'GREAT_MACE',
+  LANCE = 'LANCE',
+  HALBERD = 'HALBERD',
 }
 
 export enum StaffWeaponType {
   STAFF = 'STAFF',
-}
-
-export enum MiddleRangeWeaponType {
-  LANCE = 'LANCE',
-  POLEARM = 'POLEARM',
-  HALBERD = 'HALBERD',
 }
 
 export enum LongRangeWeaponType {

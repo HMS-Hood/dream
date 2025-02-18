@@ -15,16 +15,14 @@ export function getFrontWidth(army: IArmy): number {
 
 // 验证部队的站位分配是否合法
 export function validateArmyFormation(army: IArmy): boolean {
-  const front = army.squads
-    .filter((s) => s.position === SquadPosition.FRONT)
-    .reduce((sum, s) => sum + s.members.length, 0);
-  const middle = army.squads
-    .filter((s) => s.position === SquadPosition.MIDDLE)
-    .reduce((sum, s) => sum + s.members.length, 0);
-  const back = army.squads
-    .filter((s) => s.position === SquadPosition.BACK)
-    .reduce((sum, s) => sum + s.members.length, 0);
-  return middle <= front && back <= 2 * front;
+  // const front = army.squads
+  //   .filter((s) => s.position === SquadPosition.FRONT)
+  //   .reduce((sum, s) => sum + s.members.length, 0);
+  // const back = army.squads
+  //   .filter((s) => s.position === SquadPosition.BACK)
+  //   .reduce((sum, s) => sum + s.members.length, 0);
+  // return front >= back;
+  return true;
 }
 
 export function createSquad(
