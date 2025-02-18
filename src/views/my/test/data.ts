@@ -5,6 +5,13 @@ export const profession: string[] = [
   'queen',
 ];
 
+export const poses: string[] = [
+  'gracefully',
+  'thoughtfully',
+  'valiantly',
+  'boldly',
+];
+
 export const pantyhoseColor: string[] = ['dark brown', 'gray', 'dark'];
 
 export const hairColor: string[] = [
@@ -58,25 +65,9 @@ export const hairFrontStyle: string[] = [
   ' and Choppy Bangs',
 ];
 
-export const hairStyle: string[] = [
-  'beachy waves',
-  'nature curls',
-  'nature waves',
-  'side part with soft waves',
-  'center part with minimal styling',
-  'soft layers',
-  'long and flowy',
-  'the wet look',
-  'the shag',
-  'twists',
-  'cornrows along the Scalp',
-  'braids along the Scalp',
+export const hairStyleLong: string[] = [
   'waterfall braid',
   'fishtail braid',
-  'natural waves',
-  'natural curls',
-  'straight and simple',
-  'loose hair',
   'half-up twisted crown',
   'half-up braids',
   'half-up bun',
@@ -94,6 +85,25 @@ export const hairStyle: string[] = [
   'side ponytail',
   'low ponytail',
   'high ponytail',
+];
+
+export const hairStyle: string[] = [
+  'beachy waves',
+  'nature curls',
+  'nature waves',
+  'side part with soft waves',
+  'center part with minimal styling',
+  'soft layers',
+  'long and flowy',
+  'the wet look',
+  'the shag',
+  'twists',
+  'cornrows along the Scalp',
+  'braids along the Scalp',
+  'natural waves',
+  'natural curls',
+  'straight and simple',
+  'loose hair',
 ];
 
 export const hairLength: string[] = [
