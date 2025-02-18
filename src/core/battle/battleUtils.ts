@@ -52,8 +52,14 @@ export class BattleUtils {
           targetSquad
         );
         if (distance <= maxDistance) {
-          // 根据距离计算权重：若距离为0，权重1，否则权重为 0.5
-          const weight = targetSquad.position === SquadPosition.FRONT ? 1 : 0.5;
+          // 计算权重：若为后排且所在部队有存活的前排小队则为0.5，其它为1
+          const weight =
+            targetSquad.position === SquadPosition.BACK &&
+            targetArmy.squads.some(
+              (squad) => squad.position === SquadPosition.FRONT && !squad.isDead
+            )
+              ? 0.5
+              : 1;
           return targetSquad.members
             .filter((unit) => !unit.isDead)
             .map((unit) => ({ unit, weight, distance }));

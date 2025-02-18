@@ -70,9 +70,11 @@ export class CombatUnit implements ICombatUnit {
       strength: calculateAttributeModifier(this.character.strength),
       agility: calculateAttributeModifier(this.character.agility),
       endurance: calculateAttributeModifier(this.character.endurance),
+      intelligence: calculateAttributeModifier(this.character.intelligence),
       spirit: calculateAttributeModifier(this.character.spirit),
       perception: calculateAttributeModifier(this.character.perception),
       luck: calculateAttributeModifier(this.character.luck),
+      charm: calculateAttributeModifier(this.character.charm),
     };
   }
 
