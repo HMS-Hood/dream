@@ -12,7 +12,7 @@ export const poses: string[] = [
   'boldly',
 ];
 
-export const pantyhoseColor: string[] = ['dark brown', 'gray', 'dark'];
+export const pantyhoseColor: string[] = ['dark brown', 'gray', 'dark', 'light'];
 
 export const hairColor: string[] = [
   'pink',

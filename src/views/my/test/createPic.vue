@@ -53,7 +53,7 @@
       armorColor[Math.floor(Math.random() * armorColor.length)];
     const desc =
       backgroundDesc[Math.floor(Math.random() * backgroundDesc.length)];
-    let suitDesc = ` She wears a ${armorMain} glamorous armor with ${armorBorder} border, paires ${randomPantyhoseColor} pantyhose.`;
+    let suitDesc = ` She wears a ${armorMain} glamorous armor with ${armorBorder} border, paires ${randomPantyhoseColor} stockings.`;
     if (Math.random() > 0.4) {
       suitDesc = '';
     }
