@@ -3,7 +3,6 @@
 /* eslint-disable import/prefer-default-export */
 import { IArmy, BattleGroup } from '../interfaces/combat';
 import { BattleConfig, ICombatUnit } from '../interfaces';
-import { getFrontWidth } from '../utils/armyUtils';
 import { generateId } from '../utils/utils';
 import { ActionScheduler } from './actionScheduler';
 import { BattleUtils } from './battleUtils';
@@ -57,29 +56,16 @@ export class Campaign implements IRefactoredCampaign {
     );
   }
 
-  // 根据部队正面宽度和战场上限，将上场部队与后备部队分配出来
-  public assignActiveAndReserveArmies(maxFrontWidth: number): {
+  // 根据部队数和战场上限，将上场部队与后备部队分配出来
+  public assignActiveAndReserveArmies(armyLimit: number): {
     active: IArmy[];
     reserve: IArmy[];
   }[] {
     const assignForSide = (armies: IArmy[]) => {
-      const sorted = armies
-        .slice()
-        .sort((a, b) => getFrontWidth(b) - getFrontWidth(a));
-      const active: IArmy[] = [];
-      const reserve: IArmy[] = [];
-      let totalFrontWidth = 0;
-      for (let i = 0; i < sorted.length; i += 1) {
-        const army = sorted[i];
-        const width = getFrontWidth(army);
-        if (totalFrontWidth + width <= maxFrontWidth) {
-          active.push(army);
-          totalFrontWidth += width;
-        } else {
-          reserve.push(army);
-        }
-      }
-      return { active, reserve };
+      return {
+        active: armies.slice(0, armyLimit),
+        reserve: armies.slice(armyLimit),
+      };
     };
 
     return [assignForSide(this.side1Armies), assignForSide(this.side2Armies)];
@@ -92,12 +78,8 @@ export class Campaign implements IRefactoredCampaign {
   ): BattleGroup[] {
     // 目前先采用简单的1对1匹配，后续再根据各部队的正面宽度比例调整实现1对多情况
     const groups: BattleGroup[] = [];
-    const side1 = activeSide1
-      .slice()
-      .sort((a, b) => getFrontWidth(b) - getFrontWidth(a));
-    const side2 = activeSide2
-      .slice()
-      .sort((a, b) => getFrontWidth(b) - getFrontWidth(a));
+    const side1 = activeSide1.slice();
+    const side2 = activeSide2.slice();
 
     while (side1.length && side2.length) {
       const army1 = side1.shift()!;
@@ -110,22 +92,18 @@ export class Campaign implements IRefactoredCampaign {
       });
     }
 
-    // 如有剩余的部队，单独成立战团等待后续匹配调节
-    while (side1.length) {
-      groups.push({
-        id: generateId(),
-        side1Armies: [side1.shift()!],
-        side2Armies: [],
-        battleState: { timeElapsed: 0, isOver: false },
-      });
-    }
-    while (side2.length) {
-      groups.push({
-        id: generateId(),
-        side1Armies: [],
-        side2Armies: [side2.shift()!],
-        battleState: { timeElapsed: 0, isOver: false },
-      });
+    // 如有剩余的部队，则依次加入到战团中
+    if (groups.length > 0) {
+      while (side1.length) {
+        for (let i = 0; i < groups.length && side1.length > 0; i += 1) {
+          groups[i].side1Armies.push(side1.shift()!);
+        }
+      }
+      while (side2.length) {
+        for (let i = 0; i < groups.length && side2.length > 0; i += 1) {
+          groups[i].side2Armies.push(side2.shift()!);
+        }
+      }
     }
     this.battleGroups = groups;
     return groups;
@@ -143,6 +121,17 @@ export class Campaign implements IRefactoredCampaign {
     const side1Assign = assignments[0];
     const side2Assign = assignments[1];
     // 使用分配出的上场部队匹配战团
+    if (side1Assign.active.length > 0 && side2Assign.active.length > 0) {
+      if (side1Assign.active.length / side2Assign.active.length > 6) {
+        side1Assign.reserve.push(
+          ...side1Assign.active.splice(side2Assign.active.length * 6 - 1)
+        );
+      } else if (side2Assign.active.length / side1Assign.active.length > 6) {
+        side2Assign.reserve.push(
+          ...side2Assign.active.splice(side1Assign.active.length * 6 - 1)
+        );
+      }
+    }
     this.matchBattleGroups(side1Assign.active, side2Assign.active);
     const scheduler = new ActionScheduler(this.config.standardInterval);
     // 初始化所有上场部队
@@ -170,11 +159,11 @@ export class Campaign implements IRefactoredCampaign {
       if (!group) continue;
 
       // 根据所属阵营确定敌方部队
-      let enemyArmies: IArmy[] = [];
+      let targetArmies: IArmy[] = [];
       if (group.side1Armies.includes(action.army)) {
-        enemyArmies = group.side2Armies;
+        targetArmies = group.side2Armies;
       } else {
-        enemyArmies = group.side1Armies;
+        targetArmies = group.side1Armies;
       }
 
       // 攻击者攻击范围
@@ -184,7 +173,7 @@ export class Campaign implements IRefactoredCampaign {
       const targetInfo = BattleUtils.selectTargetWithinRange(
         action.army,
         action.squad,
-        enemyArmies,
+        targetArmies,
         attackRange
       );
       if (targetInfo) {
@@ -195,31 +184,16 @@ export class Campaign implements IRefactoredCampaign {
         );
       }
 
-      // 攻击后重新计算对方存活单位
-      const updatedEnemyUnits = enemyArmies
-        .flatMap((army) => army.squads)
-        .flatMap((squad) => squad.members)
-        .filter((unit) => !unit.isDead);
-
-      // 新的处理逻辑
-      if (updatedEnemyUnits.length === 0) {
-        // 敌方全部阵亡，则对该战团中获胜方的每个部队（以下称为部队b）进行重新分配：
-        // 对于每个部队b，查找当前战场上其它所有战团中己方正面宽度劣势最大的战团（记为a），
-        // 若a中敌方部队数大于1，则解散a，与部队b一起重新匹配战团；
-        // 如果a中敌方部队数为1，则部队b直接加入a。
-        // 执行完毕后将当前战团移除。
-        this.handleBattleGroupVictory(group);
-        continue;
+      // 判断战团是否结束，如果结束则进行重新匹配
+      const isGroupOver = this.handleBattleGroupVictory(group);
+      if (isGroupOver) {
+        // 如果战团结束，则重新匹配战团
+        this.tryPromoteReserveArmies(side1Assign, side2Assign);
       }
 
       // 如果攻击者仍存活，则重新安排下次行动
       if (!action.unit.isDead) {
         scheduler.reschedule(action);
-      }
-
-      // 每隔一定的模拟时间检查是否有后备部队需要上场
-      if (Math.floor(simulationTime) % 20 === 0) {
-        this.tryPromoteReserveArmies();
       }
     }
     this.battleStateHandler.getBattleState().isOver = true;
@@ -351,28 +325,55 @@ export class Campaign implements IRefactoredCampaign {
   }
 
   // 检查后备部队是否达到上场条件，若满足则重新匹配战团
-  private tryPromoteReserveArmies() {
-    const assignment = this.assignActiveAndReserveArmies(
-      this.config.battlefieldWidth
+  /**
+   * 重构后的 tryPromoteReserveArmies 方法：
+   * 1. 根据战场限制（battlefieldWidth）将全部部队划分为 active 和 reserve 部队，并过滤掉全部阵亡的部队。
+   * 2. 计算哪些 active 部队尚未进入战团（即新晋补充的部队），
+   *    同时如果 active 部队数量不足，则从 reserve 队列中继续晋升。
+   * 3. 对新晋部队调用 integrateArmyIntoBattleGroup，将它们按照与 reassignVictoriousArmy 类似的逻辑加入到已有的战团中。
+   */
+  private tryPromoteReserveArmies(
+    side1Assign: { active: IArmy[]; reserve: IArmy[] },
+    side2Assign: { active: IArmy[]; reserve: IArmy[] }
+  ) {
+    // 过滤掉没有存活单元的部队
+    side1Assign.active = side1Assign.active.filter((army) =>
+      this.hasLivingUnits(army)
     );
-    const newActiveSide1 = assignment[0].active;
-    const newActiveSide2 = assignment[1].active;
-    const currentActiveSide1 = this.battleGroups.flatMap(
-      (group) => group.side1Armies
+    side2Assign.active = side2Assign.active.filter((army) =>
+      this.hasLivingUnits(army)
     );
-    const currentActiveSide2 = this.battleGroups.flatMap(
-      (group) => group.side2Armies
-    );
-
-    if (
-      newActiveSide1.length > currentActiveSide1.length ||
-      newActiveSide2.length > currentActiveSide2.length
+    const newSide1Active: IArmy[] = [];
+    const newSide2Active: IArmy[] = [];
+    // 如果 active 部队不足战场限制，则从 reserve 队列中依次晋升
+    while (
+      side1Assign.active.length < this.getBattleConfig().battlefieldWidth &&
+      side1Assign.reserve.length > 0
     ) {
-      this.battleGroups = this.matchBattleGroups(
-        newActiveSide1,
-        newActiveSide2
+      newSide1Active.push(side1Assign.active.shift()!);
+    }
+    while (
+      side2Assign.active.length < this.getBattleConfig().battlefieldWidth &&
+      side2Assign.reserve.length > 0
+    ) {
+      newSide2Active.push(side2Assign.reserve.shift()!);
+    }
+
+    // 对于每个新晋部队，依次将其加入到已有的战团中（使用与 reassignVictoriousArmy 类似的逻辑）
+    newSide1Active.forEach((army) => {
+      this.reassignVictoriousArmy(army, 'side1', 'no-group');
+    });
+    newSide2Active.forEach((army) => {
+      this.reassignVictoriousArmy(army, 'side2', 'no-group');
+    });
+
+    side1Assign.active = [...side1Assign.active, ...newSide1Active];
+    side2Assign.active = [...side2Assign.active, ...newSide2Active];
+
+    if (newSide1Active.length > 0 || newSide2Active.length > 0) {
+      console.log(
+        'Promoted reserve armies and integrated them into existing battle groups'
       );
-      console.log('Promoted reserve armies and re-matched battle groups');
     }
   }
 
@@ -381,25 +382,6 @@ export class Campaign implements IRefactoredCampaign {
     return army.squads.some((squad) =>
       squad.members.some((unit) => !unit.isDead)
     );
-  }
-
-  /**
-   * 计算指定战团在己方胜利状态下的"正面宽度劣势"值；
-   * 当己方敌军正面宽度与己方正面宽度之差越大，表示劣势越明显。
-   */
-  private getDisadvantageValue(
-    group: BattleGroup,
-    winningSide: 'side1' | 'side2'
-  ): number {
-    const friendlyWidth =
-      winningSide === 'side1'
-        ? group.side1Armies.reduce((sum, army) => sum + getFrontWidth(army), 0)
-        : group.side2Armies.reduce((sum, army) => sum + getFrontWidth(army), 0);
-    const enemyWidth =
-      winningSide === 'side1'
-        ? group.side2Armies.reduce((sum, army) => sum + getFrontWidth(army), 0)
-        : group.side1Armies.reduce((sum, army) => sum + getFrontWidth(army), 0);
-    return enemyWidth - friendlyWidth;
   }
 
   /**
@@ -412,17 +394,12 @@ export class Campaign implements IRefactoredCampaign {
     winningSide: 'side1' | 'side2',
     curGroupId: string
   ): void {
-    // 在其它所有战团中筛选出己方有部队的候选战团
-    const candidateGroups = this.battleGroups.filter((group) => {
-      if (group.id === curGroupId) return false;
-      if (winningSide === 'side1') {
-        return group.side1Armies.length > 0;
-      }
-      return group.side2Armies.length > 0;
-    });
-
+    // 过滤掉当前调用中刚结束的战团，其它战团都应该既有我方也有敌方部队
+    const candidateGroups = this.battleGroups.filter(
+      (group) => group.id !== curGroupId
+    );
     if (candidateGroups.length === 0) {
-      // 无候选，则创建新战团
+      // 如果没有候选，则创建新的战团
       const newGroup: BattleGroup = {
         id: generateId(),
         side1Armies: winningSide === 'side1' ? [b] : [],
@@ -433,51 +410,64 @@ export class Campaign implements IRefactoredCampaign {
       return;
     }
 
-    // 选出己方正面宽度劣势最大的候选战团
+    // 在候选的战团中查找“我方部队数量减敌方部队数量”最小的一个
     let selectedGroup = candidateGroups[0];
-    let maxDisadvantage = this.getDisadvantageValue(selectedGroup, winningSide);
-    for (let i = 0; i < candidateGroups.length; i += 1) {
-      const group = candidateGroups[i];
-      const disadvantage = this.getDisadvantageValue(group, winningSide);
-      if (disadvantage > maxDisadvantage) {
-        maxDisadvantage = disadvantage;
-        selectedGroup = group;
+    let minDifference = this.getSideDifference(selectedGroup, winningSide);
+    for (let i = 1; i < candidateGroups.length; i += 1) {
+      const diff = this.getSideDifference(candidateGroups[i], winningSide);
+      if (diff < minDifference) {
+        minDifference = diff;
+        selectedGroup = candidateGroups[i];
       }
     }
 
-    // 根据获胜方所属来判断selectedGroup中敌方部队数量
+    // 获取选中战团中的敌方部队数
     const enemyCount =
       winningSide === 'side1'
         ? selectedGroup.side2Armies.length
         : selectedGroup.side1Armies.length;
+
     if (enemyCount > 1) {
-      // 若敌方部队多余1个，则解散selectedGroup，与b的部队合并重新匹配
-      const winningArmiesFromA =
+      // 若敌方部队多于1，则拆分该战团，重新匹配（注意保持我方和敌方阵营的顺序）
+      const winningArmies =
         winningSide === 'side1'
           ? selectedGroup.side1Armies
           : selectedGroup.side2Armies;
-      // 删除selectedGroup
-      this.battleGroups = this.battleGroups.filter((g) => g !== selectedGroup);
-      // 合并selectedGroup中的己方部队和部队b
-      const combinedWinningArmies = [...winningArmiesFromA, b];
-      // 提取selectedGroup中的敌方部队
-      const enemyArmiesFromA =
+      const enemyArmies =
         winningSide === 'side1'
           ? selectedGroup.side2Armies
           : selectedGroup.side1Armies;
-      // 重新匹配战团：注意匹配时参数顺序要区分己方与敌方
+      // 将选中的战团移除
+      this.battleGroups = this.battleGroups.filter(
+        (group) => group !== selectedGroup
+      );
+      // 合并选中战团中的我方部队与获胜部队 b
+      const combinedWinningArmies = [...winningArmies, b];
+      // 按matchBattleGroups的逻辑重新匹配战团
       const rematchedGroups =
         winningSide === 'side1'
-          ? this.matchBattleGroups(combinedWinningArmies, enemyArmiesFromA)
-          : this.matchBattleGroups(enemyArmiesFromA, combinedWinningArmies);
-      // 合并新匹配的战团
+          ? this.matchBattleGroups(combinedWinningArmies, enemyArmies)
+          : this.matchBattleGroups(enemyArmies, combinedWinningArmies);
+      // 将新匹配的战团加入战场
       this.battleGroups.push(...rematchedGroups);
-    } else if (winningSide === 'side1') {
-      // 如果enemyCount正好为1，则直接将部队b加入selectedGroup
-      selectedGroup.side1Armies.push(b);
     } else {
+      // 如果敌方部队数量等于1，则直接将 b 加入到选中战团的对应位置
+      if (winningSide === 'side1') {
+        selectedGroup.side1Armies.push(b);
+      }
       selectedGroup.side2Armies.push(b);
     }
+  }
+
+  // 辅助方法：计算指定战团中我方部队与敌方部队的数量差值
+  // 我们定义“差值”为：我方部队数量减去敌方部队数量
+  private getSideDifference(
+    group: BattleGroup,
+    winningSide: 'side1' | 'side2'
+  ): number {
+    return winningSide === 'side1'
+      ? group.side1Armies.length - group.side2Armies.length
+      : group.side2Armies.length - group.side1Armies.length;
   }
 
   /**
@@ -486,14 +476,14 @@ export class Campaign implements IRefactoredCampaign {
    * 判断a中敌方部队数：若多余1个，则解散a，与部队b重新匹配；若等于1，则部队b直接加入a。
    * 最后，从战场中移除该结束的战团。
    */
-  private handleBattleGroupVictory(group: BattleGroup): void {
+  private handleBattleGroupVictory(group: BattleGroup): boolean {
     let winningSide: 'side1' | 'side2' | null = null;
     if (group.side1Armies.some((army) => this.hasLivingUnits(army))) {
       winningSide = 'side1';
     } else if (group.side2Armies.some((army) => this.hasLivingUnits(army))) {
       winningSide = 'side2';
     }
-    if (!winningSide) return;
+    if (!winningSide) return false;
     const victoriousArmies =
       winningSide === 'side1' ? group.side1Armies : group.side2Armies;
     for (let i = 0; i < victoriousArmies.length; i += 1) {
@@ -502,6 +492,7 @@ export class Campaign implements IRefactoredCampaign {
     }
     // 移除该已结束的战团
     this.battleGroups = this.battleGroups.filter((g) => g !== group);
+    return true;
   }
 
   getBattleConfig(): BattleConfig {
