@@ -11,26 +11,8 @@
       <div class="battle-header">
         <h2>Battle Status</h2>
         <div class="control-buttons">
-          <a-button
-            type="primary"
-            :disabled="battleMatched"
-            @click="matchBattles"
-          >
-            Match Battles
-          </a-button>
-          <a-button
-            type="primary"
-            :disabled="!battleMatched || nonPlayerBattlesExecuted"
-            @click="executeNonPlayerBattles"
-          >
+          <a-button type="primary" @click="executeNonPlayerBattles">
             Execute Other Battles
-          </a-button>
-          <a-button
-            type="primary"
-            :disabled="!nonPlayerBattlesExecuted || playerBattleExecuted"
-            @click="executePlayerBattle"
-          >
-            Execute Player Battle
           </a-button>
         </div>
       </div>

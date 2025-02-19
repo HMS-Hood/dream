@@ -1,5 +1,5 @@
 import { QualityLevel, MissionDifficulty, SquadPosition } from '../enums';
-import { IArmy } from '../interfaces/combat';
+import { IArmy, ISquad } from '../interfaces/combat';
 import {
   missionQualityEnimyCount,
   missionQualityLowQuality,
@@ -21,11 +21,12 @@ import {
   generateRandomEquipment,
 } from '../utils/itemUtils';
 import { CombatUnit } from '../battle/CombatUnit';
-import { CharacterInterface } from '../interfaces';
-import { Campaign } from '../battle/campaign';
+import { CharacterInterface, ICombatUnit } from '../interfaces';
 import { defaultBattleConfig } from '../setting/param-combat';
 import { Armor, Item, Shield, Weapon } from '../interfaces/item';
 import { Army } from '../battle/Army';
+import { SquadBattle } from './SquadBattle';
+import { Squad } from '../battle/Squad';
 
 export interface MissionInfo {
   name: string;
@@ -193,13 +194,10 @@ export class Mission {
     const battleConfig = defaultBattleConfig;
     battleConfig.battlefieldWidth = 200;
     battleConfig.battleTimeLimit = 1000;
-    const campaign = new Campaign(
-      battleConfig,
-      [],
-      [enemyArmy],
-      playerArmy,
-      true
-    );
+    const campaign = new SquadBattle(playerArmy.squads, enemyArmy.squads, {
+      restThreshold: 0.3,
+      fleeThreshold: 0.1,
+    });
     const result = campaign.executeBattle();
 
     // remove dead member
@@ -215,7 +213,7 @@ export class Mission {
     });
 
     // 3. If the player's army wins, generate rewards.
-    if (result.winner === 'side1') {
+    if (result.winner === 'player') {
       // 从玩家部队中选取最高的 charm, luck 和 perception 数值
       let maxCharm = 0;
       let maxLuck = 0;
@@ -249,7 +247,7 @@ export class Mission {
       return {
         success: true,
         lost: lostMemberCount,
-        duration: 10 - Math.floor(result.duration / 100),
+        duration: Math.ceil(result.duration / 100),
         moneyReward: this.moneyReward,
         equipmentReward: this.equipmentReward,
         lostMembersId,
@@ -262,7 +260,7 @@ export class Mission {
     return {
       success: false,
       lost: lostMemberCount,
-      duration: 10 - Math.floor(result.duration / 100),
+      duration: Math.ceil(result.duration / 100),
       moneyReward: this.moneyReward,
       equipmentReward: this.equipmentReward,
       lostMembersId,
@@ -297,7 +295,7 @@ export class Mission {
     }
 
     // 6. Group every 10 personnel into a squad.
-    const squads: any[] = [];
+    const squads: ISquad[] = [];
     for (let i = 0; i < enemyMembers.length; i += 10) {
       const group = enemyMembers.slice(i, i + 10);
       // Sort the group by quality descending.
@@ -308,14 +306,11 @@ export class Mission {
       const squad = {
         id: generateId(),
         position: SquadPosition.FRONT, // temporary; will be reassigned below.
-        attackSpeed:
-          combatUnits.reduce((sum, unit) => sum + (unit.attackSpeed || 1), 0) /
-          combatUnits.length,
         members: combatUnits,
         targetIds: [],
         isDead: false,
       };
-      squads.push(squad);
+      squads.push(new Squad(squad));
     }
 
     // 7. Combine squads into an Army object.
@@ -345,7 +340,7 @@ export class Mission {
 
     // 10. For each squad, generate equipment based on formation.
     squads.forEach((squad) => {
-      squad.members.forEach((unit: any) => {
+      squad.members.forEach((unit: ICombatUnit) => {
         // For each piece of equipment, first determine its random quality.
         const equipQuality = generateQualityLevelWithMin(
           missionQualityLowQuality[this.quality]
@@ -393,6 +388,7 @@ export class Mission {
               );
           }
         }
+        unit.updateStats();
       });
     });
 

@@ -143,7 +143,7 @@
       {
         battlefieldWidth: 20,
         standardInterval: 40,
-        battleTimeLimit: 100,
+        battleTimeLimit: 1000,
         positionWeight: {
           front: 0.4,
           middle: 0.3,

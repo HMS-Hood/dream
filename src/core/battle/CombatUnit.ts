@@ -134,7 +134,7 @@ export class CombatUnit implements ICombatUnit {
         );
     }
 
-    this.parryRate = Math.max(
+    this.parryRate = Math.min(
       0.75,
       baseCombatStats.parryRate +
         (this.attributeModifiers.strength * 0.1 +
