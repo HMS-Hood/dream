@@ -2,7 +2,7 @@
   <h2>{{ title }}</h2>
   <div v-for="squad in listSquads" :key="squad.id">
     <a-card class="squad-card" hoverable>
-      <div class="squad-header">
+      <div class="squad-header" @click="pickSquadLeader(squad)">
         <span v-if="squad.members.length" class="leader-name">
           {{
             squad.members
@@ -30,7 +30,6 @@
         >
         <div class="weapon-stats">
           <span>近战: {{ getWeaponStats(squad).melee }}</span>
-          <span>中程: {{ getWeaponStats(squad).mid }}</span>
           <span>远程: {{ getWeaponStats(squad).ranged }}</span>
         </div>
       </div>
@@ -125,22 +124,22 @@
   // Compute weapon statistics for a squad based on its members' equipped weapon.
   const getWeaponStats = (squad: ISquad) => {
     let melee = 0;
-    let mid = 0;
     let ranged = 0;
     squad.members.forEach((member) => {
       const weapon = member.getCharacter().equipment?.weapon;
       if (weapon && weapon.weaponType) {
         const type = weapon.weaponType;
-        if (Object.values(OneHandWeaponType).includes(type as any)) {
+        if (
+          Object.values(OneHandWeaponType).includes(type as any) ||
+          Object.values(TwoHandWeaponType).includes(type as any)
+        ) {
           melee += 1;
-        } else if (Object.values(TwoHandWeaponType).includes(type as any)) {
-          mid += 1;
         } else if (Object.values(LongRangeWeaponType).includes(type as any)) {
           ranged += 1;
         }
       }
     });
-    return { melee, mid, ranged };
+    return { melee, ranged };
   };
 
   const handleChecked = (newMemberIds: string[]) => {

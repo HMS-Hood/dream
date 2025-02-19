@@ -23,9 +23,16 @@
         <div class="tag">领主仓库</div>
       </div>
       <div class="item-list">
-        <div v-for="item in player.items" :key="item.name" class="item">
-          <div class="name" :class="item.quality">{{ item.name }}</div>
-          <div class="value">{{ item.value }}</div>
+        <div
+          v-for="item in soldItems"
+          :key="item.item.name"
+          :class="item.check ? 'sold item' : 'item'"
+          @click="item.check = !item.check"
+        >
+          <div class="name" :class="item.item.quality">{{
+            item.item.name
+          }}</div>
+          <div class="value">{{ Math.floor(item.item.value / 4) }}</div>
         </div>
       </div>
     </div>
@@ -101,7 +108,6 @@
   import back from '@/views/my/component/back.vue';
   import {
     LongRangeWeaponType,
-    MiddleRangeWeaponType,
     OneHandWeaponType,
     QualityLevel,
     StaffWeaponType,
@@ -112,10 +118,10 @@
     valueOfQualityCloth,
     valueOfQualityLeather,
     valueOfQualityLongRangeWeapon,
-    valueOfQualityMiddleRangeWeapon,
     valueOfQualityOneHandWeapon,
     valueOfQualityPlate,
     valueOfQualityShield,
+    valueOfQualityStaffWeapon,
     valueOfQualityTwoHandWeapon,
   } from '@/core/setting/param-item';
   import {
@@ -123,7 +129,11 @@
     createNormalStandardWeapon,
     createStaff,
   } from '@/core/utils/itemUtils';
-  import { Armor, Shield, Weapon } from '@/core/interfaces/item';
+  import { Armor, Item, Shield, Weapon } from '@/core/interfaces/item';
+
+  const soldItems = ref<{ item: Item; check: boolean }[]>();
+
+  soldItems.value = player.items.map((item) => ({ item, check: false }));
 
   const weaponList: {
     name: string;
@@ -132,7 +142,6 @@
     weaponType:
       | OneHandWeaponType
       | TwoHandWeaponType
-      | MiddleRangeWeaponType
       | LongRangeWeaponType
       | StaffWeaponType;
     num: number;
@@ -223,58 +232,44 @@
     },
     {
       name: '制式长矛',
-      value: valueOfQualityMiddleRangeWeapon[QualityLevel.F],
+      value: valueOfQualityTwoHandWeapon[QualityLevel.F],
       quality: QualityLevel.F,
-      weaponType: MiddleRangeWeaponType.LANCE,
+      weaponType: TwoHandWeaponType.LANCE,
       num: 0,
     },
     {
       name: '优质制式长矛',
-      value: valueOfQualityMiddleRangeWeapon[QualityLevel.E],
+      value: valueOfQualityTwoHandWeapon[QualityLevel.E],
       quality: QualityLevel.E,
-      weaponType: MiddleRangeWeaponType.LANCE,
+      weaponType: TwoHandWeaponType.LANCE,
       num: 0,
     },
     {
       name: '制式长柄',
-      value: valueOfQualityMiddleRangeWeapon[QualityLevel.F],
+      value: valueOfQualityTwoHandWeapon[QualityLevel.F],
       quality: QualityLevel.F,
-      weaponType: MiddleRangeWeaponType.POLEARM,
+      weaponType: TwoHandWeaponType.HALBERD,
       num: 0,
     },
     {
       name: '优质制式长柄',
-      value: valueOfQualityMiddleRangeWeapon[QualityLevel.E],
+      value: valueOfQualityTwoHandWeapon[QualityLevel.E],
       quality: QualityLevel.E,
-      weaponType: MiddleRangeWeaponType.POLEARM,
-      num: 0,
-    },
-    {
-      name: '制式长戟',
-      value: valueOfQualityMiddleRangeWeapon[QualityLevel.F],
-      quality: QualityLevel.F,
-      weaponType: MiddleRangeWeaponType.HALBERD,
-      num: 0,
-    },
-    {
-      name: '优质制式长戟',
-      value: valueOfQualityMiddleRangeWeapon[QualityLevel.E],
-      quality: QualityLevel.E,
-      weaponType: MiddleRangeWeaponType.HALBERD,
+      weaponType: TwoHandWeaponType.HALBERD,
       num: 0,
     },
     {
       name: '木制法杖',
-      value: valueOfQualityMiddleRangeWeapon[QualityLevel.F],
+      value: valueOfQualityStaffWeapon[QualityLevel.F],
       quality: QualityLevel.F,
-      weaponType: MiddleRangeWeaponType.HALBERD,
+      weaponType: StaffWeaponType.STAFF,
       num: 0,
     },
     {
       name: '精灵法杖',
-      value: valueOfQualityMiddleRangeWeapon[QualityLevel.E],
+      value: valueOfQualityStaffWeapon[QualityLevel.E],
       quality: QualityLevel.E,
-      weaponType: MiddleRangeWeaponType.HALBERD,
+      weaponType: StaffWeaponType.STAFF,
       num: 0,
     },
     {
@@ -444,7 +439,12 @@
       epicItems.reduce<number>(
         (coin: number, item) => coin + (item.check ? item.item.value : 0),
         0
-      )
+      ) -
+      (soldItems.value?.reduce<number>(
+        (coin: number, item) =>
+          coin + (item.check ? Math.floor(item.item.value / 4) : 0),
+        0
+      ) ?? 0)
   );
   const info = ref('这里什么都有！不许瞎想 ~~~！');
 
@@ -452,6 +452,23 @@
 
   const deal = () => {
     if (player.gold >= consume.value) {
+      if (soldItems.value) {
+        player.items.splice(
+          0,
+          player.items.length,
+          ...soldItems.value
+            .filter((item) => !item.check)
+            .map((item) => item.item)
+        );
+        player.gold += soldItems.value
+          .filter((item) => item.check)
+          .reduce<number>(
+            (coin: number, item) =>
+              coin + (item.check ? Math.floor(item.item.value / 4) : 0),
+            0
+          );
+        soldItems.value = player.items.map((item) => ({ item, check: false }));
+      }
       weaponList.forEach((item) => {
         if (item.num > 0) {
           const weapon =
@@ -648,6 +665,10 @@
           .value {
             width: 5em;
             text-align: right;
+          }
+
+          &.sold {
+            background-color: rgb(154 153 153 / 80%);
           }
         }
 

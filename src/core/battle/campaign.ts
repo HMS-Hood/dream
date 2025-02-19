@@ -132,7 +132,10 @@ export class Campaign implements IRefactoredCampaign {
         );
       }
     }
-    this.matchBattleGroups(side1Assign.active, side2Assign.active);
+    this.battleGroups = this.matchBattleGroups(
+      side1Assign.active,
+      side2Assign.active
+    );
     const scheduler = new ActionScheduler(this.config.standardInterval);
     // 初始化所有上场部队
     const allArmies = this.battleGroups.flatMap((group) => [
@@ -267,12 +270,12 @@ export class Campaign implements IRefactoredCampaign {
     if (parry < target.parryRate) {
       // parry
       attackerDamage = 0;
-      attackInfo.push('parry');
+      attackInfo.push(`parry(rate:${target.parryRate})`);
       attackState = 'parry';
     } else if (block < target.blockRate) {
       // block
       attackerDamage = Math.max(0, attackerDamage - target.blockValue);
-      attackInfo.push(`block(${target.blockValue})`);
+      attackInfo.push(`block(${target.blockValue},rate:${target.blockRate})`);
       attackState = 'block';
     } else if (critical < attacker.criticalRate) {
       // critical
@@ -295,9 +298,9 @@ export class Campaign implements IRefactoredCampaign {
       if (attackState === 'miss') {
         counterDamage = target.physicalAttack;
       } else if (attackState === 'parry' || attackState === 'block') {
-        counterDamage = target.physicalAttack / 0.5;
+        counterDamage = target.physicalAttack * 0.5;
       } else if (attackState === 'normal') {
-        counterDamage = target.physicalAttack / 0.1;
+        counterDamage = target.physicalAttack * 0.1;
       } else if (attackState === 'critical') {
         counterDamage = 0;
       }
@@ -311,11 +314,13 @@ export class Campaign implements IRefactoredCampaign {
       if (countParry < attacker.parryRate) {
         // parry
         counterDamage = 0;
-        attackInfo.push('parry');
+        attackInfo.push(`parry(rate:${attacker.parryRate})`);
       } else if (countBlock < attacker.blockRate) {
         // block
         counterDamage = Math.max(0, counterDamage - attacker.blockValue);
-        attackInfo.push(`block(${attacker.blockValue})`);
+        attackInfo.push(
+          `block(${attacker.blockValue},rate:${attacker.blockRate})`
+        );
       }
       attacker.takeDamage(counterDamage);
       attackInfo.push(`do damage: ${counterDamage}`);
@@ -478,12 +483,17 @@ export class Campaign implements IRefactoredCampaign {
    */
   private handleBattleGroupVictory(group: BattleGroup): boolean {
     let winningSide: 'side1' | 'side2' | null = null;
-    if (group.side1Armies.some((army) => this.hasLivingUnits(army))) {
-      winningSide = 'side1';
-    } else if (group.side2Armies.some((army) => this.hasLivingUnits(army))) {
-      winningSide = 'side2';
+    const side1Alive = group.side1Armies.some((army) =>
+      this.hasLivingUnits(army)
+    );
+    const side2Alive = group.side2Armies.some((army) =>
+      this.hasLivingUnits(army)
+    );
+    if (side1Alive && side2Alive) {
+      return false;
     }
-    if (!winningSide) return false;
+    if (side1Alive) winningSide = 'side1';
+    else winningSide = 'side2';
     const victoriousArmies =
       winningSide === 'side1' ? group.side1Armies : group.side2Armies;
     for (let i = 0; i < victoriousArmies.length; i += 1) {

@@ -92,6 +92,7 @@
     armyStyleStore.setArmyStyle(
       squads.value.map((squad) => ({
         position: squad.position,
+        leaderId: squad.leaderId,
         membersId: squad.members.map((member) => member.getCharacter().id),
       }))
     );
@@ -118,6 +119,7 @@
             new Squad({
               id: `squad_${Date.now()}`,
               position: squadTemplate.position,
+              leaderId: squadTemplate.leaderId,
               members: allMembers.value
                 .filter((member) => squadTemplate.membersId.includes(member.id))
                 .map((member) => new CombatUnit(member)),

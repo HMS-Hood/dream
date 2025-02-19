@@ -1,11 +1,13 @@
 import { useEnvDataStore } from '@/store/envData';
 import { DoingMission, useDoingMissionStore } from '@/store/doingMission';
+import { SquadTemplate, useArmyStyleStore } from '@/store/armyStyle';
 import { calendar, player } from '../game';
 import { CharacterInterface } from '../interfaces';
 import { MissionInfo } from '../mission/Mission';
 
 const envData = useEnvDataStore();
 const doingMissionStroe = useDoingMissionStore();
+const armyStyleStore = useArmyStyleStore();
 
 export function save() {
   localStorage.setItem('player', JSON.stringify(player));
@@ -22,6 +24,9 @@ export function save() {
 
   const doingMission = doingMissionStroe.getDoingMission();
   localStorage.setItem('doingMission', JSON.stringify(doingMission));
+
+  const armyStyle = armyStyleStore.getArmyStyle();
+  localStorage.setItem('armyStyle', JSON.stringify(armyStyle));
 }
 
 export function load() {
@@ -55,5 +60,11 @@ export function load() {
   if (doingMissionData) {
     const doingMission = JSON.parse(doingMissionData) as DoingMission[];
     doingMissionStroe.setDoingMission(doingMission);
+  }
+
+  const armyStyleData = localStorage.getItem('armyStyle');
+  if (armyStyleData) {
+    const armyStle = JSON.parse(armyStyleData) as SquadTemplate[];
+    armyStyleStore.setArmyStyle(armyStle);
   }
 }

@@ -2,8 +2,9 @@
 import { defineStore } from 'pinia';
 import { SquadPosition } from '@/core/enums';
 
-type SquadTemplate = {
+export type SquadTemplate = {
   position: SquadPosition;
+  leaderId: string;
   membersId: string[];
 };
 
