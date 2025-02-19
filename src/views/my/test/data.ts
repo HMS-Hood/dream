@@ -1,3 +1,17 @@
+// Chanting mantras
+// Standing with head bowed
+// reading
+// dancing
+// Poised with sword drawn
+// Hands on hips confidently
+// Arms crossed defiantly
+// Casting a magical spell
+// Holding a royal scepter
+// Reaching skyward dramatically
+// Balancing on one leg
+// Stepping forward purposefully
+// Wielding a glowing shield
+// Gesturing regally to subjects
 export const profession: string[] = [
   'princess',
   'female warrior',
