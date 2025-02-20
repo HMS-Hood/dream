@@ -27,7 +27,10 @@
   const renewDesc = () => {
     const randomProfession =
       profession[Math.floor(Math.random() * profession.length)];
-    const randomPose = poses[Math.floor(Math.random() * poses.length)];
+    const randomPose =
+      randomProfession[1][
+        Math.floor(Math.random() * randomProfession[1].length)
+      ];
     const randomPantyhoseColor =
       pantyhoseColor[Math.floor(Math.random() * pantyhoseColor.length)];
     const randomHairColor =
@@ -57,7 +60,7 @@
     if (Math.random() > 0.4) {
       suitDesc = '';
     }
-    description.value = `/image model:⭐ FLUX.1.1 Pro prompt:A full-body portrait of a ${randomProfession} standing ${randomPose}.${suitDesc} 
+    description.value = `/image model:⭐ FLUX.1.1 Pro prompt:A full-body portrait of a ${randomProfession[0]} standing, ${randomPose}.${suitDesc} 
 Her footwear consists of expertly designed and crafted high-heeled boots. The heels are sturdy yet stylish, accentuating her every step with an impression of both grace and power.
 Her ${randomHairColor} hair was styled with ${randomHairLength} ${randomHairStyle}${randomFrontStyle}. Digital fantasy art style and 
 Japanese anime style ${desc}`;

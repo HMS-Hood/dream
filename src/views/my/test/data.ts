@@ -1,22 +1,59 @@
-// Chanting mantras
-// Standing with head bowed
-// reading
-// dancing
-// Poised with sword drawn
-// Hands on hips confidently
-// Arms crossed defiantly
-// Casting a magical spell
-// Holding a royal scepter
-// Reaching skyward dramatically
-// Balancing on one leg
-// Stepping forward purposefully
-// Wielding a glowing shield
-// Gesturing regally to subjects
-export const profession: string[] = [
-  'princess',
-  'female warrior',
-  'female mage',
-  'queen',
+export const princessPoses: string[] = [
+  'Poised with sword drawn',
+  'Hands on hips confidently',
+  'Arms crossed defiantly',
+  'Casting a magical spell',
+  'Holding a royal scepter',
+  'Reaching skyward dramatically',
+  'Balancing on one leg',
+  'Stepping forward purposefully',
+  'Wielding a glowing shield',
+  'Gesturing regally to subjects',
+];
+
+export const queenPoses: string[] = [
+  'Holding royal scepter regally',
+  'Adjusting crown gracefully',
+  'Gesturing to subjects majestically',
+  'Seated on throne elegantly',
+  'Signing royal decree confidently',
+  'Addressing court authoritatively',
+  'Overseeing royal procession proudly',
+  'Receiving foreign dignitaries formally',
+  'Contemplating kingdom thoughtfully',
+];
+
+export const warriorPoses: string[] = [
+  'Brandishing sword fiercely',
+  'Shield raised defensively',
+  'Charging into battle',
+  'Aiming bow precisely',
+  'Donning armor methodically',
+  'Sharpening blade intently',
+  'Surveying battlefield strategically',
+  'Rallying troops inspirationally',
+  'Demonstrating combat stance',
+  'Wielding dual weapons skillfully',
+];
+
+export const magePoses: string[] = [
+  'Conjuring mystic energy',
+  'Levitating magical tome',
+  'Casting intricate spell',
+  'Mixing potions carefully',
+  'Channeling elemental forces',
+  'Meditating in trance',
+  'Inscribing arcane runes',
+  'Summoning ethereal familiar',
+  'Manipulating time-space fabric',
+  'Deciphering ancient scrolls',
+];
+
+export const profession: [string, string[]][] = [
+  ['princess', princessPoses],
+  ['female warrior', warriorPoses],
+  ['female mage', magePoses],
+  ['queen', queenPoses],
 ];
 
 export const poses: string[] = [

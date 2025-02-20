@@ -19,7 +19,8 @@ import {
  */
 function generateAvatarURL(): string {
   const avatarId = getRandomInt(1, maxAvatarIndex);
-  return `/img/avatar/${avatarId}.png`;
+  const avatarName = `0000${avatarId}`.substring(`0000${avatarId}`.length - 4);
+  return `/img/avatar/${avatarName}.png`;
 }
 
 /**
