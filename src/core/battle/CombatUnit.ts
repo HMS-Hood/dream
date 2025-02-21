@@ -115,7 +115,7 @@ export class CombatUnit implements ICombatUnit {
         getTotalModifier(this.levelModifier);
 
     this.blockRate = this.getCharacter().equipment.shield
-      ? Math.max(
+      ? Math.min(
           0.9,
           baseCombatStats.blockRate +
             this.attributeModifiers.agility *
@@ -125,7 +125,7 @@ export class CombatUnit implements ICombatUnit {
       : 0;
 
     const shieldDefence = this.getCharacter().equipment.shield?.defence ?? 0;
-    if (!shieldDefence) {
+    if (shieldDefence) {
       this.blockValue =
         shieldDefence *
         getTotalModifier(
