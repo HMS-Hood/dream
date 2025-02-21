@@ -7,11 +7,22 @@ import {
   TwoHandWeaponType,
   LongRangeWeaponType,
   StaffWeaponType,
+  CharacterBaseProperty,
 } from '../enums';
 
 export interface ItemKey {
   desc: string;
   effect: any;
+}
+
+export interface BasePropertyModifier {
+  property: CharacterBaseProperty;
+  value: number;
+}
+
+export interface BasePropertyLimit {
+  property: CharacterBaseProperty;
+  minValue: number;
 }
 
 export interface Item {
@@ -24,6 +35,8 @@ export interface Item {
   quality: QualityLevel;
   keys: ItemKey[];
   type: ItemType;
+  modifier: BasePropertyModifier[];
+  limit: BasePropertyLimit[];
 }
 
 export interface Weapon extends Item {
@@ -54,7 +67,7 @@ export interface StaffWeapon extends Weapon {
   handType: WeaponHandType.TWO_HAND;
   attackMethod: AttackMethod.MELEE;
   weaponType: StaffWeaponType;
-  intelligenceIncrease: number;
+  modifier: [{ property: CharacterBaseProperty.intelligence; value: number }];
 }
 
 export interface LongRangeWeapon extends Weapon {
@@ -72,22 +85,22 @@ export interface Armor extends Item {
 }
 
 export interface Plate extends Armor {
-  strengthLimit: number;
-  agilityDecrease: number;
+  limit: [{ property: CharacterBaseProperty.strength; minValue: number }];
+  modifier: [{ property: CharacterBaseProperty.agility; value: number }];
   defence: number;
 }
 
 export interface Chain extends Armor {
-  strengthLimit: number;
+  limit: [{ property: CharacterBaseProperty.strength; minValue: number }];
   defence: number;
 }
 
 export interface Leather extends Armor {
   defence: number;
-  agilityIncrease: number;
+  modifier: [{ property: CharacterBaseProperty.agility; value: number }];
 }
 
 export interface Robe extends Armor {
   defence: number;
-  intelligenceIncrease: number;
+  modifier: [{ property: CharacterBaseProperty.intelligence; value: number }];
 }

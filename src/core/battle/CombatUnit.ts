@@ -1,11 +1,12 @@
 /* eslint-disable import/prefer-default-export */
 import { CharacterInterface, ICombatUnit } from '../interfaces';
-import { AttackMethod } from '../enums';
+import { AttackMethod, CharacterBaseProperty, ItemType } from '../enums';
 import {
   baseCombatStats,
   levelModifiers,
   calculateAttributeModifier,
 } from '../setting/param-combat';
+import { BasePropertyModifier } from '../interfaces/item';
 
 function getTotalModifier(...modifiers: number[]): number {
   return modifiers.reduce((total, mod) => total * (1 + mod), 1);
@@ -61,25 +62,84 @@ export class CombatUnit implements ICombatUnit {
     this.calculateSecondaryStats();
   }
 
+  private getModifiedBaseProperty(property: CharacterBaseProperty) {
+    const modifiers: BasePropertyModifier[] = [
+      ...(this.character.equipment.weapon?.modifier ?? []),
+      ...(this.character.equipment.shield?.modifier ?? []),
+      ...(this.character.equipment.armor?.modifier ?? []),
+    ];
+    let originalValue: number = 0;
+    switch (property) {
+      case CharacterBaseProperty.strength:
+        originalValue = this.character.strength;
+        break;
+      case CharacterBaseProperty.agility:
+        originalValue = this.character.agility;
+        break;
+      case CharacterBaseProperty.endurance:
+        originalValue = this.character.endurance;
+        break;
+      case CharacterBaseProperty.intelligence:
+        originalValue = this.character.intelligence;
+        break;
+      case CharacterBaseProperty.spirit:
+        originalValue = this.character.spirit;
+        break;
+      case CharacterBaseProperty.perception:
+        originalValue = this.character.perception;
+        break;
+      case CharacterBaseProperty.charm:
+        originalValue = this.character.charm;
+        break;
+      case CharacterBaseProperty.luck:
+        originalValue = this.character.luck;
+        break;
+      default:
+    }
+    return modifiers
+      .filter((modifier) => modifier.property === property)
+      .reduce<number>(
+        (value, modifier) => value + modifier.value,
+        originalValue
+      );
+  }
+
   private calculateModifiers(): void {
     // Level modifier
     this.levelModifier = levelModifiers[this.character.level];
 
     // Attribute modifiers
     this.attributeModifiers = {
-      strength: calculateAttributeModifier(this.character.strength),
-      agility: calculateAttributeModifier(this.character.agility),
-      endurance: calculateAttributeModifier(this.character.endurance),
-      intelligence: calculateAttributeModifier(this.character.intelligence),
-      spirit: calculateAttributeModifier(this.character.spirit),
-      perception: calculateAttributeModifier(this.character.perception),
-      luck: calculateAttributeModifier(this.character.luck),
-      charm: calculateAttributeModifier(this.character.charm),
+      strength: calculateAttributeModifier(
+        this.getModifiedBaseProperty(CharacterBaseProperty.strength)
+      ),
+      agility: calculateAttributeModifier(
+        this.getModifiedBaseProperty(CharacterBaseProperty.agility)
+      ),
+      endurance: calculateAttributeModifier(
+        this.getModifiedBaseProperty(CharacterBaseProperty.endurance)
+      ),
+      intelligence: calculateAttributeModifier(
+        this.getModifiedBaseProperty(CharacterBaseProperty.intelligence)
+      ),
+      spirit: calculateAttributeModifier(
+        this.getModifiedBaseProperty(CharacterBaseProperty.spirit)
+      ),
+      perception: calculateAttributeModifier(
+        this.getModifiedBaseProperty(CharacterBaseProperty.perception)
+      ),
+      luck: calculateAttributeModifier(
+        this.getModifiedBaseProperty(CharacterBaseProperty.luck)
+      ),
+      charm: calculateAttributeModifier(
+        this.getModifiedBaseProperty(CharacterBaseProperty.charm)
+      ),
     };
   }
 
   // 计算二级属性
   private calculateSecondaryStats(): void {
+    this.calculateModifiers();
     // Base health modified by endurance and level
     this.maxHealth = Math.floor(
       baseCombatStats.health *

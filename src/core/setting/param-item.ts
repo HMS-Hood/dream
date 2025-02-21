@@ -74,15 +74,15 @@ export const qualityPlateRanges: QualityRange = {
 };
 
 export const qualityPlateDecRanges: QualityRange = {
-  [QualityLevel.F]: [1, 1],
-  [QualityLevel.E]: [2, 2],
-  [QualityLevel.D]: [3, 4],
-  [QualityLevel.C]: [5, 6],
-  [QualityLevel.B]: [7, 8],
-  [QualityLevel.A]: [9, 10],
-  [QualityLevel.S]: [9, 10],
-  [QualityLevel.SS]: [7, 8],
-  [QualityLevel.SSS]: [5, 6],
+  [QualityLevel.F]: [-1, -1],
+  [QualityLevel.E]: [-2, -2],
+  [QualityLevel.D]: [-3, -4],
+  [QualityLevel.C]: [-5, -6],
+  [QualityLevel.B]: [-7, -8],
+  [QualityLevel.A]: [-9, -10],
+  [QualityLevel.S]: [-9, -10],
+  [QualityLevel.SS]: [-7, -8],
+  [QualityLevel.SSS]: [-5, -6],
 };
 
 export const qualityPlateLimitRanges: QualityRange = {

@@ -7,6 +7,7 @@ import {
   LongRangeWeaponType,
   QualityLevel,
   StaffWeaponType,
+  CharacterBaseProperty,
 } from '../enums';
 import {
   Weapon,
@@ -93,6 +94,8 @@ export function createWeapon(
     maxDamage: generateAttributeValue(quality, qualityRanges) + 1,
     attackMethod,
     weaponType,
+    modifier: [],
+    limit: [],
   };
   return weapon;
 }
@@ -257,10 +260,13 @@ export function createStaff(quality?: QualityLevel): Weapon {
     maxDamage: generateAttributeValue(quality, qualityStaffDamageRanges) + 1,
     attackMethod: AttackMethod.MELEE,
     weaponType: StaffWeaponType.STAFF,
-    intelligenceIncrease: generateAttributeValue(
-      quality,
-      qualityStaffIntellRanges
-    ),
+    modifier: [
+      {
+        property: CharacterBaseProperty.intelligence,
+        value: generateAttributeValue(quality, qualityStaffIntellRanges),
+      },
+    ],
+    limit: [],
   };
   return staff;
 }
@@ -275,6 +281,8 @@ export function createShield(quality?: QualityLevel): Shield {
     keys: [],
     type: ItemType.SHIELD,
     defence: generateAttributeValue(quality, qualityShieldRanges),
+    modifier: [],
+    limit: [],
   };
   return shield;
 }
@@ -288,8 +296,18 @@ export function createPlate(quality?: QualityLevel): Plate {
     img: `/img/item/plate-${quality.toLowerCase()}.png`,
     keys: [],
     type: ItemType.ARMOR,
-    strengthLimit: generateAttributeValue(quality, qualityPlateLimitRanges),
-    agilityDecrease: generateAttributeValue(quality, qualityPlateDecRanges),
+    limit: [
+      {
+        property: CharacterBaseProperty.strength,
+        minValue: generateAttributeValue(quality, qualityPlateLimitRanges),
+      },
+    ],
+    modifier: [
+      {
+        property: CharacterBaseProperty.agility,
+        value: generateAttributeValue(quality, qualityPlateDecRanges),
+      },
+    ],
     defence: generateAttributeValue(quality, qualityPlateRanges),
   };
   return plate;
@@ -304,7 +322,13 @@ export function createChain(quality?: QualityLevel): Chain {
     img: `/img/item/chain-${quality.toLowerCase()}.png`,
     keys: [],
     type: ItemType.ARMOR,
-    strengthLimit: generateAttributeValue(quality, qualityChainLimitRanges),
+    limit: [
+      {
+        property: CharacterBaseProperty.strength,
+        minValue: generateAttributeValue(quality, qualityChainLimitRanges),
+      },
+    ],
+    modifier: [],
     defence: generateAttributeValue(quality, qualityChainRanges),
   };
   return plate;
@@ -320,7 +344,13 @@ export function createLeather(quality?: QualityLevel): Leather {
     keys: [],
     type: ItemType.ARMOR,
     defence: generateAttributeValue(quality, qualityLeatherRanges),
-    agilityIncrease: generateAttributeValue(quality, qualityLeatherAgiRanges),
+    modifier: [
+      {
+        property: CharacterBaseProperty.agility,
+        value: generateAttributeValue(quality, qualityLeatherAgiRanges),
+      },
+    ],
+    limit: [],
   };
   return leather;
 }
@@ -335,10 +365,13 @@ export function createCloth(quality?: QualityLevel): Robe {
     keys: [],
     type: ItemType.ARMOR,
     defence: generateAttributeValue(quality, qualityClothRanges),
-    intelligenceIncrease: generateAttributeValue(
-      quality,
-      qualityClothIntellRanges
-    ),
+    modifier: [
+      {
+        property: CharacterBaseProperty.intelligence,
+        value: generateAttributeValue(quality, qualityClothIntellRanges),
+      },
+    ],
+    limit: [],
   };
   return robe;
 }
