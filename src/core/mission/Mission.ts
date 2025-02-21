@@ -199,6 +199,7 @@ export class Mission {
       fleeThreshold: 0.1,
     });
     const result = campaign.executeBattle();
+    console.log(result.logs);
 
     // remove dead member
     let lostMemberCount = 0;

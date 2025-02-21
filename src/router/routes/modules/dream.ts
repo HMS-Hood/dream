@@ -73,6 +73,14 @@ const DASHBOARD: AppRouteRecordRaw[] = [
       requiresAuth: false,
     },
   },
+  {
+    path: '/createHero',
+    name: 'createHero',
+    component: () => import('@/views/my/CreateHero.vue'),
+    meta: {
+      requiresAuth: false,
+    },
+  },
 ];
 
 export default DASHBOARD;

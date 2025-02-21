@@ -181,7 +181,7 @@ export class CombatUnit implements ICombatUnit {
   public takeDamage(damage: number): void {
     this.currentHealth = Math.max(
       0,
-      this.currentHealth - damage + this.physicalDefense
+      this.currentHealth - Math.max(0, damage - this.physicalDefense)
     );
     this.isDead = this.currentHealth <= 0;
   }

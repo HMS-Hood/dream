@@ -57,7 +57,7 @@ export const charmQualityAdjustMemberLimit: QualityNumber = {
   [QualityLevel.SSS]: 20,
 };
 
-export const baseSquadLimit = 9;
+export const baseSquadLimit = 6;
 
 export const charmQualityAdjustSquadLimit: QualityNumber = {
   [QualityLevel.F]: 0,
@@ -67,6 +67,6 @@ export const charmQualityAdjustSquadLimit: QualityNumber = {
   [QualityLevel.B]: 1,
   [QualityLevel.A]: 3,
   [QualityLevel.S]: 6,
-  [QualityLevel.SS]: 11,
-  [QualityLevel.SSS]: 21,
+  [QualityLevel.SS]: 9,
+  [QualityLevel.SSS]: 12,
 };

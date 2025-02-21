@@ -1,13 +1,23 @@
 <template>
   <div class="back">
-    <div class="back-icon" @click="router.push('/main')">
-      <icon-double-left :stroke-width="6" size="48"></icon-double-left>
+    <div class="back-icon">
+      <icon-double-left
+        :stroke-width="6"
+        size="48"
+        @click="router.push('/main')"
+      ></icon-double-left>
+      <icon-right size="48" @click="calendar.nextDay()"></icon-right>
+      <icon-double-right
+        size="48"
+        @click="calendar.nextTenDay()"
+      ></icon-double-right>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
   import { useRouter } from 'vue-router';
+  import { calendar } from '@/core/game';
 
   const router = useRouter();
 </script>
@@ -15,7 +25,7 @@
 <style lang="less" scoped>
   .back {
     position: relative;
-    width: 100px;
+    width: 120px;
     margin: 20px;
     overflow: visible;
     cursor: pointer;
@@ -24,8 +34,6 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 80px;
-      height: 80px;
       padding: 10px;
       color: #fff;
       background-color: rgb(0 0 0 / 30%);

@@ -17,8 +17,6 @@ export class Character implements CharacterInterface {
 
   experience: number;
 
-  health: number;
-
   strength: number;
 
   agility: number;
@@ -46,7 +44,6 @@ export class Character implements CharacterInterface {
     this.avatar = initParam.avatar;
     this.level = initParam.level;
     this.experience = initParam.experience;
-    this.health = initParam.health;
     this.strength = initParam.strength;
     this.agility = initParam.agility;
     this.endurance = initParam.endurance;

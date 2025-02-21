@@ -495,6 +495,7 @@
         if (item.check) {
           const epicItem = item.item;
           player.items.push(epicItem);
+          player.gold -= epicItem.value;
         } else {
           leftItems.push(item.item);
         }

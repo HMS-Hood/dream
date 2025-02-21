@@ -13,7 +13,6 @@ export interface CharacterInitialData {
   avatar: string;
   level: CharacterLevel;
   experience: number;
-  health: number;
   strength: number;
   agility: number;
   endurance: number;
@@ -35,7 +34,6 @@ export interface CharacterInterface {
   experience: number;
   quality: QualityLevel;
   attackMethod: AttackMethod;
-  health: number;
   strength: number;
   agility: number;
   endurance: number;

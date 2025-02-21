@@ -120,7 +120,6 @@ export function generateCharacter(
     avatar: generateAvatarURL(),
     level: randomLevel,
     experience: 0,
-    health: 100,
     strength: generateAttributeValue(adjustedQualities.strength),
     agility: generateAttributeValue(adjustedQualities.agility),
     endurance: generateAttributeValue(adjustedQualities.endurance),

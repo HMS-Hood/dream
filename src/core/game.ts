@@ -13,9 +13,9 @@ const emblem = new Emblem('Eagle Emblem', '/img/emblem.png');
 const flag = new Flag('Red Banner', '/images/red-banner.png');
 
 // Create Player
-export const player = reactive(new Player('Hero', emblem, flag));
+export const player = reactive(new Player(emblem, flag));
 
-for (let i = 1; i <= 5; i += 1) {
+for (let i = 1; i <= 4; i += 1) {
   const character = reactive(generateCharacter());
   player.members.push(character);
 }

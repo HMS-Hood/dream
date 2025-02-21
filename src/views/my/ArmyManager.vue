@@ -73,6 +73,12 @@
       return;
     }
 
+    squads.value.forEach((squad) => {
+      squad.members.forEach((member) => {
+        member.updateStats();
+      });
+    });
+
     const army: IArmy = new Army({
       id: 'player_army',
       name: 'Player Army',

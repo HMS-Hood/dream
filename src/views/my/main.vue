@@ -25,7 +25,7 @@
           <div class="player-details">
             <div class="calendar">{{ calendar.getDate() }}</div>
             <div class="name-title">
-              <h2 class="player-name">{{ player.name }}</h2>
+              <h2 class="player-name">{{ player.protagonist.name }}</h2>
               <p class="player-title">{{ player.title }}</p>
             </div>
             <div class="reputation">

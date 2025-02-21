@@ -2,16 +2,33 @@
 import { reactive } from 'vue';
 import { Emblem } from './Emblem';
 import { Flag } from './Flag';
-import { generateCharacter } from '../utils/dataUtils';
 import { Character } from './Character';
 import { Item } from '../interfaces/item';
+import { generateId } from '../utils/utils';
+import { CharacterLevel } from '../enums';
+import { Equipments } from './Equipments';
+
+const maidCharactor = new Character({
+  id: generateId(),
+  name: '辛西娅',
+  nickName: '贴身女仆',
+  avatar: '/img/avatar/0714.png',
+  level: CharacterLevel.ORDINARY,
+  experience: 0,
+  strength: 13,
+  agility: 17,
+  endurance: 12,
+  intelligence: 6,
+  spirit: 7,
+  perception: 9,
+  charm: 8,
+  luck: 8,
+  skills: [],
+  equipment: new Equipments(),
+});
 
 export class Player {
   id: string;
-
-  name: string;
-
-  nickName: string;
 
   title: string;
 
@@ -33,24 +50,28 @@ export class Player {
 
   protagonistId: string;
 
-  constructor(name: string, familyEmblem: Emblem, familyFlag: Flag) {
-    this.id = Math.random().toString(36).substring(2, 15);
-    this.name = name;
-    this.nickName = '';
+  constructor(familyEmblem: Emblem, familyFlag: Flag) {
+    this.id = generateId();
     this.title = '';
     this.reputation = 0;
     this.familyEmblem = familyEmblem;
     this.familyFlag = familyFlag;
     this.gold = 2000;
-    const protagonist = reactive(generateCharacter());
+    this.protagonistId = '';
+    this.members.push(maidCharactor);
+  }
+
+  get protagonist(): Character {
+    return this.members.find((member) => member.id === this.protagonistId)!;
+  }
+
+  setProtagonist(protagonist: Character) {
+    this.members.splice(0, 0, protagonist);
     this.protagonistId = protagonist.id;
-    this.members.push(protagonist);
   }
 
   reload(loadData: Player) {
     this.id = loadData.id;
-    this.name = loadData.name;
-    this.nickName = loadData.nickName;
     this.title = loadData.title;
     this.reputation = loadData.reputation;
     this.familyEmblem = loadData.familyEmblem;

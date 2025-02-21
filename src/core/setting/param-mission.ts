@@ -43,11 +43,11 @@ export const missionDropCountWeight: { [dorpNumber: number]: number } = {
 };
 
 export const missionQualityEnimyCount: QualityNumber = {
-  [QualityLevel.F]: 10,
-  [QualityLevel.E]: 20,
-  [QualityLevel.D]: 40,
-  [QualityLevel.C]: 60,
-  [QualityLevel.B]: 100,
+  [QualityLevel.F]: 5,
+  [QualityLevel.E]: 10,
+  [QualityLevel.D]: 20,
+  [QualityLevel.C]: 40,
+  [QualityLevel.B]: 80,
   [QualityLevel.A]: 150,
   [QualityLevel.S]: 300,
   [QualityLevel.SS]: 500,

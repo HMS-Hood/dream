@@ -18,13 +18,68 @@ export interface SquadBattleOptions {
   standardInterval?: number; // 默认40
 }
 
+type BattleStatistic = {
+  name: string;
+  damage: number;
+  receive: number;
+  attack: number;
+  defense: number;
+};
+
+type BattleLog = {
+  statistics: Map<string, BattleStatistic>;
+  message: string[];
+};
+
+function useBattleLog(playerSquads: ISquad[]) {
+  const membersId = playerSquads
+    .flatMap((squad) => squad.members)
+    .map((member) => member.getCharacter().id);
+  const logs: BattleLog = {
+    statistics: new Map<string, BattleStatistic>(),
+    message: [],
+  };
+
+  const record = (
+    attackUnit: ICombatUnit,
+    targetUnit: ICombatUnit,
+    damage: number,
+    counterDamage: number
+  ) => {
+    const logCharacter = membersId.includes(attackUnit.getCharacter().id)
+      ? attackUnit.getCharacter()
+      : targetUnit.getCharacter();
+    const type = membersId.includes(attackUnit.getCharacter().id)
+      ? 'attack'
+      : 'defend';
+    const stac = logs.statistics.get(logCharacter.id) ?? {
+      name: logCharacter.name,
+      damage: 0,
+      receive: 0,
+      attack: 0,
+      defense: 0,
+    };
+    if (type === 'attack') {
+      stac.damage += damage;
+      stac.receive += counterDamage;
+      stac.attack += 1;
+    } else {
+      stac.damage += counterDamage;
+      stac.receive += damage;
+      stac.defense += 1;
+    }
+    logs.statistics.set(logCharacter.id, stac);
+  };
+
+  return { record, logs };
+}
 /**
  * 战斗结果返回
  */
 export interface SquadBattleResult {
   winner: 'player' | 'enemy' | 'none';
   duration: number;
-  logs: string[];
+  logs: BattleLog;
 }
 
 /**
@@ -39,9 +94,16 @@ export class SquadBattle {
 
   private options: SquadBattleOptions;
 
-  private logs: string[] = [];
-
   private totalSimulationTime = 0;
+
+  private record: (
+    attackUnit: ICombatUnit,
+    targetUnit: ICombatUnit,
+    damage: number,
+    counterDamage: number
+  ) => void;
+
+  private logs: BattleLog;
 
   constructor(
     playerSquads: ISquad[],
@@ -56,6 +118,9 @@ export class SquadBattle {
       standardInterval: 40,
       ...options,
     };
+    const { record, logs } = useBattleLog(playerSquads);
+    this.record = record;
+    this.logs = logs;
   }
 
   /**
@@ -131,11 +196,13 @@ export class SquadBattle {
       if (playerSquad.members.includes(action.unit)) {
         const aliveTargets = enemySquad.members.filter((unit) => !unit.isDead);
         if (aliveTargets.length === 0) break;
-        [targetUnit] = aliveTargets;
+        targetUnit =
+          aliveTargets[Math.floor(Math.random() * aliveTargets.length)];
       } else {
         const aliveTargets = playerSquad.members.filter((unit) => !unit.isDead);
         if (aliveTargets.length === 0) break;
-        [targetUnit] = aliveTargets;
+        targetUnit =
+          aliveTargets[Math.floor(Math.random() * aliveTargets.length)];
       }
       // 固定攻击距离为1
       this.executeUnitAttack(action.unit, targetUnit, 1);
@@ -243,12 +310,14 @@ export class SquadBattle {
       attackInfo.push(
         `counter damage: ${counterDamage}(${attacker.currentHealth}/${attacker.maxHealth})`
       );
+      this.record(attacker, target, attackerDamage, counterDamage);
       if (counterDamage > 0) {
         target.getCharacter().addExperience(1);
       }
-      this.logs.push(attackInfo.join(' | '));
+      this.logs.message.push(attackInfo.join(' | '));
     } else {
-      this.logs.push(attackInfo.join(' | '));
+      this.record(attacker, target, attackerDamage, 0);
+      this.logs.message.push(attackInfo.join(' | '));
     }
   }
 
@@ -289,7 +358,7 @@ export class SquadBattle {
         currentEnemySquad
       );
       this.totalSimulationTime += fightResult.duration;
-      this.logs.push(
+      this.logs.message.push(
         `Fight: Player squad ${currentPlayerSquad.id} vs Enemy squad ${currentEnemySquad.id} ⇒ Winner: ${fightResult.winner} (time: ${fightResult.duration})`
       );
 
@@ -316,7 +385,7 @@ export class SquadBattle {
       this.playerSquads = this.playerSquads.filter((squad) => {
         const ratio = this.getSquadHealthRatio(squad);
         if (ratio < this.options.fleeThreshold!) {
-          this.logs.push(
+          this.logs.message.push(
             `Player squad ${squad.id} fled (ratio: ${ratio.toFixed(2)})`
           );
           return false;
