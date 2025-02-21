@@ -54,4 +54,4 @@ export const qualityAttributeRanges: QualityRange = {
   [QualityLevel.SSS]: [20, 20],
 };
 
-export const maxAvatarIndex = 1144;
+export const maxAvatarIndex = 1165;

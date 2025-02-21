@@ -33,25 +33,34 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, reactive, computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { useEnvDataStore } from '@/store/envData';
-  import { CheckCharacter } from '../../core/interfaces';
+  import { player, calendar } from '@/core/game';
+  import { CharacterInterface, CheckCharacter } from '@/core/interfaces';
   import CheckCharacterComp from './component/CheckCharacter.vue';
-  import { player } from '../../core/game';
   import back from './component/back.vue';
 
   const backgroundImage = '/img/bg/recruit.png';
   const envData = useEnvDataStore();
-  const recruitListInStore = envData.getRecruit();
-  const recruitList: CheckCharacter[] = reactive(
-    recruitListInStore.map((character) => ({
+  const recruitListInStore = ref<CharacterInterface[]>(envData.getRecruit());
+  const recruitList = ref<CheckCharacter[]>(
+    recruitListInStore.value.map((character) => ({
       character,
       checked: false,
     }))
   );
 
+  watch(calendar, () => {
+    recruitListInStore.value = envData.getRecruit();
+    recruitList.value = recruitListInStore.value.map((character) => ({
+      character,
+      checked: false,
+    }));
+  });
+
   const consume = computed(
-    () => recruitList.filter((character) => character.checked).length * 100
+    () =>
+      recruitList.value.filter((character) => character.checked).length * 100
   );
   const info = ref(
     '这里有许多正在找工作的冒险者，但是普通人总是占大多数的。用你独到的眼光发现其中的“小天才”吧！'
@@ -59,18 +68,18 @@
 
   const recruit = () => {
     if (player.gold >= consume.value) {
-      const newRecruitList = recruitList.filter(
+      const newRecruitList = recruitList.value.filter(
         (character) => !character.checked
       );
-      const newMembers = recruitList
+      const newMembers = recruitList.value
         .filter((character) => character.checked)
         .map((checkcharacter) => checkcharacter.character);
       player.members.splice(player.members.length, 0, ...newMembers);
       player.gold -= consume.value;
-      recruitList.splice(1, recruitList.length, ...newRecruitList);
-      recruitListInStore.splice(
+      recruitList.value.splice(1, recruitList.value.length, ...newRecruitList);
+      recruitListInStore.value.splice(
         1,
-        recruitList.length,
+        recruitList.value.length,
         ...newRecruitList.map((checkCharacter) => checkCharacter.character)
       );
     } else {

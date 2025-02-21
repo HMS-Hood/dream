@@ -60,6 +60,23 @@ export class Character implements CharacterInterface {
     return this.equipment?.weapon?.attackMethod || AttackMethod.MELEE;
   }
 
+  get total(): number {
+    return (
+      this.strength +
+      this.agility +
+      this.endurance +
+      this.perception +
+      this.spirit +
+      this.intelligence +
+      this.charm +
+      this.luck
+    );
+  }
+
+  get fightStatistic(): number {
+    return this.strength + this.agility + this.endurance + this.perception;
+  }
+
   get quality(): QualityLevel {
     const qualities = [
       getQualityForValue(this.strength),

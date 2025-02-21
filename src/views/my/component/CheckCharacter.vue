@@ -3,6 +3,8 @@
     <div class="character-row header" :style="{ width: `${width}vw` }">
       <div class="list-desc"></div>
       <div class="property-name" @click="order('quality')">品质</div>
+      <div class="property-name" @click="order('total')">总计</div>
+      <div class="property-name" @click="order('fightStatistic')">战斗</div>
       <div class="property-name" @click="order('strength')">力量</div>
       <div class="property-name" @click="order('agility')">敏捷</div>
       <div class="property-name" @click="order('endurance')">耐力</div>
@@ -51,6 +53,12 @@
         ><div class="quality-text">{{ item.character.quality }}</div></div
       >
       <div class="property">
+        <div class="property-value">{{ item.character.total }}</div>
+      </div>
+      <div class="property">
+        <div class="property-value">{{ item.character.fightStatistic }}</div>
+      </div>
+      <div class="property">
         <div class="property-value">{{ item.character.strength }}</div>
       </div>
       <div class="property">
@@ -91,14 +99,16 @@
   const characters = defineModel<CheckCharacter[]>('characters');
 
   const order = (field: string) => {
-    if (field === 'quality' || !field) {
-      return characters.value?.sort(
-        (a, b) =>
-          qualityRankMap[b.character.quality] -
-          qualityRankMap[a.character.quality]
-      );
+    if (characters.value) {
+      if (field === 'quality' || !field) {
+        characters.value.sort(
+          (a, b) =>
+            qualityRankMap[b.character.quality] -
+            qualityRankMap[a.character.quality]
+        );
+      }
+      characters.value.sort((a, b) => b.character[field] - a.character[field]);
     }
-    return characters.value?.sort((a, b) => b[field] - a[field]);
   };
 
   const check = (item: CheckCharacter) => {

@@ -131,7 +131,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed } from 'vue';
+  import { ref, computed, watch } from 'vue';
   import { Message, Modal } from '@arco-design/web-vue';
   import { Mission, MissionInfo } from '@/core/mission/Mission';
   import { MissionDifficulty, QualityLevel } from '@/core/enums';
@@ -140,13 +140,22 @@
   import { calendar, player } from '@/core/game';
   import { Calendar } from '@/core/entities/Calendar';
   import { DoingMission, useDoingMissionStore } from '@/store/doingMission';
+  import { useStatusStore } from '@/store/status';
   import back from './component/back.vue';
   import ArmyManager from './ArmyManager.vue';
 
   const backgroundImage = '/img/bg/mission.png';
   const gameStore = useEnvDataStore();
-  const qualityFilter = ref('');
-  const difficultyFilter = ref('');
+  const { getDifficulty, getQuality, setDifficulty, setQuality } =
+    useStatusStore();
+  const qualityFilter = ref(getQuality());
+  const difficultyFilter = ref(getDifficulty());
+  watch(difficultyFilter, (newVal) => {
+    setDifficulty(newVal);
+  });
+  watch(qualityFilter, (newVal) => {
+    setQuality(newVal);
+  });
   const showDoingMission = ref(false);
   const info = ref(
     '欢迎来到任务大厅,这里有各种各样的任务等待着你。记住,任务的难度和品质往往与报酬成正比。'

@@ -12,7 +12,7 @@ const maidCharactor = new Character({
   id: generateId(),
   name: '辛西娅',
   nickName: '贴身女仆',
-  avatar: '/img/avatar/0714.png',
+  avatar: '/img/avatar/1166.png',
   level: CharacterLevel.ORDINARY,
   experience: 0,
   strength: 13,

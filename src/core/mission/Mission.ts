@@ -199,7 +199,12 @@ export class Mission {
       fleeThreshold: 0.1,
     });
     const result = campaign.executeBattle();
-    console.log(result.logs);
+    console.log('——————————————————————————————————————————');
+    result.logs.statistics.forEach((obj) => {
+      console.log(
+        `| ${obj.name} | ${obj.damage} | ${obj.attack} | ${obj.receive} | ${obj.defense} |`
+      );
+    });
 
     // remove dead member
     let lostMemberCount = 0;

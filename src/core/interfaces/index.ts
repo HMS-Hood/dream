@@ -44,6 +44,8 @@ export interface CharacterInterface {
   charm: number;
   skills: Skill[];
   equipment: Equipments;
+  total: number;
+  fightStatistic: number;
   getLevelUpExperience(): number;
   canLevelUp(): boolean;
   levelUp(): boolean;
