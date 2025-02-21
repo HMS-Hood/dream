@@ -316,7 +316,7 @@
       margin-right: 20px;
       color: aliceblue;
       font-weight: bolder;
-      font-size: 2em;
+      font-size: @primary-title-font;
       background-color: rgb(127 127 127 / 50%);
       border-radius: 10px;
 
@@ -377,7 +377,7 @@
 
         .mission-name {
           font-weight: bold;
-          font-size: 1.2em;
+          font-size: @secondary-title-font;
         }
 
         .mission-tags {
@@ -388,13 +388,13 @@
         .mission-quality,
         .mission-difficulty {
           padding: 2px 8px;
-          font-size: 0.9em;
+          font-size: @content-font;
           border-radius: 4px;
         }
 
         .mission-desc {
           color: #999;
-          font-size: 0.9em;
+          font-size: @secondary-content-font;
           line-height: 1.5;
         }
 
