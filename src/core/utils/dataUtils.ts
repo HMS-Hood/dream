@@ -2,7 +2,7 @@
 import { reactive } from 'vue';
 import { Character } from '../entities/Character';
 import { Equipments } from '../entities/Equipments';
-import { CharacterLevel, QualityLevel } from '../enums';
+import { CharacterLevel, QualityLevel, qualityRankMap } from '../enums';
 import { CharacterInitialData } from '../interfaces';
 import { characterNames } from '../setting/names';
 import { maxAvatarIndex } from '../setting/param';
@@ -30,28 +30,19 @@ function adjustQualityLevel(
   quality: QualityLevel,
   adjustment: number
 ): QualityLevel {
-  const qualityLevels = Object.values(QualityLevel);
-  const currentQualityIndex = qualityLevels.indexOf(quality);
-  let newQualityIndex = currentQualityIndex + adjustment;
-
-  if (newQualityIndex < 0) {
-    newQualityIndex = 0;
-  } else if (newQualityIndex >= qualityLevels.length) {
-    newQualityIndex = qualityLevels.length - 1;
-  } else if (
-    newQualityIndex > qualityLevels.indexOf(QualityLevel.A) &&
-    adjustment > 0
-  ) {
-    if (qualityLevels[newQualityIndex] > QualityLevel.A) {
-      newQualityIndex = qualityLevels.indexOf(QualityLevel.S); // Cap at S if original quality was A and above and adjustment is more than needed to reach A
-    }
-  } else if (
-    newQualityIndex > qualityLevels.indexOf(QualityLevel.S) &&
-    adjustment > 0
-  ) {
-    newQualityIndex = qualityLevels.indexOf(QualityLevel.SSS); // Cap at SSS if original quality was S and above and adjustment is more than needed to reach S
+  if (adjustment === 0) {
+    return quality;
   }
-  return qualityLevels[newQualityIndex] as QualityLevel;
+  const currentQualityIndex = qualityRankMap[quality];
+  // 如果调整为1，则原始最大为A，则不会调整大于B的品级
+  let maxIndex = 5;
+  // 如果调整为1，则原始最大为S，则不会调整大于S的品级
+  if (adjustment === 2) {
+    maxIndex = 6;
+  }
+  const newQualityIndex = Math.min(maxIndex, currentQualityIndex + adjustment);
+
+  return Object.keys(QualityLevel)[newQualityIndex] as QualityLevel;
 }
 
 function generateName(): string {

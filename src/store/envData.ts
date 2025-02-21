@@ -24,7 +24,7 @@ type EnvDataState = {
 
 const generateRecruit = () => {
   const result: CharacterInterface[] = [];
-  for (let i = 0; i < 10; i += 1) {
+  for (let i = 0; i < 100; i += 1) {
     result.push(generateCharacter());
   }
   return result;
