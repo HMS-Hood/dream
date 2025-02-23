@@ -20,6 +20,7 @@ export interface ISquad extends ISquadData {
   readonly memberLimit: number;
   targetIds: string[];
   isDead: boolean;
+  leader: ICombatUnit | undefined;
   checkLimit: () => boolean;
   setLeaderId: (leaderId: string) => void;
 }

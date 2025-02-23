@@ -81,13 +81,13 @@
   import { load, save } from '@/core/utils/systemUtils';
   import { player, calendar } from '@/core/game';
 
-  const backgroundImage = ref('/img/bg/bg1.png');
+  const backgroundImage = ref('/img/bg/bg3.png');
   const router = useRouter();
   const row2 = ref([
-    { title: 'Item 1', image: '/img/avatar/1.png' },
-    { title: 'Item 2', image: '/img/avatar/2.png' },
-    { title: 'Item 3', image: '/img/avatar/3.png', url: '/mission' },
-    { title: '部队', image: '/img/avatar/4.png', url: '/army-manager' },
+    { title: 'Item 1', image: '/img/bg/tavern.png', url: '/campaign' },
+    { title: 'Item 2', image: '/img/bg/bg.png' },
+    { title: '佣兵工会', image: '/img/bg/mercenary.png', url: '/mission' },
+    { title: '部队', image: '/img/bg/store1.png', url: '/army-manager' },
     { title: '征兵所', image: '/img/bg/military-camp.png', url: '/recruit' },
     { title: '兵营', image: '/img/bg/barracks.png', url: '/barracks' },
     { title: '商店', image: '/img/bg/store.png', url: '/shop' },

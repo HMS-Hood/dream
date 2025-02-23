@@ -13,6 +13,7 @@ import { missionsInfo as eMissionsInfo } from '@/core/setting/mission-info-e';
 import { missionsInfo as dMissionsInfo } from '@/core/setting/mission-info-d';
 import { missionsInfo as cMissionsInfo } from '@/core/setting/mission-info-c';
 import { missionsInfo as bMissionsInfo } from '@/core/setting/mission-info-b';
+import { missionsInfo as aMissionsInfo } from '@/core/setting/mission-info-a';
 import { getRandomElements } from '@/core/utils/arrayUtils';
 
 type EnvDataState = {
@@ -24,7 +25,7 @@ type EnvDataState = {
 
 const generateRecruit = () => {
   const result: CharacterInterface[] = [];
-  for (let i = 0; i < 100; i += 1) {
+  for (let i = 0; i < 10; i += 1) {
     result.push(generateCharacter());
   }
   return result;
@@ -40,11 +41,12 @@ const generateEquipment = () => {
 
 const generateMissions = (): MissionInfo[] => {
   // 从不同级别的任务池中随机抽取
-  const fCheckedMissionsInfo = getRandomElements(fMissionsInfo, 20);
-  const eCheckedMissionsInfo = getRandomElements(eMissionsInfo, 20);
+  const fCheckedMissionsInfo = getRandomElements(fMissionsInfo, 10);
+  const eCheckedMissionsInfo = getRandomElements(eMissionsInfo, 10);
   const dCheckedMissionsInfo = getRandomElements(dMissionsInfo, 10);
-  const cCheckedMissionsInfo = getRandomElements(cMissionsInfo, 5);
-  const bCheckedMissionsInfo = getRandomElements(bMissionsInfo, 3);
+  const cCheckedMissionsInfo = getRandomElements(cMissionsInfo, 10);
+  const bCheckedMissionsInfo = getRandomElements(bMissionsInfo, 10);
+  const aCheckedMissionsInfo = getRandomElements(aMissionsInfo, 10);
 
   // 合并所有任务信息并转换为Mission对象
   const allMissionsInfo = [
@@ -53,6 +55,7 @@ const generateMissions = (): MissionInfo[] => {
     ...dCheckedMissionsInfo,
     ...cCheckedMissionsInfo,
     ...bCheckedMissionsInfo,
+    ...aCheckedMissionsInfo,
   ];
 
   // 将任务信息转换为Mission对象并排序

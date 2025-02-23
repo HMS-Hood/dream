@@ -100,6 +100,10 @@ export class Character implements CharacterInterface {
     }, QualityLevel.F);
   }
 
+  get smallAvatar() {
+    return this.avatar.replace('.png', '_s.png');
+  }
+
   // 获取当前等级所需的升级经验
   getLevelUpExperience(): number {
     const baseExperience = 100;

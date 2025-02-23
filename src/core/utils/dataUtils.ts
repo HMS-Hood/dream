@@ -2,8 +2,17 @@
 import { reactive } from 'vue';
 import { Character } from '../entities/Character';
 import { Equipments } from '../entities/Equipments';
-import { CharacterLevel, QualityLevel, qualityRankMap } from '../enums';
-import { CharacterInitialData } from '../interfaces';
+import {
+  CharacterLevel,
+  QualityLevel,
+  qualityRankMap,
+  SquadPosition,
+} from '../enums';
+import {
+  CharacterInitialData,
+  CharacterInterface,
+  ICombatUnit,
+} from '../interfaces';
 import { characterNames } from '../setting/names';
 import { maxAvatarIndex } from '../setting/param';
 import {
@@ -13,6 +22,18 @@ import {
   generateRandomLevel,
   getRandomInt,
 } from './utils';
+import { IArmy, ISquad } from '../interfaces/combat';
+import { baseMemberLimit, baseSquadLimit } from '../setting/param-combat';
+import { CombatUnit } from '../battle/CombatUnit';
+import { Squad } from '../battle/Squad';
+import { Army } from '../battle/Army';
+import {
+  createLongRangeWeapon,
+  createNormalStandardArmor,
+  createOneHandWeapon,
+  createShield,
+  createTwohandWeapon,
+} from './itemUtils';
 
 /**
  * Function to generate avatar URL.
@@ -124,4 +145,103 @@ export function generateCharacter(
   };
 
   return reactive(new Character(character));
+}
+
+export function generateEnemyArmy(
+  enemyCount: number,
+  enemyQualityFloor: QualityLevel
+): IArmy[] {
+  // 5. Generate enemy personnel. (generateCharacter returns a Character.)
+  const enemyMembers: CharacterInterface[] = [];
+  for (let i = 0; i < enemyCount; i += 1) {
+    enemyMembers.push(generateCharacter(enemyQualityFloor));
+  }
+
+  // 6. Group every 10 personnel into a squad.
+  // 7. Combine squads into an Army object.
+  const enemyArmies: IArmy[] = reactive([]);
+  const squadCap = baseMemberLimit;
+  const armyCap = baseSquadLimit;
+  for (let i = 0; i < enemyMembers.length; i += squadCap * armyCap) {
+    const squads: ISquad[] = reactive([]);
+    const group = enemyMembers.slice(i, i + squadCap * armyCap);
+    // Sort the group by quality descending.
+    const combatUnits = group.map((member) => reactive(new CombatUnit(member)));
+    while (combatUnits.length > 0) {
+      const members = reactive(combatUnits.splice(0, squadCap));
+      const squad = {
+        id: generateId(),
+        position: SquadPosition.FRONT, // temporary; will be reassigned below.
+        members,
+      };
+      squads.push(reactive(new Squad(squad)));
+    }
+    squads.forEach((squad, index) => {
+      squad.position =
+        index % 2 === 0 ? SquadPosition.FRONT : SquadPosition.BACK;
+    });
+    enemyArmies.push(
+      new Army({
+        id: generateId(),
+        name: '敌人',
+        squads,
+      })
+    );
+  }
+
+  // 10. For each squad, generate equipment based on formation.
+  enemyArmies
+    .flatMap((army) => army.squads)
+    .forEach((squad) => {
+      squad.members.forEach((unit: ICombatUnit) => {
+        // For each piece of equipment, first determine its random quality.
+        const equipQuality = generateQualityLevelWithMin(enemyQualityFloor);
+
+        if (squad.position === SquadPosition.FRONT) {
+          if (Math.random() < 0.5) {
+            unit
+              .getCharacter()
+              .equipment.setWeapon(createOneHandWeapon(equipQuality));
+            unit.getCharacter().equipment.setShield(createShield(equipQuality));
+          } else {
+            unit
+              .getCharacter()
+              .equipment.setWeapon(createTwohandWeapon(equipQuality));
+          }
+          if (Math.random() < 0.5) {
+            unit
+              .getCharacter()
+              .equipment.setArmor(
+                createNormalStandardArmor(equipQuality, 'Plate')
+              );
+          } else {
+            unit
+              .getCharacter()
+              .equipment.setArmor(
+                createNormalStandardArmor(equipQuality, 'Chain')
+              );
+          }
+        } else if (squad.position === SquadPosition.BACK) {
+          unit
+            .getCharacter()
+            .equipment.setWeapon(createLongRangeWeapon(equipQuality));
+          if (Math.random() < 0.5) {
+            unit
+              .getCharacter()
+              .equipment.setArmor(
+                createNormalStandardArmor(equipQuality, 'Leather')
+              );
+          } else {
+            unit
+              .getCharacter()
+              .equipment.setArmor(
+                createNormalStandardArmor(equipQuality, 'Cloth')
+              );
+          }
+        }
+        unit.updateStats();
+      });
+    });
+
+  return enemyArmies;
 }

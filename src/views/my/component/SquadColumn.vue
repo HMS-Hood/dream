@@ -18,8 +18,7 @@
           :src="
             squad.members
               .find((member) => member.getCharacter().id === squad.leaderId)
-              ?.getCharacter()
-              .avatar.replace('.png', '_s.png')
+              ?.getCharacter().smallAvatar
           "
         ></a-image>
       </div>

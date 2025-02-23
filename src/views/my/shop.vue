@@ -3,7 +3,7 @@
     <div class="panel">
       <div class="official">
         <back></back>
-        <img src="/img/recruit.png" />
+        <img src="/img/mission.png" />
       </div>
       <div class="info">
         <div class="tip"> <span>商人：</span>{{ info }} </div>
@@ -523,7 +523,7 @@
     justify-content: center;
     height: 100vh;
     padding: 20px;
-    background-image: url('/img/bg/weapon-store.png');
+    background-image: url('/img/bg/bg4.png');
     background-position: center;
     background-size: cover;
 

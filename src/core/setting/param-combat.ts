@@ -38,23 +38,22 @@ export const defaultBattleConfig: BattleConfig = {
   standardInterval: 40,
   positionWeight: {
     front: 4, // 前排权重最高
-    middle: 2,
     back: 1,
   },
 };
 
-export const baseMemberList = 10;
+export const baseMemberLimit = 5;
 
 export const charmQualityAdjustMemberLimit: QualityNumber = {
   [QualityLevel.F]: 0,
   [QualityLevel.E]: 0,
   [QualityLevel.D]: 0,
-  [QualityLevel.C]: 1,
-  [QualityLevel.B]: 2,
-  [QualityLevel.A]: 4,
-  [QualityLevel.S]: 10,
-  [QualityLevel.SS]: 15,
-  [QualityLevel.SSS]: 20,
+  [QualityLevel.C]: 0,
+  [QualityLevel.B]: 1,
+  [QualityLevel.A]: 3,
+  [QualityLevel.S]: 7,
+  [QualityLevel.SS]: 11,
+  [QualityLevel.SSS]: 15,
 };
 
 export const baseSquadLimit = 6;

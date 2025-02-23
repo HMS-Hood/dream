@@ -144,7 +144,7 @@
   import back from './component/back.vue';
   import ArmyManager from './ArmyManager.vue';
 
-  const backgroundImage = '/img/bg/mission.png';
+  const backgroundImage = '/img/bg/bg5.png';
   const gameStore = useEnvDataStore();
   const { getDifficulty, getQuality, setDifficulty, setQuality } =
     useStatusStore();

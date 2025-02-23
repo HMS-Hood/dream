@@ -1,7 +1,8 @@
 /* eslint-disable no-continue */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable import/prefer-default-export */
-import { IArmy, BattleGroup } from '../interfaces/combat';
+import { reactive } from 'vue';
+import { IArmy, BattleGroup, ISquad } from '../interfaces/combat';
 import { BattleConfig, ICombatUnit } from '../interfaces';
 import { generateId } from '../utils/utils';
 import { ActionScheduler } from './actionScheduler';
@@ -9,6 +10,69 @@ import { BattleUtils } from './battleUtils';
 import { IRefactoredCampaign } from './IRefactoredCampaign';
 import { BattleState } from './battleState';
 import { BattleStateHandler } from './battleStateHandler';
+
+type BattleStatistic = {
+  name: string;
+  damage: number;
+  receive: number;
+  attack: number;
+  defense: number;
+};
+
+type BattleLog = {
+  statistics: Map<string, BattleStatistic>;
+  message: string[];
+};
+
+function useBattleLog(playerSquads: ISquad[]) {
+  const membersId = playerSquads
+    .flatMap((squad) => squad.members)
+    .map((member) => member.getCharacter().id);
+  const logs: BattleLog = {
+    statistics: new Map<string, BattleStatistic>(),
+    message: [],
+  };
+
+  const record = (
+    attackUnit: ICombatUnit,
+    targetUnit: ICombatUnit,
+    damage: number,
+    counterDamage: number
+  ) => {
+    const logCharacter = membersId.includes(attackUnit.getCharacter().id)
+      ? attackUnit.getCharacter()
+      : targetUnit.getCharacter();
+    const type = membersId.includes(attackUnit.getCharacter().id)
+      ? 'attack'
+      : 'defend';
+    const stac = logs.statistics.get(logCharacter.id) ?? {
+      name: logCharacter.name,
+      damage: 0,
+      receive: 0,
+      attack: 0,
+      defense: 0,
+    };
+    if (type === 'attack') {
+      stac.damage += damage;
+      stac.receive += counterDamage;
+      stac.attack += 1;
+    } else {
+      stac.damage += counterDamage;
+      stac.receive += damage;
+      stac.defense += 1;
+    }
+    logs.statistics.set(logCharacter.id, stac);
+  };
+
+  return { record, logs };
+}
+
+// 定义一个异步函数
+async function waitForMilliseconds(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 export class Campaign implements IRefactoredCampaign {
   private config: BattleConfig;
@@ -20,11 +84,20 @@ export class Campaign implements IRefactoredCampaign {
   private playerArmy: IArmy | null;
 
   // 保存最终匹配出的战团
-  private battleGroups: BattleGroup[] = [];
+  public battleGroups = reactive<BattleGroup[]>([]);
 
   private isPlayerOnSide1: boolean;
 
   private battleStateHandler: BattleStateHandler;
+
+  private record: (
+    attackUnit: ICombatUnit,
+    targetUnit: ICombatUnit,
+    damage: number,
+    counterDamage: number
+  ) => void;
+
+  private logs: BattleLog;
 
   constructor(
     config: BattleConfig,
@@ -38,15 +111,15 @@ export class Campaign implements IRefactoredCampaign {
     this.isPlayerOnSide1 = isPlayerOnSide1;
     if (playerArmy) {
       if (isPlayerOnSide1) {
-        this.side1Armies = [playerArmy, ...side1Armies];
-        this.side2Armies = side2Armies;
+        this.side1Armies = reactive([playerArmy, ...side1Armies]);
+        this.side2Armies = reactive(side2Armies);
       } else {
-        this.side1Armies = side1Armies;
-        this.side2Armies = [playerArmy, ...side2Armies];
+        this.side1Armies = reactive(side1Armies);
+        this.side2Armies = reactive([playerArmy, ...side2Armies]);
       }
     } else {
-      this.side1Armies = side1Armies;
-      this.side2Armies = side2Armies;
+      this.side1Armies = reactive(side1Armies);
+      this.side2Armies = reactive(side2Armies);
     }
     this.battleStateHandler = new BattleStateHandler(
       this.config,
@@ -54,6 +127,9 @@ export class Campaign implements IRefactoredCampaign {
       this.side2Armies,
       this.isPlayerOnSide1
     );
+    const { record, logs } = useBattleLog(this.playerArmy?.squads ?? []);
+    this.record = record;
+    this.logs = logs;
   }
 
   // 根据部队数和战场上限，将上场部队与后备部队分配出来
@@ -105,16 +181,15 @@ export class Campaign implements IRefactoredCampaign {
         }
       }
     }
-    this.battleGroups = groups;
     return groups;
   }
 
   // 战斗执行方法：采用行动调度器模拟各单位按照攻击速度行动，
   // 并在战斗过程中根据伤亡情况动态调整战团，同时判断后备部队是否可以上场
-  public executeBattle(): {
+  public async executeBattle(): Promise<{
     winner: 'side1' | 'side2' | 'none';
     duration: number;
-  } {
+  }> {
     const assignments = this.assignActiveAndReserveArmies(
       this.getBattleConfig().battlefieldWidth
     );
@@ -132,9 +207,12 @@ export class Campaign implements IRefactoredCampaign {
         );
       }
     }
-    this.battleGroups = this.matchBattleGroups(
-      side1Assign.active,
-      side2Assign.active
+    this.battleGroups.splice(
+      0,
+      this.battleGroups.length,
+      ...this.matchBattleGroups(side1Assign.active, side2Assign.active).map(
+        (group) => reactive(group)
+      )
     );
     const scheduler = new ActionScheduler(this.config.standardInterval);
     // 初始化所有上场部队
@@ -150,6 +228,8 @@ export class Campaign implements IRefactoredCampaign {
       simulationTime < this.config.battleTimeLimit &&
       !this.isBattleOver()
     ) {
+      // eslint-disable-next-line no-await-in-loop
+      await waitForMilliseconds(100);
       const action = scheduler.nextAction();
       if (!action) break;
       simulationTime = action.time;
@@ -200,7 +280,7 @@ export class Campaign implements IRefactoredCampaign {
       }
     }
     this.battleStateHandler.getBattleState().isOver = true;
-
+    console.log('schedule', scheduler);
     console.log('Battle execution complete, simulation time:', simulationTime);
 
     // 判断side1和side2的部队剩下的人数
@@ -213,6 +293,11 @@ export class Campaign implements IRefactoredCampaign {
       .flatMap((squad) => squad.members)
       .filter((unit) => !unit.isDead).length;
 
+    this.logs.statistics.forEach((obj) => {
+      console.log(
+        `| ${obj.name} | ${obj.damage} | ${obj.attack} | ${obj.receive} | ${obj.defense} |`
+      );
+    });
     if (side1Remaining > side2Remaining) {
       return { winner: 'side1', duration: simulationTime };
     }
@@ -242,23 +327,24 @@ export class Campaign implements IRefactoredCampaign {
     return !(side1Alive && side2Alive);
   }
 
-  // 计算并结算攻击伤害，然后根据对方存活情况执行反击
+  /**
+   * 攻击结算逻辑，与 campaign 中 executeUnitAttack 类似
+   * 这里统一固定攻击距离为1
+   */
   private executeUnitAttack(
     attacker: ICombatUnit,
     target: ICombatUnit,
     distance: number
-  ) {
+  ): void {
     let attackerDamage = attacker.physicalAttack;
     const hit = Math.random();
-    // 不同攻击结果，影响反击效果
     let attackState: 'normal' | 'miss' | 'parry' | 'block' | 'critical' =
       'normal';
     const attackInfo: string[] = [
-      `Unit ${attacker.getCharacter().name} attacked ${
-        target.getCharacter().name
-      }`,
+      `${attacker.getCharacter().name} attacked ${target.getCharacter().name}`,
     ];
-    // hit and miss
+
+    // 判断命中与闪避
     if (hit > Math.max(0.05, attacker.hitRate - target.dodgeRate)) {
       attackerDamage = 0;
       attackInfo.push('miss');
@@ -268,33 +354,33 @@ export class Campaign implements IRefactoredCampaign {
     const block = Math.random();
     const critical = Math.random();
     if (parry < target.parryRate) {
-      // parry
       attackerDamage = 0;
       attackInfo.push(`parry(rate:${target.parryRate})`);
       attackState = 'parry';
     } else if (block < target.blockRate) {
-      // block
       attackerDamage = Math.max(0, attackerDamage - target.blockValue);
       attackInfo.push(`block(${target.blockValue},rate:${target.blockRate})`);
       attackState = 'block';
     } else if (critical < attacker.criticalRate) {
-      // critical
       attackerDamage *= attacker.criticalDamage;
       attackInfo.push('critical');
       attackState = 'critical';
     }
     target.takeDamage(attackerDamage);
-    attackInfo.push(`do damage: ${attackerDamage}`);
-    if (attackerDamage > 0) attacker.getCharacter().addExperience(1);
+    attackInfo.push(
+      `damage: ${attackerDamage}(${target.currentHealth}/${target.maxHealth})`
+    );
+    if (attackerDamage > 0) {
+      attacker.getCharacter().addExperience(1);
+    }
+    // 如果目标存活且距离满足，则执行反击
     if (!target.isDead && target.getAttackRange() >= distance) {
-      // counter
       attackInfo.push(
-        `Unit ${target.getCharacter().name} counterattacked ${
+        `${target.getCharacter().name} counterattacked ${
           attacker.getCharacter().name
         }`
       );
       let counterDamage = 0;
-      // count base couterDamage by attackState
       if (attackState === 'miss') {
         counterDamage = target.physicalAttack;
       } else if (attackState === 'parry' || attackState === 'block') {
@@ -306,26 +392,32 @@ export class Campaign implements IRefactoredCampaign {
       }
       const counterHit = Math.random();
       if (counterHit > Math.max(0.05, target.hitRate - attacker.dodgeRate)) {
-        attackInfo.push('miss');
+        attackInfo.push('counter miss');
         counterDamage = 0;
       }
       const countParry = Math.random();
       const countBlock = Math.random();
       if (countParry < attacker.parryRate) {
-        // parry
         counterDamage = 0;
-        attackInfo.push(`parry(rate:${attacker.parryRate})`);
+        attackInfo.push(`counter parry(rate:${attacker.parryRate})`);
       } else if (countBlock < attacker.blockRate) {
-        // block
         counterDamage = Math.max(0, counterDamage - attacker.blockValue);
         attackInfo.push(
-          `block(${attacker.blockValue},rate:${attacker.blockRate})`
+          `counter block(${attacker.blockValue},rate:${attacker.blockRate})`
         );
       }
       attacker.takeDamage(counterDamage);
-      attackInfo.push(`do damage: ${counterDamage}`);
-      if (counterDamage > 0) target.getCharacter().addExperience(1);
-      console.log(...attackInfo);
+      attackInfo.push(
+        `counter damage: ${counterDamage}(${attacker.currentHealth}/${attacker.maxHealth})`
+      );
+      this.record(attacker, target, attackerDamage, counterDamage);
+      if (counterDamage > 0) {
+        target.getCharacter().addExperience(1);
+      }
+      this.logs.message.push(attackInfo.join(' | '));
+    } else {
+      this.record(attacker, target, attackerDamage, 0);
+      this.logs.message.push(attackInfo.join(' | '));
     }
   }
 
@@ -411,7 +503,7 @@ export class Campaign implements IRefactoredCampaign {
         side2Armies: winningSide === 'side2' ? [b] : [],
         battleState: { timeElapsed: 0, isOver: false },
       };
-      this.battleGroups.push(newGroup);
+      this.battleGroups.push(reactive(newGroup));
       return;
     }
 
@@ -443,8 +535,9 @@ export class Campaign implements IRefactoredCampaign {
           ? selectedGroup.side2Armies
           : selectedGroup.side1Armies;
       // 将选中的战团移除
-      this.battleGroups = this.battleGroups.filter(
-        (group) => group !== selectedGroup
+      this.battleGroups.splice(
+        this.battleGroups.findIndex((group) => group !== selectedGroup),
+        1
       );
       // 合并选中战团中的我方部队与获胜部队 b
       const combinedWinningArmies = [...winningArmies, b];
@@ -454,7 +547,9 @@ export class Campaign implements IRefactoredCampaign {
           ? this.matchBattleGroups(combinedWinningArmies, enemyArmies)
           : this.matchBattleGroups(enemyArmies, combinedWinningArmies);
       // 将新匹配的战团加入战场
-      this.battleGroups.push(...rematchedGroups);
+      this.battleGroups.push(
+        ...rematchedGroups.map((group) => reactive(group))
+      );
     } else {
       // 如果敌方部队数量等于1，则直接将 b 加入到选中战团的对应位置
       if (winningSide === 'side1') {
@@ -501,7 +596,11 @@ export class Campaign implements IRefactoredCampaign {
       this.reassignVictoriousArmy(b, winningSide, group.id);
     }
     // 移除该已结束的战团
-    this.battleGroups = this.battleGroups.filter((g) => g !== group);
+    this.battleGroups.splice(
+      0,
+      this.battleGroups.length,
+      ...this.battleGroups.filter((g) => g !== group)
+    );
     return true;
   }
 

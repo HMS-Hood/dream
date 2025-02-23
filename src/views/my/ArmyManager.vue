@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, computed } from 'vue';
+  import { ref, computed, reactive } from 'vue';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useArmyStyleStore } from '@/store/armyStyle';
   import { CharacterInterface } from '@/core/interfaces';
@@ -82,14 +82,14 @@
     const army: IArmy = new Army({
       id: 'player_army',
       name: 'Player Army',
-      squads: squads.value,
+      squads: squads.value.map((squad) => reactive(squad)),
     });
 
     if (!validateArmyFormation(army)) {
       Modal.warning({ content: '部队阵型不合规定！' });
       return;
     }
-    armyStore.setArmy(army);
+    armyStore.setArmy(reactive(army));
     Message.success('Army information saved.');
   };
 

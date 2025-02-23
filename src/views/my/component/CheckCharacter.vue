@@ -33,10 +33,7 @@
           <div
             class="team-avatar"
             :style="{
-              'background-image': `url(${item.character.avatar.replace(
-                '.png',
-                '_s.png'
-              )})`,
+              'background-image': `url(${item.character.smallAvatar})`,
             }"
           >
           </div>
@@ -287,7 +284,8 @@
         .property-value {
           padding: 10px;
           color: #c7c9c9;
-          font-size: 1.5em;
+          font-weight: 600;
+          font-size: @secondary-title-font;
         }
       }
 

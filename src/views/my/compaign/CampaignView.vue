@@ -11,15 +11,18 @@
       <div class="battle-header">
         <h2>Battle Status</h2>
         <div class="control-buttons">
+          <a-button type="primary" @click="showArmyManager = true">
+            Set Army
+          </a-button>
           <a-button type="primary" @click="executeNonPlayerBattles">
             Execute Other Battles
           </a-button>
         </div>
       </div>
 
-      <div v-if="battleMatched" class="battle-groups">
+      <div class="battle-groups">
         <div
-          v-for="group in activeBattleGroups"
+          v-for="group in campaign?.battleGroups"
           :key="group.id"
           :class="[
             'battle-group',
@@ -29,23 +32,21 @@
           <div class="group-armies">
             <div class="side">
               <h4>Side 1</h4>
-              <div
+              <army-battle-info
                 v-for="army in group.side1Armies"
                 :key="army.id"
-                :class="['army-info', { 'player-army': isPlayerArmy(army) }]"
-              >
-                <squad-distribution :army="army" />
-              </div>
+                :army="army"
+                :is-player="isPlayerArmy(army)"
+              />
             </div>
             <div class="side">
               <h4>Side 2</h4>
-              <div
+              <army-battle-info
                 v-for="army in group.side2Armies"
                 :key="army.id"
-                :class="['army-info', { 'player-army': isPlayerArmy(army) }]"
-              >
-                <squad-distribution :army="army" />
-              </div>
+                :army="army"
+                :is-player="isPlayerArmy(army)"
+              />
             </div>
           </div>
           <div
@@ -86,22 +87,55 @@
       <div>Winner: {{ getWinningSide() }}</div>
     </div>
   </div>
+  <a-modal
+    v-model:visible="showArmyManager"
+    :modal-style="{ 'background-color': 'rgb(78, 78, 78, 0.8)' }"
+    :fullscreen="true"
+    :closable="false"
+    @before-ok="handleArmySet"
+  >
+    <army-manager
+      ref="armyManagerRef"
+      :idle-members="idleMembers"
+    ></army-manager>
+  </a-modal>
 </template>
 
 <script lang="ts" setup>
   import { ref, computed } from 'vue';
-  import { Campaign } from '../../../core/battle/campaign';
-  import { IArmy, BattleGroup } from '../../../core/interfaces/combat';
-  import SquadDistribution from './SquadDistribution.vue';
-  import { useCampaignStore } from '../../../store/campaign';
+  import { useArmyStore } from '@/store/army';
+  import { Campaign } from '@/core/battle/campaign';
+  import { SideState } from '@/core/battle/SideState';
+  import { IArmy, BattleGroup } from '@/core/interfaces/combat';
+  import { defaultBattleConfig } from '@/core/setting/param-combat';
+  import { generateEnemyArmy } from '@/core/utils/dataUtils';
+  import { QualityLevel } from '@/core/enums';
+  import { player } from '@/core/game';
+  import ArmyBattleInfo from './ArmyBattleInfo.vue';
   import sideArmiesList from './sideArmiesList.vue';
-  import { SideState } from '../../../core/battle/SideState';
+  import ArmyManager from '../ArmyManager.vue';
 
-  const campaignStore = useCampaignStore();
   const campaign = ref<Campaign | null>(null);
 
-  // 假定从 store 中获取重构后的 Campaign 实例
-  campaign.value = campaignStore.getCampaign();
+  const showArmyManager = ref(false);
+  const armyManagerRef = ref<typeof ArmyManager>();
+  const armyStore = useArmyStore();
+  const handleArmySet = () => {
+    const army = armyStore.getArmy();
+    const enemyArmies = generateEnemyArmy(90, QualityLevel.F);
+    campaign.value = new Campaign(
+      defaultBattleConfig,
+      [],
+      enemyArmies,
+      army,
+      true
+    );
+    return true;
+  };
+
+  const idleMembers = computed(() =>
+    player.members.filter((member) => !player.workingIds.includes(member.id))
+  );
 
   // 假定 RefactoredCampaign 实例提供 getBattleState、getActiveBattleGroups、getPlayerSide 等方法，供渲染使用
   const battleState = computed(() => campaign.value?.getBattleState());
@@ -125,7 +159,6 @@
   // 控制变量
   const battleMatched = ref(false);
   const nonPlayerBattlesExecuted = ref(false);
-  const playerBattleExecuted = ref(false);
 
   const combatLogs = ref<string[]>([]);
   const battleStats = ref({
@@ -143,19 +176,7 @@
   };
 
   const isPlayerArmy = (army: IArmy): boolean => {
-    return playerSide.value?.includes(army) || false;
-  };
-
-  const matchBattles = () => {
-    if (campaign.value) {
-      // 假定 assignActiveAndReserveArmies 方法根据配置进行部队上场及后备分配，此处以一个示例上场宽度参数 100
-      // const assignments = campaign.value.assignActiveAndReserveArmies(100);
-      // const side1Assign = assignments[0];
-      // const side2Assign = assignments[1];
-      // 使用分配出的上场部队匹配战团
-      // campaign.value.matchBattleGroups(side1Assign.active, side2Assign.active);
-      battleMatched.value = true;
-    }
+    return armyStore.getArmy()?.id === army.id;
   };
 
   const executeNonPlayerBattles = () => {
@@ -163,16 +184,6 @@
       campaign.value.executeBattle();
       nonPlayerBattlesExecuted.value = true;
       // 此处可根据具体逻辑更新战斗日志和统计数据
-    }
-  };
-
-  const executePlayerBattle = () => {
-    if (campaign.value) {
-      campaign.value.executeBattle();
-      playerBattleExecuted.value = true;
-      // 示例中更新日志和统计数据，实际可根据 campaign 返回数据进行处理
-      combatLogs.value = ['Player battle executed.'];
-      battleStats.value = { totalDamage: 1234, unitsLost: 3 };
     }
   };
 

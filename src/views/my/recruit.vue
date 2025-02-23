@@ -74,9 +74,9 @@
       const newMembers = recruitList.value
         .filter((character) => character.checked)
         .map((checkcharacter) => checkcharacter.character);
-      player.members.splice(player.members.length, 0, ...newMembers);
+      player.members.push(...newMembers);
       player.gold -= consume.value;
-      recruitList.value.splice(1, recruitList.value.length, ...newRecruitList);
+      recruitList.value.splice(0, recruitList.value.length, ...newRecruitList);
       recruitListInStore.value.splice(
         1,
         recruitList.value.length,

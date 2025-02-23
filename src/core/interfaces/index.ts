@@ -46,6 +46,7 @@ export interface CharacterInterface {
   equipment: Equipments;
   total: number;
   fightStatistic: number;
+  smallAvatar: string;
   getLevelUpExperience(): number;
   canLevelUp(): boolean;
   levelUp(): boolean;
@@ -72,7 +73,6 @@ export interface BattleConfig {
   positionWeight: {
     // 不同位置的选中权重
     front: number;
-    middle: number;
     back: number;
   };
 }

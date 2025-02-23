@@ -11,7 +11,7 @@
       <div class="left">
         <div class="avatar-container">
           <img
-            :src="character.avatar.replace('.png', '_s.png')"
+            :src="character.smallAvatar"
             alt="Character Avatar"
             class="avatar"
           />

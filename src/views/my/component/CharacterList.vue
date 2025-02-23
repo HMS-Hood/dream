@@ -268,7 +268,7 @@
       .quality-text {
         color: #000;
         font-weight: 600;
-        font-size: 24px;
+        font-size: @primary-title-font;
       }
     }
 
@@ -281,7 +281,8 @@
       .property-value {
         padding: 10px;
         color: #c7c9c9;
-        font-size: 1.5em;
+        font-weight: 800;
+        font-size: @primary-title-font;
       }
     }
 

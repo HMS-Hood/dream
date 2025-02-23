@@ -79,7 +79,7 @@
   import { load, save } from '@/core/utils/systemUtils';
   import back from './component/back.vue';
 
-  const backgroundImage = ref('/img/bg/bg1.png');
+  const backgroundImage = ref('/img/bg/bg2.png');
 
   interface HeroInfo {
     name: string;

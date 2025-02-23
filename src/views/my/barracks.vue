@@ -18,7 +18,7 @@
         <div class="cell-content">
           <div class="player-details">
             <div class="name-title">
-              <h2 class="player-name">{{ player.name }}</h2>
+              <h2 class="player-name">{{ player.protagonist.name }}</h2>
               <p class="player-title">{{ player.title }}</p>
             </div>
             <div class="reputation">
@@ -65,7 +65,7 @@
   import back from './component/back.vue';
   import CharacterList from './component/CharacterList.vue';
 
-  const backgroundImage = ref('/img/bg/bg1.png');
+  const backgroundImage = ref('/img/bg/bg6.png');
 
   const showList = ref<'character' | 'item'>('character');
 </script>

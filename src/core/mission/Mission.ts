@@ -10,8 +10,7 @@ import {
   luckAndPerMissionDropRate,
 } from '../setting/param-mission';
 import { generateId, generateQualityLevelWithMin } from '../utils/utils';
-import { generateCharacter } from '../utils/dataUtils';
-import { validateArmyFormation } from '../utils/armyUtils';
+import { generateCharacter, generateEnemyArmy } from '../utils/dataUtils';
 import {
   createLongRangeWeapon,
   createNormalStandardArmor,
@@ -22,10 +21,14 @@ import {
 } from '../utils/itemUtils';
 import { CombatUnit } from '../battle/CombatUnit';
 import { CharacterInterface, ICombatUnit } from '../interfaces';
-import { defaultBattleConfig } from '../setting/param-combat';
+import {
+  baseMemberLimit,
+  baseSquadLimit,
+  defaultBattleConfig,
+} from '../setting/param-combat';
 import { Armor, Item, Shield, Weapon } from '../interfaces/item';
 import { Army } from '../battle/Army';
-import { SquadBattle } from './SquadBattle';
+import { SquadBattle } from './SquadBattleA';
 import { Squad } from '../battle/Squad';
 
 export interface MissionInfo {
@@ -188,13 +191,13 @@ export class Mission {
    */
   completeMission(playerArmy: IArmy): MissionResult {
     // 1. Generate enemy army and get the multiplier.
-    const { enemyArmy, multiplier } = this.generateEnemyArmy();
+    const { enemyArmies, multiplier } = this.localGenerateEnemyArmy();
 
     // 2. Create a campaign and let the player's army fight the enemy army.
     const battleConfig = defaultBattleConfig;
-    battleConfig.battlefieldWidth = 200;
+    battleConfig.battlefieldWidth = 1;
     battleConfig.battleTimeLimit = 1000;
-    const campaign = new SquadBattle(playerArmy.squads, enemyArmy.squads, {
+    const campaign = new SquadBattle(playerArmy, enemyArmies, {
       restThreshold: 0.3,
       fleeThreshold: 0.1,
     });
@@ -279,7 +282,7 @@ export class Mission {
   /**
    * Generates an enemy Army for this mission.
    */
-  generateEnemyArmy(): { enemyArmy: IArmy; multiplier: number } {
+  localGenerateEnemyArmy(): { enemyArmies: IArmy[]; multiplier: number } {
     // 1. Get the base enemy count from missionQualityEnimyCount.
     const baseCount: number = missionQualityEnimyCount[this.quality];
 
@@ -294,110 +297,8 @@ export class Mission {
     const enemyQualityFloor: QualityLevel =
       missionQualityLowQuality[this.quality];
 
-    // 5. Generate enemy personnel. (generateCharacter returns a Character.)
-    const enemyMembers: CharacterInterface[] = [];
-    for (let i = 0; i < enemyCount; i += 1) {
-      enemyMembers.push(generateCharacter(enemyQualityFloor));
-    }
-
-    // 6. Group every 10 personnel into a squad.
-    const squads: ISquad[] = [];
-    for (let i = 0; i < enemyMembers.length; i += 10) {
-      const group = enemyMembers.slice(i, i + 10);
-      // Sort the group by quality descending.
-      group.sort((a, b) => Number(b.quality) - Number(a.quality));
-      // Wrap each character into a CombatUnit.
-      const combatUnits = group.map((member) => new CombatUnit(member));
-
-      const squad = {
-        id: generateId(),
-        position: SquadPosition.FRONT, // temporary; will be reassigned below.
-        members: combatUnits,
-        targetIds: [],
-        isDead: false,
-      };
-      squads.push(new Squad(squad));
-    }
-
-    // 7. Combine squads into an Army object.
-    const enemyArmy: IArmy = new Army({
-      id: generateId(),
-      name: '敌人',
-      squads,
-    });
-
-    // 8. Distribute squads into formation positions.
-    const totalSquads = squads.length;
-    const frontCount = Math.ceil(totalSquads / 2);
-
-    squads.forEach((squad, index) => {
-      if (index < frontCount) {
-        squad.position = SquadPosition.FRONT;
-      } else {
-        squad.position = SquadPosition.BACK;
-      }
-    });
-
-    // 9. Validate formation (optional).
-    if (!validateArmyFormation(enemyArmy)) {
-      // eslint-disable-next-line no-console
-      console.warn('Generated enemy army formation is invalid.');
-    }
-
-    // 10. For each squad, generate equipment based on formation.
-    squads.forEach((squad) => {
-      squad.members.forEach((unit: ICombatUnit) => {
-        // For each piece of equipment, first determine its random quality.
-        const equipQuality = generateQualityLevelWithMin(
-          missionQualityLowQuality[this.quality]
-        );
-
-        if (squad.position === SquadPosition.FRONT) {
-          if (Math.random() < 0.5) {
-            unit
-              .getCharacter()
-              .equipment.setWeapon(createOneHandWeapon(equipQuality));
-            unit.getCharacter().equipment.setShield(createShield(equipQuality));
-          } else {
-            unit
-              .getCharacter()
-              .equipment.setWeapon(createTwohandWeapon(equipQuality));
-          }
-          if (Math.random() < 0.5) {
-            unit
-              .getCharacter()
-              .equipment.setArmor(
-                createNormalStandardArmor(equipQuality, 'Plate')
-              );
-          } else {
-            unit
-              .getCharacter()
-              .equipment.setArmor(
-                createNormalStandardArmor(equipQuality, 'Chain')
-              );
-          }
-        } else if (squad.position === SquadPosition.BACK) {
-          unit
-            .getCharacter()
-            .equipment.setWeapon(createLongRangeWeapon(equipQuality));
-          if (Math.random() < 0.5) {
-            unit
-              .getCharacter()
-              .equipment.setArmor(
-                createNormalStandardArmor(equipQuality, 'Leather')
-              );
-          } else {
-            unit
-              .getCharacter()
-              .equipment.setArmor(
-                createNormalStandardArmor(equipQuality, 'Cloth')
-              );
-          }
-        }
-        unit.updateStats();
-      });
-    });
-
-    return { enemyArmy, multiplier };
+    // 5. Generate enemy personnel.
+    const enemyArmies = generateEnemyArmy(enemyCount, enemyQualityFloor);
+    return { enemyArmies, multiplier };
   }
 }

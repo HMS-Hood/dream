@@ -3,7 +3,7 @@ import { SquadPosition } from '../enums';
 import { ICombatUnit } from '../interfaces';
 import { ISquad, ISquadData } from '../interfaces/combat';
 import {
-  baseMemberList,
+  baseMemberLimit,
   charmQualityAdjustMemberLimit,
 } from '../setting/param-combat';
 import { generateId, getQualityForValue } from '../utils/utils';
@@ -19,8 +19,6 @@ export class Squad implements ISquad {
 
   targetIds: string[];
 
-  isDead: boolean;
-
   constructor(initData: ISquadData) {
     this.id = initData.id ?? generateId();
     this.position = initData.position ?? SquadPosition.FRONT;
@@ -33,7 +31,6 @@ export class Squad implements ISquad {
       this.leaderId = '';
     }
     this.targetIds = initData.targetIds ?? [];
-    this.isDead = initData.isDead ?? false;
   }
 
   checkLimit(): boolean {
@@ -53,18 +50,28 @@ export class Squad implements ISquad {
       );
       if (leader) {
         const charmQuality = getQualityForValue(leader.getCharacter().charm);
-        return baseMemberList + charmQualityAdjustMemberLimit[charmQuality];
+        return baseMemberLimit + charmQualityAdjustMemberLimit[charmQuality];
       }
       if (this.members.length > 0) {
         this.leaderId = this.members[0].getCharacter().id;
         const charmQuality = getQualityForValue(
           this.members[0].getCharacter().charm
         );
-        return baseMemberList + charmQualityAdjustMemberLimit[charmQuality];
+        return baseMemberLimit + charmQualityAdjustMemberLimit[charmQuality];
       }
       this.leaderId = '';
     }
-    return baseMemberList;
+    return baseMemberLimit;
+  }
+
+  get isDead(): boolean {
+    return this.members.every((member) => member.isDead);
+  }
+
+  get leader(): ICombatUnit | undefined {
+    return this.members.find(
+      (member) => member.getCharacter().id === this.leaderId
+    );
   }
 
   setLeaderId(leaderId: string) {

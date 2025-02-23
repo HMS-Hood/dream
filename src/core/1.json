@@ -1,30 +1,170 @@
 {
   "items": [
     {
-      "name": "祝福之剑",
+      "name": "秘法织物",
       "value": 1600,
-      "quality": "B",
-      "img": "/img/item/sword-b.png",
+      "quality": "C",
+      "img": "/img/item/cloth-c.png",
+      "keys": [],
+      "type": "armor",
+      "defence": 4,
+      "modifier": [
+        {
+          "property": "intelligence",
+          "value": 5
+        }
+      ],
+      "limit": []
+    },
+    {
+      "name": "皇家卫甲",
+      "value": 2400,
+      "quality": "C",
+      "img": "/img/item/plate-c.png",
+      "keys": [],
+      "type": "armor",
+      "limit": [
+        {
+          "property": "strength",
+          "minValue": 9
+        }
+      ],
+      "modifier": [
+        {
+          "property": "agility",
+          "value": -5
+        }
+      ],
+      "defence": 10
+    },
+    {
+      "name": "巨人之锤",
+      "value": 1200,
+      "quality": "C",
+      "img": "/img/item/g-hammer-c.png",
+      "keys": [],
+      "type": "weapon",
+      "handType": "TWO_HAND",
+      "minDamage": 43,
+      "maxDamage": 42,
+      "attackMethod": "MELEE",
+      "weaponType": "GREAT_MACE",
+      "modifier": [],
+      "limit": []
+    },
+    {
+      "name": "狂战士之斧",
+      "value": 800,
+      "quality": "C",
+      "img": "/img/item/axe-c.png",
       "keys": [],
       "type": "weapon",
       "handType": "ONE_HAND",
-      "minDamage": 33,
-      "maxDamage": 35,
+      "minDamage": 28,
+      "maxDamage": 30,
       "attackMethod": "MELEE",
-      "weaponType": "SWORD"
+      "weaponType": "AXE",
+      "modifier": [],
+      "limit": []
     },
     {
-      "name": "祝福之剑",
+      "name": "圣光破碎者",
       "value": 1600,
       "quality": "B",
-      "img": "/img/item/sword-b.png",
+      "img": "/img/item/hammer-b.png",
       "keys": [],
       "type": "weapon",
       "handType": "ONE_HAND",
       "minDamage": 32,
-      "maxDamage": 36,
+      "maxDamage": 38,
       "attackMethod": "MELEE",
-      "weaponType": "SWORD"
+      "weaponType": "MACE",
+      "modifier": [],
+      "limit": []
+    },
+    {
+      "name": "龙骑士矛",
+      "value": 1200,
+      "quality": "C",
+      "img": "/img/item/lance-c.png",
+      "keys": [],
+      "type": "weapon",
+      "handType": "TWO_HAND",
+      "minDamage": 40,
+      "maxDamage": 41,
+      "attackMethod": "MELEE",
+      "weaponType": "LANCE"
+    },
+    {
+      "name": "皇家卫甲",
+      "value": 2400,
+      "quality": "C",
+      "img": "/img/item/plate-c.png",
+      "keys": [],
+      "type": "armor",
+      "strengthLimit": 9,
+      "agilityDecrease": 6,
+      "defence": 9
+    },
+    {
+      "name": "皇家卫甲",
+      "value": 2400,
+      "quality": "C",
+      "img": "/img/item/plate-c.png",
+      "keys": [],
+      "type": "armor",
+      "strengthLimit": 9,
+      "agilityDecrease": 6,
+      "defence": 9
+    },
+    {
+      "name": "术士法袍",
+      "value": 3200,
+      "quality": "B",
+      "img": "/img/item/cloth-b.png",
+      "keys": [],
+      "type": "armor",
+      "defence": 5,
+      "modifier": [
+        {
+          "property": "intelligence",
+          "value": 7
+        }
+      ],
+      "limit": []
+    },
+    {
+      "name": "巨人之剑",
+      "value": 1200,
+      "quality": "C",
+      "img": "/img/item/g-sword-c.png",
+      "keys": [],
+      "type": "weapon",
+      "handType": "TWO_HAND",
+      "minDamage": 43,
+      "maxDamage": 39,
+      "attackMethod": "MELEE",
+      "weaponType": "GREAT_SWORD"
+    },
+    {
+      "name": "秘法法杖",
+      "value": 1600,
+      "quality": "C",
+      "img": "/img/item/staff-c.png",
+      "keys": [],
+      "type": "weapon",
+      "handType": "TWO_HAND",
+      "minDamage": 3,
+      "maxDamage": 5,
+      "attackMethod": "MELEE",
+      "weaponType": "STAFF",
+      "modifier": [
+        {
+          "property": "intelligence",
+          "value": 4
+        }
+      ],
+      "limit": []
     }
   ],
   "members": [
@@ -57,9 +197,9 @@
       "id": "3k2l3y3mu9n",
       "name": "克莱蒙娜",
       "nickName": "没落贵族",
-      "avatar": "/img/avatar/0088.png",
+      "avatar": "/img/avatar/0089.png",
       "level": "VETERAN",
-      "experience": 3112,
+      "experience": 7901,
       "strength": 9,
       "agility": 9,
       "endurance": 12,
@@ -100,8 +240,8 @@
       "name": "辛西娅",
       "nickName": "贴身女仆",
       "avatar": "/img/avatar/1166.png",
-      "level": "VETERAN",
-      "experience": 4649,
+      "level": "ELITE",
+      "experience": 1167,
       "strength": 13,
       "agility": 17,
       "endurance": 12,
@@ -115,17 +255,28 @@
     {
       "equipment": {
         "weapon": {
-          "name": "龙骑士矛",
-          "value": 1200,
-          "quality": "C",
-          "img": "/img/item/lance-c.png",
+          "name": "祝福之剑",
+          "value": 1600,
+          "quality": "B",
+          "img": "/img/item/sword-b.png",
           "keys": [],
           "type": "weapon",
-          "handType": "TWO_HAND",
-          "minDamage": 40,
-          "maxDamage": 41,
+          "handType": "ONE_HAND",
+          "minDamage": 32,
+          "maxDamage": 36,
           "attackMethod": "MELEE",
-          "weaponType": "LANCE"
+          "weaponType": "SWORD"
+        },
+        "shield": {
+          "name": "守卫者之盾",
+          "value": 800,
+          "quality": "C",
+          "img": "/img/item/shield-c.png",
+          "keys": [],
+          "type": "shield",
+          "defence": 5,
+          "modifier": [],
+          "limit": []
         },
         "armor": {
           "name": "皇家卫甲",
@@ -134,8 +285,18 @@
           "img": "/img/item/plate-c.png",
           "keys": [],
           "type": "armor",
-          "strengthLimit": 9,
-          "agilityDecrease": 6,
+          "limit": [
+            {
+              "property": "strength",
+              "minValue": 9
+            }
+          ],
+          "modifier": [
+            {
+              "property": "agility",
+              "value": -5
+            }
+          ],
           "defence": 9
         }
       },
@@ -158,59 +319,28 @@
     {
       "equipment": {
         "weapon": {
-          "name": "禁卫戟斧",
-          "value": 1200,
-          "quality": "C",
-          "img": "/img/item/halberd-c.png",
+          "name": "祝福之剑",
+          "value": 1600,
+          "quality": "B",
+          "img": "/img/item/sword-b.png",
           "keys": [],
           "type": "weapon",
-          "handType": "TWO_HAND",
-          "minDamage": 41,
-          "maxDamage": 39,
+          "handType": "ONE_HAND",
+          "minDamage": 33,
+          "maxDamage": 35,
           "attackMethod": "MELEE",
-          "weaponType": "HALBERD"
+          "weaponType": "SWORD"
         },
-        "armor": {
-          "name": "哨兵链甲",
-          "value": 2000,
+        "shield": {
+          "name": "守卫者之盾",
+          "value": 800,
           "quality": "C",
-          "img": "/img/item/chain-c.png",
+          "img": "/img/item/shield-c.png",
           "keys": [],
-          "type": "armor",
-          "strengthLimit": 6,
-          "defence": 7
-        }
-      },
-      "id": "9pxlv3kqvpa",
-      "name": "安涅丽丝",
-      "nickName": "",
-      "avatar": "/img/avatar/0149.png",
-      "level": "VETERAN",
-      "experience": 2049,
-      "strength": 8,
-      "agility": 8,
-      "endurance": 8,
-      "intelligence": 9,
-      "spirit": 6,
-      "perception": 9,
-      "luck": 6,
-      "charm": 5,
-      "skills": []
-    },
-    {
-      "equipment": {
-        "weapon": {
-          "name": "巨人之剑",
-          "value": 1200,
-          "quality": "C",
-          "img": "/img/item/g-sword-c.png",
-          "keys": [],
-          "type": "weapon",
-          "handType": "TWO_HAND",
-          "minDamage": 43,
-          "maxDamage": 39,
-          "attackMethod": "MELEE",
-          "weaponType": "GREAT_SWORD"
+          "type": "shield",
+          "defence": 4,
+          "modifier": [],
+          "limit": []
         },
         "armor": {
           "name": "督军战甲",
@@ -224,12 +354,60 @@
           "defence": 15
         }
       },
+      "id": "9pxlv3kqvpa",
+      "name": "安涅丽丝",
+      "nickName": "",
+      "avatar": "/img/avatar/0149.png",
+      "level": "VETERAN",
+      "experience": 2659,
+      "strength": 8,
+      "agility": 8,
+      "endurance": 8,
+      "intelligence": 9,
+      "spirit": 6,
+      "perception": 9,
+      "luck": 6,
+      "charm": 5,
+      "skills": []
+    },
+    {
+      "equipment": {
+        "weapon": {
+          "name": "禁卫戟斧",
+          "value": 1200,
+          "quality": "C",
+          "img": "/img/item/halberd-c.png",
+          "keys": [],
+          "type": "weapon",
+          "handType": "TWO_HAND",
+          "minDamage": 41,
+          "maxDamage": 39,
+          "attackMethod": "MELEE",
+          "weaponType": "HALBERD"
+        },
+        "armor": {
+          "name": "守护者链甲",
+          "value": 4000,
+          "quality": "B",
+          "img": "/img/item/chain-b.png",
+          "keys": [],
+          "type": "armor",
+          "limit": [
+            {
+              "property": "strength",
+              "minValue": 7
+            }
+          ],
+          "modifier": [],
+          "defence": 9
+        }
+      },
       "id": "qm0ixin1v4i",
       "name": "梅里特",
       "nickName": "",
       "avatar": "/img/avatar/0556.png",
       "level": "VETERAN",
-      "experience": 1296,
+      "experience": 3988,
       "strength": 9,
       "agility": 6,
       "endurance": 6,
@@ -271,7 +449,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0939.png",
       "level": "VETERAN",
-      "experience": 1804,
+      "experience": 4920,
       "strength": 11,
       "agility": 7,
       "endurance": 10,
@@ -313,7 +491,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0397.png",
       "level": "VETERAN",
-      "experience": 2903,
+      "experience": 7342,
       "strength": 10,
       "agility": 10,
       "endurance": 11,
@@ -355,7 +533,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0249.png",
       "level": "VETERAN",
-      "experience": 2003,
+      "experience": 5444,
       "strength": 11,
       "agility": 8,
       "endurance": 9,
@@ -397,7 +575,7 @@
       "nickName": "",
       "avatar": "/img/avatar/1074.png",
       "level": "VETERAN",
-      "experience": 1507,
+      "experience": 4406,
       "strength": 14,
       "agility": 7,
       "endurance": 13,
@@ -424,15 +602,20 @@
           "weaponType": "LANCE"
         },
         "armor": {
-          "name": "皇家卫甲",
-          "value": 2400,
-          "quality": "C",
-          "img": "/img/item/plate-c.png",
+          "name": "守护者链甲",
+          "value": 4000,
+          "quality": "B",
+          "img": "/img/item/chain-b.png",
           "keys": [],
           "type": "armor",
-          "strengthLimit": 9,
-          "agilityDecrease": 6,
-          "defence": 9
+          "limit": [
+            {
+              "property": "strength",
+              "minValue": 7
+            }
+          ],
+          "modifier": [],
+          "defence": 8
         }
       },
       "id": "omp4myinpwq",
@@ -440,7 +623,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0830.png",
       "level": "VETERAN",
-      "experience": 2250,
+      "experience": 6012,
       "strength": 10,
       "agility": 11,
       "endurance": 6,
@@ -482,7 +665,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0052.png",
       "level": "VETERAN",
-      "experience": 2840,
+      "experience": 7030,
       "strength": 10,
       "agility": 8,
       "endurance": 7,
@@ -524,7 +707,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0148.png",
       "level": "VETERAN",
-      "experience": 1835,
+      "experience": 5289,
       "strength": 10,
       "agility": 8,
       "endurance": 8,
@@ -565,8 +748,8 @@
       "name": "纳亚娜",
       "nickName": "",
       "avatar": "/img/avatar/0097.png",
-      "level": "VETERAN",
-      "experience": 4997,
+      "level": "ELITE",
+      "experience": 3116,
       "strength": 11,
       "agility": 17,
       "endurance": 10,
@@ -608,7 +791,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0762.png",
       "level": "VETERAN",
-      "experience": 2785,
+      "experience": 7715,
       "strength": 17,
       "agility": 13,
       "endurance": 7,
@@ -650,7 +833,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0851.png",
       "level": "VETERAN",
-      "experience": 2877,
+      "experience": 8505,
       "strength": 10,
       "agility": 14,
       "endurance": 8,
@@ -691,8 +874,8 @@
       "name": "维斯特里娅",
       "nickName": "",
       "avatar": "/img/avatar/1156.png",
-      "level": "ORDINARY",
-      "experience": 973,
+      "level": "VETERAN",
+      "experience": 4797,
       "strength": 8,
       "agility": 12,
       "endurance": 10,
@@ -742,8 +925,8 @@
       "name": "亚瑞莉",
       "nickName": "",
       "avatar": "/img/avatar/0106.png",
-      "level": "ORDINARY",
-      "experience": 502,
+      "level": "VETERAN",
+      "experience": 3369,
       "strength": 8,
       "agility": 7,
       "endurance": 14,
@@ -752,6 +935,294 @@
       "perception": 11,
       "luck": 6,
       "charm": 9,
+      "skills": []
+    },
+    {
+      "equipment": {
+        "weapon": {
+          "name": "山崩之锤",
+          "value": 2400,
+          "quality": "B",
+          "img": "/img/item/g-hammer-b.png",
+          "keys": [],
+          "type": "weapon",
+          "handType": "TWO_HAND",
+          "minDamage": 49,
+          "maxDamage": 56,
+          "attackMethod": "MELEE",
+          "weaponType": "GREAT_MACE",
+          "modifier": [],
+          "limit": []
+        },
+        "armor": {
+          "name": "暗影皮甲",
+          "value": 1600,
+          "quality": "C",
+          "img": "/img/item/leather-c.png",
+          "keys": [],
+          "type": "armor",
+          "defence": 6,
+          "agilityIncrease": 4
+        }
+      },
+      "id": "a3egku7rn8j",
+      "name": "尤娜",
+      "nickName": "",
+      "avatar": "/img/avatar/0267.png",
+      "level": "VETERAN",
+      "experience": 2696,
+      "strength": 14,
+      "agility": 12,
+      "endurance": 5,
+      "intelligence": 12,
+      "spirit": 10,
+      "perception": 6,
+      "luck": 7,
+      "charm": 10,
+      "skills": []
+    },
+    {
+      "equipment": {
+        "weapon": {
+          "name": "统帅戟斧",
+          "value": 2400,
+          "quality": "B",
+          "img": "/img/item/halberd-b.png",
+          "keys": [],
+          "type": "weapon",
+          "handType": "TWO_HAND",
+          "minDamage": 49,
+          "maxDamage": 56,
+          "attackMethod": "MELEE",
+          "weaponType": "HALBERD",
+          "modifier": [],
+          "limit": []
+        },
+        "armor": {
+          "name": "游侠皮甲",
+          "value": 3200,
+          "quality": "B",
+          "img": "/img/item/leather-b.png",
+          "keys": [],
+          "type": "armor",
+          "defence": 10,
+          "modifier": [
+            {
+              "property": "agility",
+              "value": 5
+            }
+          ],
+          "limit": []
+        }
+      },
+      "id": "dnn9bp3xtq",
+      "name": "卡洛威",
+      "nickName": "",
+      "avatar": "/img/avatar/0833.png",
+      "level": "VETERAN",
+      "experience": 6121,
+      "strength": 15,
+      "agility": 12,
+      "endurance": 11,
+      "intelligence": 13,
+      "spirit": 10,
+      "perception": 12,
+      "luck": 11,
+      "charm": 17,
+      "skills": []
+    },
+    {
+      "equipment": {
+        "weapon": {
+          "name": "斩龙大剑",
+          "value": 2400,
+          "quality": "B",
+          "img": "/img/item/g-sword-b.png",
+          "keys": [],
+          "type": "weapon",
+          "handType": "TWO_HAND",
+          "minDamage": 53,
+          "maxDamage": 49,
+          "attackMethod": "MELEE",
+          "weaponType": "GREAT_SWORD",
+          "modifier": [],
+          "limit": []
+        },
+        "armor": {
+          "name": "暗影皮甲",
+          "value": 1600,
+          "quality": "C",
+          "img": "/img/item/leather-c.png",
+          "keys": [],
+          "type": "armor",
+          "defence": 6,
+          "modifier": [
+            {
+              "property": "agility",
+              "value": 4
+            }
+          ],
+          "limit": []
+        }
+      },
+      "id": "miaatwomd7",
+      "name": "肯德尔",
+      "nickName": "黒锋",
+      "avatar": "/img/avatar/0999.png",
+      "level": "VETERAN",
+      "experience": 3860,
+      "strength": 12,
+      "agility": 9,
+      "endurance": 13,
+      "intelligence": 13,
+      "spirit": 10,
+      "perception": 11,
+      "luck": 12,
+      "charm": 15,
+      "skills": []
+    },
+    {
+      "equipment": {
+        "weapon": {
+          "name": "风行者之弓",
+          "value": 2400,
+          "quality": "B",
+          "img": "/img/item/bow-b.png",
+          "keys": [],
+          "type": "weapon",
+          "handType": "TWO_HAND",
+          "minDamage": 40,
+          "maxDamage": 45,
+          "attackMethod": "LONG_RANGE",
+          "weaponType": "BOW",
+          "modifier": [],
+          "limit": []
+        },
+        "armor": {
+          "name": "哨兵链甲",
+          "value": 2000,
+          "quality": "C",
+          "img": "/img/item/chain-c.png",
+          "keys": [],
+          "type": "armor",
+          "limit": [
+            {
+              "property": "strength",
+              "minValue": 6
+            }
+          ],
+          "modifier": [],
+          "defence": 7
+        }
+      },
+      "id": "siflq0ovzmj",
+      "name": "肯德尔",
+      "nickName": "白炎",
+      "avatar": "/img/avatar/0293.png",
+      "level": "VETERAN",
+      "experience": 5397,
+      "strength": 8,
+      "agility": 15,
+      "endurance": 9,
+      "intelligence": 8,
+      "spirit": 10,
+      "perception": 11,
+      "luck": 9,
+      "charm": 9,
+      "skills": []
+    },
+    {
+      "equipment": {
+        "weapon": {
+          "name": "狙击弩",
+          "value": 2400,
+          "quality": "B",
+          "img": "/img/item/cross-bow-b.png",
+          "keys": [],
+          "type": "weapon",
+          "handType": "TWO_HAND",
+          "minDamage": 40,
+          "maxDamage": 45,
+          "attackMethod": "LONG_RANGE",
+          "weaponType": "CROSSBOW",
+          "modifier": [],
+          "limit": []
+        },
+        "armor": {
+          "name": "哨兵链甲",
+          "value": 2000,
+          "quality": "C",
+          "img": "/img/item/chain-c.png",
+          "keys": [],
+          "type": "armor",
+          "strengthLimit": 6,
+          "defence": 7
+        }
+      },
+      "id": "3gbk9b4eufu",
+      "name": "赞德拉",
+      "nickName": "",
+      "avatar": "/img/avatar/0839.png",
+      "level": "VETERAN",
+      "experience": 4419,
+      "strength": 14,
+      "agility": 16,
+      "endurance": 13,
+      "intelligence": 18,
+      "spirit": 14,
+      "perception": 11,
+      "luck": 9,
+      "charm": 12,
+      "skills": []
+    },
+    {
+      "equipment": {
+        "weapon": {
+          "name": "巨人之剑",
+          "value": 1200,
+          "quality": "C",
+          "img": "/img/item/g-sword-c.png",
+          "keys": [],
+          "type": "weapon",
+          "handType": "TWO_HAND",
+          "minDamage": 40,
+          "maxDamage": 40,
+          "attackMethod": "MELEE",
+          "weaponType": "GREAT_SWORD",
+          "modifier": [],
+          "limit": []
+        },
+        "armor": {
+          "name": "暗影皮甲",
+          "value": 1600,
+          "quality": "C",
+          "img": "/img/item/leather-c.png",
+          "keys": [],
+          "type": "armor",
+          "defence": 6,
+          "modifier": [
+            {
+              "property": "agility",
+              "value": 4
+            }
+          ],
+          "limit": []
+        }
+      },
+      "id": "chctspeglne",
+      "name": "瑞安侬",
+      "nickName": "",
+      "avatar": "/img/avatar/0548.png",
+      "level": "ROOKIE",
+      "experience": 0,
+      "strength": 12,
+      "agility": 8,
+      "endurance": 12,
+      "intelligence": 12,
+      "spirit": 6,
+      "perception": 13,
+      "luck": 5,
+      "charm": 6,
       "skills": []
     },
     {
@@ -770,30 +1241,41 @@
           "weaponType": "GREAT_SWORD"
         },
         "armor": {
-          "name": "暗影皮甲",
-          "value": 1600,
-          "quality": "C",
-          "img": "/img/item/leather-c.png",
+          "name": "督军战甲",
+          "value": 4800,
+          "quality": "B",
+          "img": "/img/item/plate-b.png",
           "keys": [],
           "type": "armor",
-          "defence": 6,
-          "agilityIncrease": 4
+          "limit": [
+            {
+              "property": "strength",
+              "minValue": 10
+            }
+          ],
+          "modifier": [
+            {
+              "property": "agility",
+              "value": -7
+            }
+          ],
+          "defence": 15
         }
       },
-      "id": "a3egku7rn8j",
-      "name": "尤娜",
+      "id": "tzm51t9ore",
+      "name": "纳亚娜",
       "nickName": "",
-      "avatar": "/img/avatar/0267.png",
-      "level": "ORDINARY",
-      "experience": 218,
-      "strength": 14,
+      "avatar": "/img/avatar/0827.png",
+      "level": "ROOKIE",
+      "experience": 0,
+      "strength": 11,
       "agility": 12,
-      "endurance": 5,
-      "intelligence": 12,
+      "endurance": 9,
+      "intelligence": 7,
       "spirit": 10,
-      "perception": 6,
-      "luck": 7,
-      "charm": 10,
+      "perception": 9,
+      "luck": 6,
+      "charm": 11,
       "skills": []
     }
   ],
@@ -812,6 +1294,6 @@
     "name": "Red Banner",
     "imageUrl": "/images/red-banner.png"
   },
-  "gold": 379155,
+  "gold": 874657,
   "protagonistId": "3k2l3y3mu9n"
 }
