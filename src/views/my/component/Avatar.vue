@@ -4,7 +4,7 @@
       <div
         class="team-avatar"
         :style="{
-          'background-image': `url(${avatar.replace('.png', '_s.png')})`,
+          'background-image': avatar,
         }"
       >
       </div>

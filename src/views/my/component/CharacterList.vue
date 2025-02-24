@@ -20,7 +20,7 @@
     @mouseleave="hoverItem = null"
     @click="showCharacterDetail(item)"
   >
-    <avatar :quality="item.quality" :avatar="item.avatar"></avatar>
+    <avatar :quality="item.quality" :avatar="item.smallAvatar"></avatar>
     <div class="character-info parallelogram">
       <h3 class="name">{{
         item.nickName ? `“${item.nickName}”${item.name}` : item.name
