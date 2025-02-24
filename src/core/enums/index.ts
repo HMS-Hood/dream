@@ -111,4 +111,5 @@ export enum ProficiencyLevel {
   JOURNEYMAN = 'JOURNEYMAN',
   EXPERT = 'EXPERT',
   MASTER = 'MASTER',
+  GRANDMASTER = 'GRANDMASTER',
 }

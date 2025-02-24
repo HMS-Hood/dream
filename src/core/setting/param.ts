@@ -63,8 +63,9 @@ export const maxAvatarIndex = 1165;
 export const proficiencyExpRequirements: { [key in ProficiencyLevel]: number } =
   {
     [ProficiencyLevel.NOVICE]: 100,
-    [ProficiencyLevel.APPRENTICE]: 200,
-    [ProficiencyLevel.JOURNEYMAN]: 400,
-    [ProficiencyLevel.EXPERT]: 800,
-    [ProficiencyLevel.MASTER]: Infinity, // MASTER is the maximum; no further upgrade.
+    [ProficiencyLevel.APPRENTICE]: 500,
+    [ProficiencyLevel.JOURNEYMAN]: 2000,
+    [ProficiencyLevel.EXPERT]: 10000,
+    [ProficiencyLevel.MASTER]: 100000,
+    [ProficiencyLevel.GRANDMASTER]: Infinity, // GRANDMASTER is the maximum; no further upgrade.
   };

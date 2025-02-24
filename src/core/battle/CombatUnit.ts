@@ -212,9 +212,9 @@ export class CombatUnit implements ICombatUnit {
     this.criticalDamage =
       baseCombatStats.criticalDamage *
       getTotalModifier(
-        this.attributeModifiers.strength / 4,
-        this.attributeModifiers.luck / 4,
-        this.levelModifier / 2
+        this.attributeModifiers.strength * 0.25,
+        this.attributeModifiers.luck * 0.25,
+        this.levelModifier * 0.5
       );
 
     this.attackSpeed =
