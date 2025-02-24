@@ -80,7 +80,7 @@
   } from '@/core/enums';
   import { ISquad } from '@/core/interfaces/combat';
   import { CombatUnit } from '@/core/battle/CombatUnit';
-  import { CharacterInterface } from '@/core/interfaces';
+  import { ICharacter } from '@/core/interfaces';
   import { Squad } from '@/core/battle/Squad';
   import CheckSquadMember from '../CheckSquadMember.vue';
 
@@ -91,7 +91,7 @@
     title: string;
     listSquads: ISquad[];
     position: SquadPosition;
-    allMembers: CharacterInterface[];
+    allMembers: ICharacter[];
   }>();
   const squads = defineModel<ISquad[]>('squads', { required: true });
   // const allMembers = defineModel<CharacterInterface[]>('allMembers', {
@@ -99,7 +99,7 @@
   // });
 
   const emit = defineEmits<{
-    (e: 'changeMembers', members: CharacterInterface[]): void;
+    (e: 'changeMembers', members: ICharacter[]): void;
   }>();
 
   const addSquad = () => {
@@ -110,7 +110,7 @@
     squads.value.push(newSquad);
   };
 
-  const members = ref<CharacterInterface[]>([]);
+  const members = ref<ICharacter[]>([]);
   const checkMember = (squad: ISquad) => {
     members.value = [
       ...squad.members.map((unit) => unit.getCharacter()),

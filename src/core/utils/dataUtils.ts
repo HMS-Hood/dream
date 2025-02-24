@@ -8,11 +8,7 @@ import {
   qualityRankMap,
   SquadPosition,
 } from '../enums';
-import {
-  CharacterInitialData,
-  CharacterInterface,
-  ICombatUnit,
-} from '../interfaces';
+import { CharacterInitialData, ICharacter, ICombatUnit } from '../interfaces';
 import { characterNames } from '../setting/names';
 import { maxAvatarIndex } from '../setting/param';
 import {
@@ -76,7 +72,7 @@ function generateName(): string {
 export function generateCharacter(
   minQuality: QualityLevel = QualityLevel.F,
   minLevel: CharacterLevel = CharacterLevel.ROOKIE
-): Character {
+): ICharacter {
   // Generate each attribute quality with the minimum quality in mind.
   const qualities = {
     strength: generateQualityLevelWithMin(minQuality),
@@ -152,7 +148,7 @@ export function generateEnemyArmy(
   enemyQualityFloor: QualityLevel
 ): IArmy[] {
   // 5. Generate enemy personnel. (generateCharacter returns a Character.)
-  const enemyMembers: CharacterInterface[] = [];
+  const enemyMembers: ICharacter[] = [];
   for (let i = 0; i < enemyCount; i += 1) {
     enemyMembers.push(generateCharacter(enemyQualityFloor));
   }

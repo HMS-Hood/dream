@@ -20,7 +20,7 @@ import {
   generateRandomEquipment,
 } from '../utils/itemUtils';
 import { CombatUnit } from '../battle/CombatUnit';
-import { CharacterInterface, ICombatUnit } from '../interfaces';
+import { ICharacter, ICombatUnit } from '../interfaces';
 import {
   baseMemberLimit,
   baseSquadLimit,
@@ -189,7 +189,7 @@ export class Mission {
    * @param player - The player's data.
    * @returns Whether the mission was successful.
    */
-  completeMission(playerArmy: IArmy): MissionResult {
+  async completeMission(playerArmy: IArmy): Promise<MissionResult> {
     // 1. Generate enemy army and get the multiplier.
     const { enemyArmies, multiplier } = this.localGenerateEnemyArmy();
 
@@ -201,7 +201,7 @@ export class Mission {
       restThreshold: 0.3,
       fleeThreshold: 0.1,
     });
-    const result = campaign.executeBattle();
+    const result = await campaign.executeBattle();
     console.log('——————————————————————————————————————————');
     result.logs.statistics.forEach((obj) => {
       console.log(

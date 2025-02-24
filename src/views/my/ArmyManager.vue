@@ -38,7 +38,7 @@
   import { ref, computed, reactive } from 'vue';
   import { Message, Modal } from '@arco-design/web-vue';
   import { useArmyStyleStore } from '@/store/armyStyle';
-  import { CharacterInterface } from '@/core/interfaces';
+  import { ICharacter } from '@/core/interfaces';
   import { ISquad, IArmy } from '@/core/interfaces/combat';
   import { SquadPosition } from '@/core/enums';
   import { CombatUnit } from '@/core/battle/CombatUnit';
@@ -58,11 +58,11 @@
     squads.value.filter((squad) => squad.position === SquadPosition.BACK)
   );
 
-  const props = defineProps<{ idleMembers: CharacterInterface[] }>();
+  const props = defineProps<{ idleMembers: ICharacter[] }>();
 
   // --- Squad Member Adjustment Feature ---
-  const allMembers = ref<CharacterInterface[]>([...props.idleMembers]); // Use player's available members
-  const changeMembers = (members: CharacterInterface[]) => {
+  const allMembers = ref<ICharacter[]>([...props.idleMembers]); // Use player's available members
+  const changeMembers = (members: ICharacter[]) => {
     allMembers.value = members;
   };
 

@@ -47,11 +47,9 @@
       .map(
         (el) => `<div class="content-panel">
         <p>
-          <span style="background-color: ${
-            el.color
-          }" class="tooltip-item-icon"></span><span>${el.seriesName}</span>
+          <span style="background-color: ${el.color}" class="tooltip-item-icon"></span><span>${el.seriesName}</span>
         </p>
-        <span class="tooltip-value">${el.value.toLocaleString()}</span>
+        <span class="tooltip-value"></span>
       </div>`
       )
       .reverse()
@@ -290,11 +288,13 @@
       color: rgb(var(--gray-10));
       font-weight: bold;
     }
+
     .arco-statistic-value {
       display: flex;
       align-items: center;
     }
   }
+
   .statistic-prefix {
     display: inline-block;
     width: 32px;

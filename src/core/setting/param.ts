@@ -1,4 +1,4 @@
-import { CharacterLevel, QualityLevel } from '../enums';
+import { CharacterLevel, QualityLevel, ProficiencyLevel } from '../enums';
 
 export type QualityWeight = {
   [key in QualityLevel]: number;
@@ -55,3 +55,16 @@ export const qualityAttributeRanges: QualityRange = {
 };
 
 export const maxAvatarIndex = 1165;
+
+/**
+ * Experience required for each proficiency level upgrade.
+ * When a proficiency's experience reaches the required value, it can upgrade.
+ */
+export const proficiencyExpRequirements: { [key in ProficiencyLevel]: number } =
+  {
+    [ProficiencyLevel.NOVICE]: 100,
+    [ProficiencyLevel.APPRENTICE]: 200,
+    [ProficiencyLevel.JOURNEYMAN]: 400,
+    [ProficiencyLevel.EXPERT]: 800,
+    [ProficiencyLevel.MASTER]: Infinity, // MASTER is the maximum; no further upgrade.
+  };

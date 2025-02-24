@@ -258,11 +258,11 @@
   };
   const armyManagerRef = ref<typeof ArmyManager>();
   const armyStore = useArmyStore();
-  const handleArmySet = (done: (closed: boolean) => void) => {
+  const handleArmySet = async (done: (closed: boolean) => void) => {
     const army = armyStore.getArmy();
     if (!curMissionInfo.value || !army) return;
     const mission = new Mission(curMissionInfo.value);
-    const missionResult = mission.completeMission(army);
+    const missionResult = await mission.completeMission(army);
     const workingIds = army.squads.flatMap((squad) =>
       squad.members.map((member) => member.getCharacter().id)
     );

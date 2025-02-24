@@ -41,8 +41,6 @@ export enum StaffWeaponType {
 export enum LongRangeWeaponType {
   BOW = 'BOW',
   CROSSBOW = 'CROSSBOW',
-  THROWING_AXE = 'THROWING_AXE',
-  STONE = 'STONE',
 }
 
 export enum CharacterLevel {
@@ -103,3 +101,14 @@ export const difficultyRankMap: { [key in MissionDifficulty]: number } = {
   EPIC: 3,
   LEGENDARY: 4,
 };
+
+/**
+ * New Proficiency system with 5 levels.
+ */
+export enum ProficiencyLevel {
+  NOVICE = 'NOVICE',
+  APPRENTICE = 'APPRENTICE',
+  JOURNEYMAN = 'JOURNEYMAN',
+  EXPERT = 'EXPERT',
+  MASTER = 'MASTER',
+}

@@ -146,9 +146,9 @@
         battleTimeLimit: 1000,
         positionWeight: {
           front: 0.4,
-          middle: 0.3,
           back: 0.3,
         },
+        interval: 20,
       },
       teams.slice(0, Math.ceil(teams.length / 2) - 1),
       teams.slice(Math.ceil(teams.length / 2)),

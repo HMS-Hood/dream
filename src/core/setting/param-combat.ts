@@ -40,6 +40,7 @@ export const defaultBattleConfig: BattleConfig = {
     front: 4, // 前排权重最高
     back: 1,
   },
+  interval: 0,
 };
 
 export const baseMemberLimit = 5;

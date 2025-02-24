@@ -84,17 +84,17 @@
 <script setup lang="ts">
   import { computed, ref } from 'vue';
   import Avatar from './Avatar.vue';
-  import { CharacterInterface } from '../../../core/interfaces';
+  import { ICharacter } from '../../../core/interfaces';
   import { AttackMethod, qualityRankMap } from '../../../core/enums';
   import CharacterDetail from './CharacterDetail.vue';
 
-  const hoverItem = ref<CharacterInterface | null>(null);
+  const hoverItem = ref<ICharacter | null>(null);
 
   const orderBy = ref<string>();
 
   const props = defineProps<{
     title: string;
-    characters: CharacterInterface[];
+    characters: ICharacter[];
   }>();
 
   const displayList = computed(() => {
@@ -115,10 +115,10 @@
     orderBy.value = field;
   };
 
-  const selectedCharacter = ref<CharacterInterface | null>(null);
+  const selectedCharacter = ref<ICharacter | null>(null);
   const characterDetailModalVisible = ref<boolean>(false);
 
-  const showCharacterDetail = (character: CharacterInterface) => {
+  const showCharacterDetail = (character: ICharacter) => {
     selectedCharacter.value = character;
     characterDetailModalVisible.value = true;
   };

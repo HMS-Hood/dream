@@ -124,7 +124,7 @@
     const army = armyStore.getArmy();
     const enemyArmies = generateEnemyArmy(90, QualityLevel.F);
     campaign.value = new Campaign(
-      defaultBattleConfig,
+      { ...defaultBattleConfig, interval: 50 },
       [],
       enemyArmies,
       army,

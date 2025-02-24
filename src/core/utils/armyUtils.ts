@@ -1,6 +1,6 @@
 import { IArmy, ISquad } from '../interfaces/combat';
 import { SquadPosition } from '../enums';
-import { CharacterInterface } from '../interfaces';
+import { ICharacter } from '../interfaces';
 import { generateId } from './utils';
 import { CombatUnit } from '../battle/CombatUnit';
 import { Squad } from '../battle/Squad';
@@ -27,7 +27,7 @@ export function validateArmyFormation(army: IArmy): boolean {
 
 export function createSquad(
   position: SquadPosition,
-  members: CharacterInterface[]
+  members: ICharacter[]
 ): ISquad {
   return new Squad({
     position,

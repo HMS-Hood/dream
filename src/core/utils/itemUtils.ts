@@ -401,10 +401,6 @@ export function createNormalStandardWeapon(
       return createLongRangeWeapon(quality, LongRangeWeaponType.BOW);
     case LongRangeWeaponType.CROSSBOW:
       return createLongRangeWeapon(quality, LongRangeWeaponType.CROSSBOW);
-    case LongRangeWeaponType.THROWING_AXE:
-      return createLongRangeWeapon(quality, LongRangeWeaponType.THROWING_AXE);
-    case LongRangeWeaponType.STONE:
-      return createLongRangeWeapon(quality, LongRangeWeaponType.STONE);
     default:
       throw new Error('Invalid weapon type');
   }

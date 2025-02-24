@@ -152,31 +152,16 @@ export class SquadBattle {
   }
 
   /**
-   * 将小队转换成临时部队（Army），以便使用 ActionScheduler 初始化
-   * 此处利用 Army 类构造一个只含一个小队的 Army 实例
-   */
-  private createTempArmyFromSquad(
-    squad: ISquad,
-    side: 'player' | 'enemy'
-  ): Army {
-    return new Army({
-      id: `${side}_temp_${squad.id}`,
-      squads: [squad],
-      name: side === 'player' ? 'PlayerTempArmy' : 'EnemyTempArmy',
-    });
-  }
-
-  /**
    * 模拟一场1v1小队对战
    * 利用 ActionScheduler 调度双方小队内各单位行动，
    * 固定攻击距离为1，使用与 campaign 中相同的伤害计算（包含反击逻辑）
    *
    * 返回对局结果及时间消耗
    */
-  private simulateSquadFight(enemyArmy: Army): {
+  private async simulateSquadFight(enemyArmy: Army): Promise<{
     winner: 'player' | 'enemy' | 'draw';
     duration: number;
-  } {
+  }> {
     // 转换为临时 Army 以便调度
     const campainOption = defaultBattleConfig;
     const campaign = new Campaign(
@@ -187,105 +172,11 @@ export class SquadBattle {
       true
     );
 
-    const result = campaign.executeBattle();
+    const result = await campaign.executeBattle();
     let winner: 'player' | 'enemy' | 'draw' = 'draw';
     if (result.winner === 'side1') winner = 'player';
     if (result.winner === 'side2') winner = 'enemy';
     return { winner, duration: result.duration };
-  }
-
-  /**
-   * 攻击结算逻辑，与 campaign 中 executeUnitAttack 类似
-   * 这里统一固定攻击距离为1
-   */
-  private executeUnitAttack(
-    attacker: ICombatUnit,
-    target: ICombatUnit,
-    distance: number
-  ): void {
-    let attackerDamage = attacker.physicalAttack;
-    const hit = Math.random();
-    let attackState: 'normal' | 'miss' | 'parry' | 'block' | 'critical' =
-      'normal';
-    const attackInfo: string[] = [
-      `${attacker.getCharacter().name} attacked ${target.getCharacter().name}`,
-    ];
-
-    // 判断命中与闪避
-    if (hit > Math.max(0.05, attacker.hitRate - target.dodgeRate)) {
-      attackerDamage = 0;
-      attackInfo.push('miss');
-      attackState = 'miss';
-    }
-    const parry = Math.random();
-    const block = Math.random();
-    const critical = Math.random();
-    if (parry < target.parryRate) {
-      attackerDamage = 0;
-      attackInfo.push(`parry(rate:${target.parryRate})`);
-      attackState = 'parry';
-    } else if (block < target.blockRate) {
-      attackerDamage = Math.max(0, attackerDamage - target.blockValue);
-      attackInfo.push(`block(${target.blockValue},rate:${target.blockRate})`);
-      attackState = 'block';
-    } else if (critical < attacker.criticalRate) {
-      attackerDamage *= attacker.criticalDamage;
-      attackInfo.push('critical');
-      attackState = 'critical';
-    }
-    target.takeDamage(attackerDamage);
-    attackInfo.push(
-      `damage: ${attackerDamage}(${target.currentHealth}/${target.maxHealth})`
-    );
-    if (attackerDamage > 0) {
-      attacker.getCharacter().addExperience(1);
-    }
-    // 如果目标存活且距离满足，则执行反击
-    if (!target.isDead && target.getAttackRange() >= distance) {
-      attackInfo.push(
-        `${target.getCharacter().name} counterattacked ${
-          attacker.getCharacter().name
-        }`
-      );
-      let counterDamage = 0;
-      if (attackState === 'miss') {
-        counterDamage = target.physicalAttack;
-      } else if (attackState === 'parry' || attackState === 'block') {
-        counterDamage = target.physicalAttack * 0.5;
-      } else if (attackState === 'normal') {
-        counterDamage = target.physicalAttack * 0.1;
-      } else if (attackState === 'critical') {
-        counterDamage = 0;
-      }
-      const counterHit = Math.random();
-      if (counterHit > Math.max(0.05, target.hitRate - attacker.dodgeRate)) {
-        attackInfo.push('counter miss');
-        counterDamage = 0;
-      }
-      const countParry = Math.random();
-      const countBlock = Math.random();
-      if (countParry < attacker.parryRate) {
-        counterDamage = 0;
-        attackInfo.push(`counter parry(rate:${attacker.parryRate})`);
-      } else if (countBlock < attacker.blockRate) {
-        counterDamage = Math.max(0, counterDamage - attacker.blockValue);
-        attackInfo.push(
-          `counter block(${attacker.blockValue},rate:${attacker.blockRate})`
-        );
-      }
-      attacker.takeDamage(counterDamage);
-      attackInfo.push(
-        `counter damage: ${counterDamage}(${attacker.currentHealth}/${attacker.maxHealth})`
-      );
-      this.record(attacker, target, attackerDamage, counterDamage);
-      if (counterDamage > 0) {
-        target.getCharacter().addExperience(1);
-      }
-      this.logs.message.push(attackInfo.join(' | '));
-    } else {
-      this.record(attacker, target, attackerDamage, 0);
-      this.logs.message.push(attackInfo.join(' | '));
-    }
   }
 
   /**
@@ -295,14 +186,15 @@ export class SquadBattle {
    * 3. 每场1v1对战后，若一方小队全灭则永久移除出队列
    * 4. 当一边队列为空时，战斗结束
    */
-  public executeBattle(): SquadBattleResult {
+  public async executeBattle(): Promise<SquadBattleResult> {
     this.totalSimulationTime = 0;
 
     while (!this.playerArmy.isDead && this.enemyArmies.length > 0) {
       const currentEnemyArmy = this.enemyArmies.pop();
 
       // 模拟1v1小队对战
-      const fightResult = this.simulateSquadFight(currentEnemyArmy!);
+      // eslint-disable-next-line no-await-in-loop
+      const fightResult = await this.simulateSquadFight(currentEnemyArmy!);
       this.totalSimulationTime += fightResult.duration;
       this.logs.message.push(
         `Fight: Player Army vs Enemy Army ${currentEnemyArmy?.id} ⇒ Winner: ${fightResult.winner} (time: ${fightResult.duration})`

@@ -100,13 +100,13 @@
 
 <script setup lang="ts">
   import { ref, computed } from 'vue';
-  import { CharacterInterface } from '@/core/interfaces';
+  import { ICharacter } from '@/core/interfaces';
   import { ItemType } from '@/core/enums';
   import { player } from '@/core/game';
   import { Armor, Item, Shield, Weapon } from '@/core/interfaces/item';
   import EquipmentsPanel from './EquipmentsPanel.vue';
 
-  const character = defineModel<CharacterInterface>('character');
+  const character = defineModel<ICharacter>('character');
 
   const showEquipmentModal = ref(false);
   const selectedSlot = ref<ItemType | null>(null);

@@ -17,12 +17,12 @@
 
 <script setup lang="ts">
   import { computed, reactive } from 'vue';
-  import { CharacterInterface } from '../../core/interfaces';
+  import { ICharacter } from '../../core/interfaces';
   import CheckCharacter from './component/CheckCharacter.vue';
 
   const props = defineProps<{
     checkedIds?: string[];
-    characters: CharacterInterface[];
+    characters: ICharacter[];
     multi: boolean;
   }>();
 

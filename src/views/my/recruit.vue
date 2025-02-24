@@ -36,13 +36,14 @@
   import { ref, computed, watch } from 'vue';
   import { useEnvDataStore } from '@/store/envData';
   import { player, calendar } from '@/core/game';
-  import { CharacterInterface, CheckCharacter } from '@/core/interfaces';
+  import { ICharacter, CheckCharacter } from '@/core/interfaces';
+  import { Character } from '@/core/entities/Character';
   import CheckCharacterComp from './component/CheckCharacter.vue';
   import back from './component/back.vue';
 
   const backgroundImage = '/img/bg/recruit.png';
   const envData = useEnvDataStore();
-  const recruitListInStore = ref<CharacterInterface[]>(envData.getRecruit());
+  const recruitListInStore = ref<ICharacter[]>(envData.getRecruit());
   const recruitList = ref<CheckCharacter[]>(
     recruitListInStore.value.map((character) => ({
       character,
@@ -73,7 +74,7 @@
       );
       const newMembers = recruitList.value
         .filter((character) => character.checked)
-        .map((checkcharacter) => checkcharacter.character);
+        .map((checkcharacter) => new Character(checkcharacter.character));
       player.members.push(...newMembers);
       player.gold -= consume.value;
       recruitList.value.splice(0, recruitList.value.length, ...newRecruitList);

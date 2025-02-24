@@ -300,34 +300,6 @@
       weaponType: LongRangeWeaponType.CROSSBOW,
       num: 0,
     },
-    {
-      name: '制式投斧',
-      value: valueOfQualityLongRangeWeapon[QualityLevel.F],
-      quality: QualityLevel.F,
-      weaponType: LongRangeWeaponType.THROWING_AXE,
-      num: 0,
-    },
-    {
-      name: '优质制式投斧',
-      value: valueOfQualityLongRangeWeapon[QualityLevel.E],
-      quality: QualityLevel.E,
-      weaponType: LongRangeWeaponType.THROWING_AXE,
-      num: 0,
-    },
-    {
-      name: '制式石块',
-      value: valueOfQualityLongRangeWeapon[QualityLevel.F],
-      quality: QualityLevel.F,
-      weaponType: LongRangeWeaponType.STONE,
-      num: 0,
-    },
-    {
-      name: '优质制式石块',
-      value: valueOfQualityLongRangeWeapon[QualityLevel.E],
-      quality: QualityLevel.E,
-      weaponType: LongRangeWeaponType.STONE,
-      num: 0,
-    },
   ]);
 
   const armorList: {

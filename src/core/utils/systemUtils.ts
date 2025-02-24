@@ -2,7 +2,7 @@ import { useEnvDataStore } from '@/store/envData';
 import { DoingMission, useDoingMissionStore } from '@/store/doingMission';
 import { SquadTemplate, useArmyStyleStore } from '@/store/armyStyle';
 import { calendar, player } from '../game';
-import { CharacterInterface } from '../interfaces';
+import { ICharacter } from '../interfaces';
 import { MissionInfo } from '../mission/Mission';
 
 const envData = useEnvDataStore();
@@ -48,7 +48,7 @@ export function load() {
   }
   const recruitData = localStorage.getItem('recruit');
   if (recruitData) {
-    const saveRecruit = JSON.parse(recruitData) as CharacterInterface[];
+    const saveRecruit = JSON.parse(recruitData) as ICharacter[];
     envData.setRecruit(saveRecruit);
   }
   const missionsData = localStorage.getItem('missions');

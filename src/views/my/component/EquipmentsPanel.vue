@@ -71,13 +71,13 @@
 
 <script setup lang="ts">
   import { defineProps } from 'vue';
-  import { CharacterInterface } from '@/core/interfaces';
+  import { ICharacter } from '@/core/interfaces';
   import { ItemType } from '@/core/enums';
   import { player } from '@/core/game';
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const props = defineProps<{
-    character: CharacterInterface;
+    character: ICharacter;
   }>();
 
   const emit = defineEmits<{

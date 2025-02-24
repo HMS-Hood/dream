@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia';
 import { Weapon, Shield, Armor } from '@/core/interfaces/item';
 import { MissionInfo } from '@/core/mission/Mission';
-import { CharacterInterface } from '@/core/interfaces';
+import { ICharacter } from '@/core/interfaces';
 import { Calendar } from '@/core/entities/Calendar';
 import { calendar } from '@/core/game';
 import { generateCharacter } from '@/core/utils/dataUtils';
@@ -19,12 +19,12 @@ import { getRandomElements } from '@/core/utils/arrayUtils';
 type EnvDataState = {
   items: (Weapon | Shield | Armor)[];
   missionsInfo: MissionInfo[];
-  recruit: CharacterInterface[];
+  recruit: ICharacter[];
   createDate: Calendar;
 };
 
 const generateRecruit = () => {
-  const result: CharacterInterface[] = [];
+  const result: ICharacter[] = [];
   for (let i = 0; i < 10; i += 1) {
     result.push(generateCharacter());
   }
@@ -116,7 +116,7 @@ export const useEnvDataStore = defineStore('envData', {
       this.missionsInfo = missionsInfo;
     },
 
-    setRecruit(recruit: CharacterInterface[]) {
+    setRecruit(recruit: ICharacter[]) {
       this.recruit = recruit;
     },
 
@@ -130,7 +130,7 @@ export const useEnvDataStore = defineStore('envData', {
       return this.missionsInfo;
     },
 
-    getRecruit(): CharacterInterface[] {
+    getRecruit(): ICharacter[] {
       renewData(this);
       return this.recruit;
     },

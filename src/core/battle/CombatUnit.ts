@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { CharacterInterface, ICombatUnit } from '../interfaces';
+import { ICharacter, ICombatUnit } from '../interfaces';
 import { AttackMethod, CharacterBaseProperty, ItemType } from '../enums';
 import {
   baseCombatStats,
@@ -13,7 +13,7 @@ function getTotalModifier(...modifiers: number[]): number {
 }
 
 export class CombatUnit implements ICombatUnit {
-  private character: CharacterInterface;
+  private character: ICharacter;
 
   // 战斗状态
   public currentHealth: number = 0;
@@ -56,7 +56,7 @@ export class CombatUnit implements ICombatUnit {
 
   private buffModifiers: { [key: string]: number } = {};
 
-  constructor(character: CharacterInterface) {
+  constructor(character: ICharacter) {
     this.character = character;
     this.calculateModifiers();
     this.calculateSecondaryStats();
@@ -263,7 +263,7 @@ export class CombatUnit implements ICombatUnit {
   }
 
   // 获取原始角色数据
-  public getCharacter(): CharacterInterface {
+  public getCharacter(): ICharacter {
     return this.character;
   }
 

@@ -228,8 +228,10 @@ export class Campaign implements IRefactoredCampaign {
       simulationTime < this.config.battleTimeLimit &&
       !this.isBattleOver()
     ) {
-      // eslint-disable-next-line no-await-in-loop
-      await waitForMilliseconds(100);
+      if (this.getBattleConfig().interval) {
+        // eslint-disable-next-line no-await-in-loop
+        await waitForMilliseconds(this.getBattleConfig().interval);
+      }
       const action = scheduler.nextAction();
       if (!action) break;
       simulationTime = action.time;

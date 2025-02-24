@@ -7,6 +7,7 @@ import { Item } from '../interfaces/item';
 import { generateId } from '../utils/utils';
 import { CharacterLevel } from '../enums';
 import { Equipments } from './Equipments';
+import { ICharacter } from '../interfaces';
 
 const maidCharactor = new Character({
   id: generateId(),
@@ -42,9 +43,9 @@ export class Player {
 
   items: Item[] = reactive([]);
 
-  members: Character[] = reactive([]);
+  members: ICharacter[] = reactive([]);
 
-  deadMembers: Character[] = reactive([]);
+  deadMembers: ICharacter[] = reactive([]);
 
   workingIds: string[] = reactive([]);
 
@@ -61,7 +62,7 @@ export class Player {
     this.members.push(maidCharactor);
   }
 
-  get protagonist(): Character {
+  get protagonist(): ICharacter {
     return this.members.find((member) => member.id === this.protagonistId)!;
   }
 
