@@ -1,3 +1,4 @@
+import { PropertyCrystal } from '../entities/PropertyCrystal';
 import {
   ItemType,
   WeaponHandType,
@@ -22,6 +23,7 @@ import {
   StaffWeapon,
   Armor,
 } from '../interfaces/item';
+import { IPropertyCrystal } from '../interfaces';
 import { QualityRange } from '../setting/param';
 import {
   qualityDamageRanges,
@@ -426,13 +428,28 @@ export function createNormalStandardArmor(
   }
 }
 
+export function generateRandomCrystal(): IPropertyCrystal {
+  const equipQuality = generateQualityLevelWithMin(QualityLevel.F);
+  const baseProperty = Object.values(CharacterBaseProperty)[
+    Math.floor(Math.random() * 8)
+  ];
+  return new PropertyCrystal({
+    baseProperty,
+    quality: equipQuality,
+  });
+}
+
 export function generateRandomEquipment(
   lowQuality: QualityLevel
-): Weapon | Armor | Shield {
+): Weapon | Armor | Shield | IPropertyCrystal {
   const equipQuality = generateQualityLevelWithMin(lowQuality);
 
+  const randomNum = Math.random();
+  if (randomNum < 0.05) {
+    return generateRandomCrystal();
+  }
   // 随机生成武器或防具
-  if (Math.random() < 0.5) {
+  if (randomNum < 0.525) {
     // 生成武器
     const weaponType = Math.floor(Math.random() * 5);
     let weapon: Weapon;

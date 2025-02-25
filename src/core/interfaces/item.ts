@@ -22,7 +22,8 @@ export interface BasePropertyModifier {
 
 export interface BasePropertyLimit {
   property: CharacterBaseProperty;
-  minValue: number;
+  minValue?: number;
+  maxValue?: number;
 }
 
 export interface Item {

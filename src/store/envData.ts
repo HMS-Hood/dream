@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia';
 import { Weapon, Shield, Armor } from '@/core/interfaces/item';
 import { MissionInfo } from '@/core/mission/Mission';
-import { ICharacter } from '@/core/interfaces';
+import { ICharacter, IPropertyCrystal } from '@/core/interfaces';
 import { Calendar } from '@/core/entities/Calendar';
 import { calendar } from '@/core/game';
 import { generateCharacter } from '@/core/utils/dataUtils';
@@ -17,7 +17,7 @@ import { missionsInfo as aMissionsInfo } from '@/core/setting/mission-info-a';
 import { getRandomElements } from '@/core/utils/arrayUtils';
 
 type EnvDataState = {
-  items: (Weapon | Shield | Armor)[];
+  items: (Weapon | Shield | Armor | IPropertyCrystal)[];
   missionsInfo: MissionInfo[];
   recruit: ICharacter[];
   createDate: Calendar;
@@ -32,7 +32,7 @@ const generateRecruit = () => {
 };
 
 const generateEquipment = () => {
-  const result: (Weapon | Armor | Shield)[] = [];
+  const result: (Weapon | Armor | Shield | IPropertyCrystal)[] = [];
   for (let i = 0; i < 10; i += 1) {
     result.push(generateRandomEquipment(QualityLevel.D));
   }
@@ -108,7 +108,7 @@ export const useEnvDataStore = defineStore('envData', {
   }),
 
   actions: {
-    setItems(items: (Weapon | Shield | Armor)[]) {
+    setItems(items: (Weapon | Shield | Armor | IPropertyCrystal)[]) {
       this.items = items;
     },
 
@@ -120,7 +120,7 @@ export const useEnvDataStore = defineStore('envData', {
       this.recruit = recruit;
     },
 
-    getItems(): (Weapon | Shield | Armor)[] {
+    getItems(): (Weapon | Shield | Armor | IPropertyCrystal)[] {
       renewData(this);
       return this.items;
     },

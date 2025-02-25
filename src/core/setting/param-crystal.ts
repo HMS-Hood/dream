@@ -1,0 +1,111 @@
+import { CharacterBaseProperty, QualityLevel } from '../enums';
+import { QualityNumber } from './param';
+
+export const valueOfCrystal: QualityNumber = {
+  [QualityLevel.F]: 0,
+  [QualityLevel.E]: 0,
+  [QualityLevel.D]: 0,
+  [QualityLevel.C]: 0,
+  [QualityLevel.B]: 0,
+  [QualityLevel.A]: 0,
+  [QualityLevel.S]: 0,
+  [QualityLevel.SS]: 0,
+  [QualityLevel.SSS]: 0,
+};
+
+export const namesOfCrystal: {
+  [keys in QualityLevel]: {
+    [property in CharacterBaseProperty]: string;
+  };
+} = {
+  [QualityLevel.F]: {
+    [CharacterBaseProperty.strength]: '力量卵石',
+    [CharacterBaseProperty.agility]: '迅捷石英',
+    [CharacterBaseProperty.endurance]: '大地碎片',
+    [CharacterBaseProperty.intelligence]: '尘封典籍碎片',
+    [CharacterBaseProperty.spirit]: '低语碎片',
+    [CharacterBaseProperty.perception]: '浑浊晶石',
+    [CharacterBaseProperty.luck]: '铜币石',
+    [CharacterBaseProperty.charm]: '微光尘',
+  },
+  [QualityLevel.E]: {
+    [CharacterBaseProperty.strength]: '力量石',
+    [CharacterBaseProperty.agility]: '疾风碎片',
+    [CharacterBaseProperty.endurance]: '巨石片段',
+    [CharacterBaseProperty.intelligence]: '学者棱镜',
+    [CharacterBaseProperty.spirit]: '回声石',
+    [CharacterBaseProperty.perception]: '猎人之眼',
+    [CharacterBaseProperty.luck]: '幸运饰物',
+    [CharacterBaseProperty.charm]: '魅力小物',
+  },
+  [QualityLevel.D]: {
+    [CharacterBaseProperty.strength]: '力量花岗岩',
+    [CharacterBaseProperty.agility]: '迅捷翠玉',
+    [CharacterBaseProperty.endurance]: '铁心石',
+    [CharacterBaseProperty.intelligence]: '思维蓝宝石',
+    [CharacterBaseProperty.spirit]: '平静紫晶',
+    [CharacterBaseProperty.perception]: '洞察蛋白石',
+    [CharacterBaseProperty.luck]: '四叶晶石',
+    [CharacterBaseProperty.charm]: '优雅碧玺',
+  },
+  [QualityLevel.C]: {
+    [CharacterBaseProperty.strength]: '活力红玉',
+    [CharacterBaseProperty.agility]: '疾风碎晶',
+    [CharacterBaseProperty.endurance]: '坚忍琥珀',
+    [CharacterBaseProperty.intelligence]: '知识水晶',
+    [CharacterBaseProperty.spirit]: '宁静水晶',
+    [CharacterBaseProperty.perception]: '探测水晶',
+    [CharacterBaseProperty.luck]: '幸运符',
+    [CharacterBaseProperty.charm]: '魅力水晶',
+  },
+  [QualityLevel.B]: {
+    [CharacterBaseProperty.strength]: '泰坦赤铁',
+    [CharacterBaseProperty.agility]: '西风之触',
+    [CharacterBaseProperty.endurance]: '山之核心',
+    [CharacterBaseProperty.intelligence]: '心灵之眼',
+    [CharacterBaseProperty.spirit]: '灵魂锚',
+    [CharacterBaseProperty.perception]: '鹰眼宝石',
+    [CharacterBaseProperty.luck]: '赌徒之喜',
+    [CharacterBaseProperty.charm]: '心灵渴望',
+  },
+  [QualityLevel.A]: {
+    [CharacterBaseProperty.strength]: '龙心石',
+    [CharacterBaseProperty.agility]: '隼之优雅',
+    [CharacterBaseProperty.endurance]: '守护者之心',
+    [CharacterBaseProperty.intelligence]: '大法师聚焦',
+    [CharacterBaseProperty.spirit]: '神圣泪滴',
+    [CharacterBaseProperty.perception]: '先知洞察',
+    [CharacterBaseProperty.luck]: '命运恩惠',
+    [CharacterBaseProperty.charm]: '海妖之音',
+  },
+  [QualityLevel.S]: {
+    [CharacterBaseProperty.strength]: '泰坦精华',
+    [CharacterBaseProperty.agility]: '风暴之心',
+    [CharacterBaseProperty.endurance]: '金刚魂石',
+    [CharacterBaseProperty.intelligence]: '贤者之石',
+    [CharacterBaseProperty.spirit]: '天界灵魂',
+    [CharacterBaseProperty.perception]: '全知之眼',
+    [CharacterBaseProperty.luck]: '命运之手',
+    [CharacterBaseProperty.charm]: '精灵魔咒',
+  },
+  [QualityLevel.SS]: {
+    [CharacterBaseProperty.strength]: '巨人核心',
+    [CharacterBaseProperty.agility]: '虚空之风',
+    [CharacterBaseProperty.endurance]: '不朽精华',
+    [CharacterBaseProperty.intelligence]: '宇宙睿智',
+    [CharacterBaseProperty.spirit]: '超然灵魂',
+    [CharacterBaseProperty.perception]: '先见者精华',
+    [CharacterBaseProperty.luck]: '神圣眷顾',
+    [CharacterBaseProperty.charm]: '灵魂缚者',
+  },
+  [QualityLevel.SSS]: {
+    [CharacterBaseProperty.strength]: '原始力量',
+    [CharacterBaseProperty.agility]: '时间扭曲者精华',
+    [CharacterBaseProperty.endurance]: '永恒壁垒',
+    [CharacterBaseProperty.intelligence]: '全知枢纽',
+    [CharacterBaseProperty.spirit]: '虚空永恒',
+    [CharacterBaseProperty.perception]: '全知棱镜',
+    [CharacterBaseProperty.luck]: '宇宙福运',
+    [CharacterBaseProperty.charm]: '君王威仪',
+  },
+};

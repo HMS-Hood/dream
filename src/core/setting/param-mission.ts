@@ -9,14 +9,14 @@ import {
 
 export const missionQualityBaseReward: QualityNumber = {
   [QualityLevel.F]: 100,
-  [QualityLevel.E]: 500,
-  [QualityLevel.D]: 1000,
-  [QualityLevel.C]: 2000,
-  [QualityLevel.B]: 5000,
-  [QualityLevel.A]: 10000,
-  [QualityLevel.S]: 50000,
-  [QualityLevel.SS]: 100000,
-  [QualityLevel.SSS]: 200000,
+  [QualityLevel.E]: 200,
+  [QualityLevel.D]: 500,
+  [QualityLevel.C]: 1000,
+  [QualityLevel.B]: 2000,
+  [QualityLevel.A]: 5000,
+  [QualityLevel.S]: 10000,
+  [QualityLevel.SS]: 20000,
+  [QualityLevel.SSS]: 50000,
 };
 
 export const missionDropQualityWeight: QualityWeight = {

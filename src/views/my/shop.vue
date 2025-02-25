@@ -130,6 +130,7 @@
     createStaff,
   } from '@/core/utils/itemUtils';
   import { Armor, Item, Shield, Weapon } from '@/core/interfaces/item';
+  import { IPropertyCrystal } from '@/core/interfaces';
 
   const soldItems = ref<{ item: Item; check: boolean }[]>();
 
@@ -382,7 +383,7 @@
   ]);
 
   type checkItem = {
-    item: Weapon | Shield | Armor;
+    item: Weapon | Shield | Armor | IPropertyCrystal;
     check: boolean;
   };
   const epicItems: checkItem[] = useEnvDataStore()
@@ -462,7 +463,7 @@
           player.gold -= item.num * item.value;
         }
       });
-      const leftItems: (Weapon | Shield | Armor)[] = [];
+      const leftItems: (Weapon | Shield | Armor | IPropertyCrystal)[] = [];
       epicItems.forEach((item) => {
         if (item.check) {
           const epicItem = item.item;

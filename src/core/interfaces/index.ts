@@ -8,7 +8,9 @@ import {
   TwoHandWeaponType,
   StaffWeaponType,
   LongRangeWeaponType,
+  CharacterBaseProperty,
 } from '../enums';
+import { Item } from './item';
 
 export interface Skill {
   name: string;
@@ -149,4 +151,15 @@ export interface ICombatUnit {
   addExperience(amount: number): void;
   addWeaponProficiencyExperience(amount: number): void;
   addShieldProficiencyExperience(amount: number): void;
+}
+
+export interface IPropertyCrystal extends Item {
+  baseProperty: CharacterBaseProperty;
+  ifEffective: (character: ICharacter) => boolean;
+  use: (character: ICharacter) => void;
+}
+
+export interface PropertyCrystalInitData {
+  baseProperty: CharacterBaseProperty;
+  quality: QualityLevel;
 }

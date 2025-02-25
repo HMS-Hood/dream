@@ -13,6 +13,8 @@ export enum ItemType {
   ARMOR = 'armor',
   SHIELD = 'shield',
   SCROLL = 'scroll',
+  POTION = 'potion',
+  PROPERTY_CRYSTAL = 'propertyCrystal',
 }
 
 export enum WeaponHandType {
