@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import { ICharacter, ICombatUnit } from '../interfaces';
-import { AttackMethod, CharacterBaseProperty, ItemType } from '../enums';
+import { AttackMethod, CharacterBaseProperty } from '../enums';
 import {
   baseCombatStats,
   levelModifiers,
@@ -274,5 +274,23 @@ export class CombatUnit implements ICombatUnit {
 
   get name(): string {
     return this.character.name;
+  }
+
+  private countRealAmount(amount: number): number {
+    return Math.round(
+      Math.random() * (1 + this.character.intelligence) * amount
+    );
+  }
+
+  public addExperience(amount: number): void {
+    this.character.addExperience(this.countRealAmount(amount));
+  }
+
+  public addWeaponProficiencyExperience(amount: number): void {
+    this.character.addWeaponProficiencyExperience(this.countRealAmount(amount));
+  }
+
+  public addShieldProficiencyExperience(amount: number): void {
+    this.character.addShieldProficiencyExperience(this.countRealAmount(amount));
   }
 }

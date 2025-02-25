@@ -347,33 +347,36 @@ export class Campaign implements IRefactoredCampaign {
     ];
 
     // 判断命中与闪避
+    attacker.addWeaponProficiencyExperience(1);
+    const parry = Math.random();
+    const block = Math.random();
+    const critical = Math.random();
     if (hit > Math.max(0.05, attacker.hitRate - target.dodgeRate)) {
       attackerDamage = 0;
       attackInfo.push('miss');
       attackState = 'miss';
-    }
-    const parry = Math.random();
-    const block = Math.random();
-    const critical = Math.random();
-    if (parry < target.parryRate) {
+    } else if (parry < target.parryRate) {
       attackerDamage = 0;
       attackInfo.push(`parry(rate:${target.parryRate})`);
       attackState = 'parry';
+      target.addWeaponProficiencyExperience(1);
     } else if (block < target.blockRate) {
       attackerDamage = Math.max(0, attackerDamage - target.blockValue);
       attackInfo.push(`block(${target.blockValue},rate:${target.blockRate})`);
       attackState = 'block';
+      target.addShieldProficiencyExperience(1);
     } else if (critical < attacker.criticalRate) {
       attackerDamage *= attacker.criticalDamage;
       attackInfo.push('critical');
       attackState = 'critical';
+      attacker.addWeaponProficiencyExperience(1);
     }
     target.takeDamage(attackerDamage);
     attackInfo.push(
       `damage: ${attackerDamage}(${target.currentHealth}/${target.maxHealth})`
     );
     if (attackerDamage > 0) {
-      attacker.getCharacter().addExperience(1);
+      attacker.addExperience(1);
     }
     // 如果目标存活且距离满足，则执行反击
     if (!target.isDead && target.getAttackRange() >= distance) {
@@ -392,21 +395,23 @@ export class Campaign implements IRefactoredCampaign {
       } else if (attackState === 'critical') {
         counterDamage = 0;
       }
+      target.addWeaponProficiencyExperience(1);
       const counterHit = Math.random();
+      const countParry = Math.random();
+      const countBlock = Math.random();
       if (counterHit > Math.max(0.05, target.hitRate - attacker.dodgeRate)) {
         attackInfo.push('counter miss');
         counterDamage = 0;
-      }
-      const countParry = Math.random();
-      const countBlock = Math.random();
-      if (countParry < attacker.parryRate) {
+      } else if (countParry < attacker.parryRate) {
         counterDamage = 0;
         attackInfo.push(`counter parry(rate:${attacker.parryRate})`);
+        attacker.addWeaponProficiencyExperience(1);
       } else if (countBlock < attacker.blockRate) {
         counterDamage = Math.max(0, counterDamage - attacker.blockValue);
         attackInfo.push(
           `counter block(${attacker.blockValue},rate:${attacker.blockRate})`
         );
+        attacker.addShieldProficiencyExperience(1);
       }
       attacker.takeDamage(counterDamage);
       attackInfo.push(
@@ -414,7 +419,7 @@ export class Campaign implements IRefactoredCampaign {
       );
       this.record(attacker, target, attackerDamage, counterDamage);
       if (counterDamage > 0) {
-        target.getCharacter().addExperience(1);
+        target.addExperience(1);
       }
       this.logs.message.push(attackInfo.join(' | '));
     } else {

@@ -95,6 +95,8 @@ export interface ICharacter {
   addProficiencyExperience(type: ProficiencyType, amount: number): void;
   upgradeProficiency(type: ProficiencyType): boolean;
   getProficiencyExpRequirement(type: ProficiencyType): number;
+  addWeaponProficiencyExperience(amount: number): void;
+  addShieldProficiencyExperience(amount: number): void;
 }
 
 export interface CheckCharacter {
@@ -143,4 +145,7 @@ export interface ICombatUnit {
   getCharacter(): ICharacter;
   updateStats(): void;
   name: string;
+  addExperience(amount: number): void;
+  addWeaponProficiencyExperience(amount: number): void;
+  addShieldProficiencyExperience(amount: number): void;
 }
