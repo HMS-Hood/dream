@@ -47,6 +47,8 @@ export class CombatUnit implements ICombatUnit {
 
   public attackSpeed: number = 0;
 
+  public penetrate: number = 0;
+
   // Modifiers from different sources
   private levelModifier: number = 0;
 
@@ -220,6 +222,12 @@ export class CombatUnit implements ICombatUnit {
     this.attackSpeed =
       baseCombatStats.attackSpeed *
       getTotalModifier(this.attributeModifiers.agility, this.levelModifier / 4);
+
+    this.penetrate =
+      (this.attributeModifiers.perception * 0.1 +
+        this.attributeModifiers.strength * 0.1 +
+        this.attributeModifiers.agility * 0.1) *
+      getTotalModifier(this.levelModifier);
   }
 
   // 获取武器伤害

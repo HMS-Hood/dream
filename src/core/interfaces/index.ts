@@ -138,6 +138,7 @@ export interface ICombatUnit {
   criticalRate: number;
   criticalDamage: number;
   attackSpeed: number;
+  penetrate: number;
 
   takeDamage(damage: number): void;
   heal(amount: number): void;

@@ -355,12 +355,12 @@ export class Campaign implements IRefactoredCampaign {
       attackerDamage = 0;
       attackInfo.push('miss');
       attackState = 'miss';
-    } else if (parry < target.parryRate) {
+    } else if (parry < target.parryRate - attacker.penetrate) {
       attackerDamage = 0;
       attackInfo.push(`parry(rate:${target.parryRate})`);
       attackState = 'parry';
       target.addWeaponProficiencyExperience(1);
-    } else if (block < target.blockRate) {
+    } else if (block < target.blockRate - attacker.penetrate) {
       attackerDamage = Math.max(0, attackerDamage - target.blockValue);
       attackInfo.push(`block(${target.blockValue},rate:${target.blockRate})`);
       attackState = 'block';
@@ -402,11 +402,11 @@ export class Campaign implements IRefactoredCampaign {
       if (counterHit > Math.max(0.05, target.hitRate - attacker.dodgeRate)) {
         attackInfo.push('counter miss');
         counterDamage = 0;
-      } else if (countParry < attacker.parryRate) {
+      } else if (countParry < attacker.parryRate - target.penetrate) {
         counterDamage = 0;
         attackInfo.push(`counter parry(rate:${attacker.parryRate})`);
         attacker.addWeaponProficiencyExperience(1);
-      } else if (countBlock < attacker.blockRate) {
+      } else if (countBlock < attacker.blockRate - target.penetrate) {
         counterDamage = Math.max(0, counterDamage - attacker.blockValue);
         attackInfo.push(
           `counter block(${attacker.blockValue},rate:${attacker.blockRate})`
