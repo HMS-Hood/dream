@@ -4,7 +4,8 @@
       <div
         class="team-avatar"
         :style="{
-          'background-image': avatar,
+          'background-image': `url('${avatar}')`,
+          'border': '1px',
         }"
       >
       </div>
