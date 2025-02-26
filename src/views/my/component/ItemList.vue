@@ -1,11 +1,5 @@
 <template>
-  <div>
-    <div class="item-cell cell header">
-      <div class="list-desc">{{ title }}</div>
-      <div class="property-name" @click="order('quality')">品质</div>
-      <div class="property-name" @click="order('name')">名称</div>
-      <div class="property-name" @click="order('value')">价值</div>
-    </div>
+  <div class="container">
     <div
       v-for="(item, index) in displayList"
       :key="index"
@@ -92,24 +86,33 @@
 <style lang="less" scoped>
   @import url('../../../assets/style/dream.less');
 
+  .container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    justify-content: flex-start;
+  }
+
   .item-cell.cell {
     display: flex;
+    flex: 0 0 none;
+    flex-direction: row;
     align-items: center;
-    width: 97vw;
+    width: 10vw;
     height: 12vh;
-    overflow: hidden;
+    padding-left: 1em;
     background-color: rgb(0 0 0 / 60%);
     border-bottom: 1px solid transparent;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgb(0 0 0 / 20%);
-    transform: skewX(-10deg);
     transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
 
     &.hovered:not(.header),
     &:hover:not(.header) {
       background-color: rgb(39 39 39 / 60%);
       box-shadow: 0 6px 12px rgb(0 0 0 / 30%);
-      transform: skewX(-10deg) scaleX(1.005);
+      transform: scaleX(1.01);
     }
 
     .item-image {

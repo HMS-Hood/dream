@@ -56,6 +56,9 @@
     <div v-if="showList === 'character'" class="row character-list">
       <character-list title="" :characters="player.members"></character-list>
     </div>
+    <div v-if="showList === 'item'" class="row character-list">
+      <item-list title="" :items="player.items"></item-list>
+    </div>
   </div>
 </template>
 
@@ -64,6 +67,7 @@
   import { player } from '../../core/game';
   import back from './component/back.vue';
   import CharacterList from './component/CharacterList.vue';
+  import ItemList from './component/ItemList.vue';
 
   const backgroundImage = ref('/img/bg/bg6.png');
 
