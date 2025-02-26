@@ -38,64 +38,6 @@
       "defence": 10
     },
     {
-      "name": "巨人之锤",
-      "value": 1200,
-      "quality": "C",
-      "img": "/img/item/g-hammer-c.png",
-      "keys": [],
-      "type": "weapon",
-      "handType": "TWO_HAND",
-      "minDamage": 43,
-      "maxDamage": 42,
-      "attackMethod": "MELEE",
-      "weaponType": "GREAT_MACE",
-      "modifier": [],
-      "limit": []
-    },
-    {
-      "name": "狂战士之斧",
-      "value": 800,
-      "quality": "C",
-      "img": "/img/item/axe-c.png",
-      "keys": [],
-      "type": "weapon",
-      "handType": "ONE_HAND",
-      "minDamage": 28,
-      "maxDamage": 30,
-      "attackMethod": "MELEE",
-      "weaponType": "AXE",
-      "modifier": [],
-      "limit": []
-    },
-    {
-      "name": "圣光破碎者",
-      "value": 1600,
-      "quality": "B",
-      "img": "/img/item/hammer-b.png",
-      "keys": [],
-      "type": "weapon",
-      "handType": "ONE_HAND",
-      "minDamage": 32,
-      "maxDamage": 38,
-      "attackMethod": "MELEE",
-      "weaponType": "MACE",
-      "modifier": [],
-      "limit": []
-    },
-    {
-      "name": "龙骑士矛",
-      "value": 1200,
-      "quality": "C",
-      "img": "/img/item/lance-c.png",
-      "keys": [],
-      "type": "weapon",
-      "handType": "TWO_HAND",
-      "minDamage": 40,
-      "maxDamage": 41,
-      "attackMethod": "MELEE",
-      "weaponType": "LANCE"
-    },
-    {
       "name": "皇家卫甲",
       "value": 2400,
       "quality": "C",
@@ -134,19 +76,6 @@
       "limit": []
     },
     {
-      "name": "巨人之剑",
-      "value": 1200,
-      "quality": "C",
-      "img": "/img/item/g-sword-c.png",
-      "keys": [],
-      "type": "weapon",
-      "handType": "TWO_HAND",
-      "minDamage": 43,
-      "maxDamage": 39,
-      "attackMethod": "MELEE",
-      "weaponType": "GREAT_SWORD"
-    },
-    {
       "name": "秘法法杖",
       "value": 1600,
       "quality": "C",
@@ -165,6 +94,138 @@
         }
       ],
       "limit": []
+    },
+    {
+      "name": "大法师法杖",
+      "value": 3200,
+      "quality": "B",
+      "img": "/img/item/staff-b.png",
+      "keys": [],
+      "type": "weapon",
+      "handType": "TWO_HAND",
+      "minDamage": 5,
+      "maxDamage": 7,
+      "attackMethod": "MELEE",
+      "weaponType": "STAFF",
+      "modifier": [
+        {
+          "property": "intelligence",
+          "value": 5
+        }
+      ],
+      "limit": []
+    },
+    {
+      "name": "皇家卫甲",
+      "value": 2400,
+      "quality": "C",
+      "img": "/img/item/plate-c.png",
+      "keys": [],
+      "type": "armor",
+      "limit": [
+        {
+          "property": "strength",
+          "minValue": 9
+        }
+      ],
+      "modifier": [
+        {
+          "property": "agility",
+          "value": -5
+        }
+      ],
+      "defence": 9
+    },
+    {
+      "name": "祝福之剑",
+      "value": 1600,
+      "quality": "B",
+      "img": "/img/item/sword-b.png",
+      "keys": [],
+      "type": "weapon",
+      "handType": "ONE_HAND",
+      "minDamage": 32,
+      "maxDamage": 36,
+      "attackMethod": "MELEE",
+      "weaponType": "SWORD"
+    },
+    {
+      "name": "守卫者之盾",
+      "value": 800,
+      "quality": "C",
+      "img": "/img/item/shield-c.png",
+      "keys": [],
+      "type": "shield",
+      "defence": 5,
+      "modifier": [],
+      "limit": []
+    },
+    {
+      "name": "圣光破碎者",
+      "value": 1600,
+      "quality": "B",
+      "img": "/img/item/hammer-b.png",
+      "keys": [],
+      "type": "weapon",
+      "handType": "ONE_HAND",
+      "minDamage": 32,
+      "maxDamage": 38,
+      "attackMethod": "MELEE",
+      "weaponType": "MACE",
+      "modifier": [],
+      "limit": []
+    },
+    {
+      "name": "守卫者之盾",
+      "value": 800,
+      "quality": "C",
+      "img": "/img/item/shield-c.png",
+      "keys": [],
+      "type": "shield",
+      "defence": 4,
+      "modifier": [],
+      "limit": []
+    },
+    {
+      "name": "祝福之剑",
+      "value": 1600,
+      "quality": "B",
+      "img": "/img/item/sword-b.png",
+      "keys": [],
+      "type": "weapon",
+      "handType": "ONE_HAND",
+      "minDamage": 33,
+      "maxDamage": 35,
+      "attackMethod": "MELEE",
+      "weaponType": "SWORD"
+    },
+    {
+      "name": "巨人之锤",
+      "value": 1200,
+      "quality": "C",
+      "img": "/img/item/g-hammer-c.png",
+      "keys": [],
+      "type": "weapon",
+      "handType": "TWO_HAND",
+      "minDamage": 40,
+      "maxDamage": 39,
+      "attackMethod": "MELEE",
+      "weaponType": "GREAT_MACE",
+      "modifier": [],
+      "limit": []
+    },
+    {
+      "name": "巨人之剑",
+      "value": 1200,
+      "quality": "C",
+      "img": "/img/item/g-sword-c.png",
+      "keys": [],
+      "type": "weapon",
+      "handType": "TWO_HAND",
+      "minDamage": 43,
+      "maxDamage": 39,
+      "attackMethod": "MELEE",
+      "weaponType": "GREAT_SWORD"
     }
   ],
   "members": [
@@ -199,7 +260,7 @@
       "nickName": "没落贵族",
       "avatar": "/img/avatar/0089.png",
       "level": "VETERAN",
-      "experience": 7901,
+      "experience": 8237,
       "strength": 9,
       "agility": 9,
       "endurance": 12,
@@ -208,7 +269,65 @@
       "perception": 12,
       "luck": 18,
       "charm": 18,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -241,7 +360,7 @@
       "nickName": "贴身女仆",
       "avatar": "/img/avatar/1166.png",
       "level": "ELITE",
-      "experience": 1167,
+      "experience": 1691,
       "strength": 13,
       "agility": 17,
       "endurance": 12,
@@ -250,54 +369,101 @@
       "perception": 9,
       "luck": 8,
       "charm": 8,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
         "weapon": {
-          "name": "祝福之剑",
-          "value": 1600,
-          "quality": "B",
-          "img": "/img/item/sword-b.png",
+          "name": "龙骑士矛",
+          "value": 1200,
+          "quality": "C",
+          "img": "/img/item/lance-c.png",
           "keys": [],
           "type": "weapon",
-          "handType": "ONE_HAND",
-          "minDamage": 32,
-          "maxDamage": 36,
+          "handType": "TWO_HAND",
+          "minDamage": 40,
+          "maxDamage": 41,
           "attackMethod": "MELEE",
-          "weaponType": "SWORD"
-        },
-        "shield": {
-          "name": "守卫者之盾",
-          "value": 800,
-          "quality": "C",
-          "img": "/img/item/shield-c.png",
-          "keys": [],
-          "type": "shield",
-          "defence": 5,
-          "modifier": [],
-          "limit": []
+          "weaponType": "LANCE"
         },
         "armor": {
-          "name": "皇家卫甲",
-          "value": 2400,
-          "quality": "C",
-          "img": "/img/item/plate-c.png",
+          "name": "督军战甲",
+          "value": 4800,
+          "quality": "B",
+          "img": "/img/item/plate-b.png",
           "keys": [],
           "type": "armor",
           "limit": [
             {
               "property": "strength",
-              "minValue": 9
+              "minValue": 10
             }
           ],
           "modifier": [
             {
               "property": "agility",
-              "value": -5
+              "value": -7
             }
           ],
-          "defence": 9
+          "defence": 15
         }
       },
       "id": "w5b9nq8n3z",
@@ -305,7 +471,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0284.png",
       "level": "VETERAN",
-      "experience": 1652,
+      "experience": 1867,
       "strength": 8,
       "agility": 6,
       "endurance": 10,
@@ -314,31 +480,80 @@
       "perception": 8,
       "luck": 6,
       "charm": 6,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
         "weapon": {
-          "name": "祝福之剑",
-          "value": 1600,
-          "quality": "B",
-          "img": "/img/item/sword-b.png",
+          "name": "巨人之锤",
+          "value": 1200,
+          "quality": "C",
+          "img": "/img/item/g-hammer-c.png",
           "keys": [],
           "type": "weapon",
-          "handType": "ONE_HAND",
-          "minDamage": 33,
-          "maxDamage": 35,
+          "handType": "TWO_HAND",
+          "minDamage": 43,
+          "maxDamage": 42,
           "attackMethod": "MELEE",
-          "weaponType": "SWORD"
-        },
-        "shield": {
-          "name": "守卫者之盾",
-          "value": 800,
-          "quality": "C",
-          "img": "/img/item/shield-c.png",
-          "keys": [],
-          "type": "shield",
-          "defence": 4,
+          "weaponType": "GREAT_MACE",
           "modifier": [],
           "limit": []
         },
@@ -359,7 +574,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0149.png",
       "level": "VETERAN",
-      "experience": 2659,
+      "experience": 2925,
       "strength": 8,
       "agility": 8,
       "endurance": 8,
@@ -368,7 +583,65 @@
       "perception": 9,
       "luck": 6,
       "charm": 5,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -407,7 +680,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0556.png",
       "level": "VETERAN",
-      "experience": 3988,
+      "experience": 4202,
       "strength": 9,
       "agility": 6,
       "endurance": 6,
@@ -416,7 +689,65 @@
       "perception": 7,
       "luck": 8,
       "charm": 8,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -449,7 +780,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0939.png",
       "level": "VETERAN",
-      "experience": 4920,
+      "experience": 5166,
       "strength": 11,
       "agility": 7,
       "endurance": 10,
@@ -458,7 +789,65 @@
       "perception": 8,
       "luck": 5,
       "charm": 12,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -491,7 +880,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0397.png",
       "level": "VETERAN",
-      "experience": 7342,
+      "experience": 7664,
       "strength": 10,
       "agility": 10,
       "endurance": 11,
@@ -500,7 +889,65 @@
       "perception": 10,
       "luck": 14,
       "charm": 18,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -533,7 +980,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0249.png",
       "level": "VETERAN",
-      "experience": 5444,
+      "experience": 5702,
       "strength": 11,
       "agility": 8,
       "endurance": 9,
@@ -542,7 +989,65 @@
       "perception": 8,
       "luck": 7,
       "charm": 6,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -575,7 +1080,7 @@
       "nickName": "",
       "avatar": "/img/avatar/1074.png",
       "level": "VETERAN",
-      "experience": 4406,
+      "experience": 4617,
       "strength": 14,
       "agility": 7,
       "endurance": 13,
@@ -584,7 +1089,65 @@
       "perception": 6,
       "luck": 8,
       "charm": 6,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -623,7 +1186,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0830.png",
       "level": "VETERAN",
-      "experience": 6012,
+      "experience": 6298,
       "strength": 10,
       "agility": 11,
       "endurance": 6,
@@ -632,7 +1195,65 @@
       "perception": 7,
       "luck": 8,
       "charm": 8,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -665,7 +1286,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0052.png",
       "level": "VETERAN",
-      "experience": 7030,
+      "experience": 7329,
       "strength": 10,
       "agility": 8,
       "endurance": 7,
@@ -674,7 +1295,65 @@
       "perception": 12,
       "luck": 10,
       "charm": 11,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -707,7 +1386,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0148.png",
       "level": "VETERAN",
-      "experience": 5289,
+      "experience": 5560,
       "strength": 10,
       "agility": 8,
       "endurance": 8,
@@ -716,7 +1395,65 @@
       "perception": 8,
       "luck": 11,
       "charm": 9,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -749,7 +1486,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0097.png",
       "level": "ELITE",
-      "experience": 3116,
+      "experience": 3717,
       "strength": 11,
       "agility": 17,
       "endurance": 10,
@@ -758,7 +1495,65 @@
       "perception": 13,
       "luck": 8,
       "charm": 7,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -791,7 +1586,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0762.png",
       "level": "VETERAN",
-      "experience": 7715,
+      "experience": 8065,
       "strength": 17,
       "agility": 13,
       "endurance": 7,
@@ -800,7 +1595,65 @@
       "perception": 9,
       "luck": 10,
       "charm": 12,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -833,7 +1686,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0851.png",
       "level": "VETERAN",
-      "experience": 8505,
+      "experience": 8925,
       "strength": 10,
       "agility": 14,
       "endurance": 8,
@@ -842,7 +1695,65 @@
       "perception": 10,
       "luck": 7,
       "charm": 8,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -875,7 +1786,7 @@
       "nickName": "",
       "avatar": "/img/avatar/1156.png",
       "level": "VETERAN",
-      "experience": 4797,
+      "experience": 5138,
       "strength": 8,
       "agility": 12,
       "endurance": 10,
@@ -884,7 +1795,65 @@
       "perception": 10,
       "luck": 9,
       "charm": 9,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -926,7 +1895,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0106.png",
       "level": "VETERAN",
-      "experience": 3369,
+      "experience": 3689,
       "strength": 8,
       "agility": 7,
       "endurance": 14,
@@ -935,7 +1904,65 @@
       "perception": 11,
       "luck": 6,
       "charm": 9,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -970,7 +1997,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0267.png",
       "level": "VETERAN",
-      "experience": 2696,
+      "experience": 2943,
       "strength": 14,
       "agility": 12,
       "endurance": 5,
@@ -979,7 +2006,65 @@
       "perception": 6,
       "luck": 7,
       "charm": 10,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -1020,7 +2105,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0833.png",
       "level": "VETERAN",
-      "experience": 6121,
+      "experience": 6658,
       "strength": 15,
       "agility": 12,
       "endurance": 11,
@@ -1029,7 +2114,65 @@
       "perception": 12,
       "luck": 11,
       "charm": 17,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -1070,7 +2213,7 @@
       "nickName": "黒锋",
       "avatar": "/img/avatar/0999.png",
       "level": "VETERAN",
-      "experience": 3860,
+      "experience": 4264,
       "strength": 12,
       "agility": 9,
       "endurance": 13,
@@ -1079,7 +2222,65 @@
       "perception": 11,
       "luck": 12,
       "charm": 15,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -1120,7 +2321,7 @@
       "nickName": "白炎",
       "avatar": "/img/avatar/0293.png",
       "level": "VETERAN",
-      "experience": 5397,
+      "experience": 5905,
       "strength": 8,
       "agility": 15,
       "endurance": 9,
@@ -1129,7 +2330,65 @@
       "perception": 11,
       "luck": 9,
       "charm": 9,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -1164,7 +2423,7 @@
       "nickName": "",
       "avatar": "/img/avatar/0839.png",
       "level": "VETERAN",
-      "experience": 4419,
+      "experience": 4956,
       "strength": 14,
       "agility": 16,
       "endurance": 13,
@@ -1173,7 +2432,65 @@
       "perception": 11,
       "luck": 9,
       "charm": 12,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -1213,8 +2530,8 @@
       "name": "瑞安侬",
       "nickName": "",
       "avatar": "/img/avatar/0548.png",
-      "level": "ROOKIE",
-      "experience": 0,
+      "level": "ORDINARY",
+      "experience": 271,
       "strength": 12,
       "agility": 8,
       "endurance": 12,
@@ -1223,7 +2540,65 @@
       "perception": 13,
       "luck": 5,
       "charm": 6,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     },
     {
       "equipment": {
@@ -1241,33 +2616,28 @@
           "weaponType": "GREAT_SWORD"
         },
         "armor": {
-          "name": "督军战甲",
-          "value": 4800,
-          "quality": "B",
-          "img": "/img/item/plate-b.png",
+          "name": "暗影皮甲",
+          "value": 1600,
+          "quality": "C",
+          "img": "/img/item/leather-c.png",
           "keys": [],
           "type": "armor",
-          "limit": [
-            {
-              "property": "strength",
-              "minValue": 10
-            }
-          ],
+          "defence": 6,
           "modifier": [
             {
               "property": "agility",
-              "value": -7
+              "value": 4
             }
           ],
-          "defence": 15
+          "limit": []
         }
       },
       "id": "tzm51t9ore",
       "name": "纳亚娜",
-      "nickName": "",
+      "nickName": "小",
       "avatar": "/img/avatar/0827.png",
-      "level": "ROOKIE",
-      "experience": 0,
+      "level": "ORDINARY",
+      "experience": 82,
       "strength": 11,
       "agility": 12,
       "endurance": 9,
@@ -1276,7 +2646,65 @@
       "perception": 9,
       "luck": 6,
       "charm": 11,
-      "skills": []
+      "skills": [],
+      "proficiency": {
+        "oneHandWeapon": {
+          "SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "twoHandWeapon": {
+          "GREAT_SWORD": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_AXE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "GREAT_MACE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "LANCE": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "HALBERD": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "staffWeapon": {
+          "STAFF": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "longRangeWeapon": {
+          "BOW": {
+            "level": "NOVICE",
+            "experience": 0
+          },
+          "CROSSBOW": {
+            "level": "NOVICE",
+            "experience": 0
+          }
+        },
+        "shield": {
+          "level": "NOVICE",
+          "experience": 0
+        }
+      }
     }
   ],
   "deadMembers": [],
@@ -1294,6 +2722,6 @@
     "name": "Red Banner",
     "imageUrl": "/images/red-banner.png"
   },
-  "gold": 874657,
+  "gold": 913118,
   "protagonistId": "3k2l3y3mu9n"
 }

@@ -2,7 +2,7 @@
 import { defineStore } from 'pinia';
 import { Weapon, Shield, Armor, Item } from '@/core/interfaces/item';
 import { MissionInfo } from '@/core/mission/Mission';
-import { ICharacter, IPropertyCrystal } from '@/core/interfaces';
+import { ICalendar, ICharacter, IPropertyCrystal } from '@/core/interfaces';
 import { Calendar } from '@/core/entities/Calendar';
 import { generateCharacter } from '@/core/utils/dataUtils';
 import { difficultyRankMap, QualityLevel, qualityRankMap } from '@/core/enums';
@@ -15,6 +15,7 @@ import { missionsInfo as bMissionsInfo } from '@/core/setting/mission-info-b';
 import { missionsInfo as aMissionsInfo } from '@/core/setting/mission-info-a';
 import { getRandomElements } from '@/core/utils/arrayUtils';
 import { calendar } from '@/core/game';
+import { Character } from '@/core/entities/Character';
 
 type EnvDataState = {
   items: Item[];
@@ -117,7 +118,11 @@ export const useEnvDataStore = defineStore('envData', {
     },
 
     setRecruit(recruit: ICharacter[]) {
-      this.recruit = recruit;
+      this.recruit = recruit.map((character) => new Character(character));
+    },
+
+    setCreateDate(newCalendar: ICalendar) {
+      this.createDate = newCalendar;
     },
 
     getItems(): Item[] {
@@ -133,6 +138,10 @@ export const useEnvDataStore = defineStore('envData', {
     getRecruit(): ICharacter[] {
       renewData(this);
       return this.recruit;
+    },
+
+    getCreateDate(): Calendar {
+      return this.createDate;
     },
   },
 });

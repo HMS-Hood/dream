@@ -3,7 +3,7 @@ import { useEnvDataStore } from '@/store/envData';
 import { DoingMission, useDoingMissionStore } from '@/store/doingMission';
 import { SquadTemplate, useArmyStyleStore } from '@/store/armyStyle';
 import { calendar, setCalendar, player, setPlayer } from '../game';
-import { ICharacter } from '../interfaces';
+import { ICalendar, ICharacter } from '../interfaces';
 import { MissionInfo } from '../mission/Mission';
 import { Player } from '../entities/Player';
 import { Calendar } from '../entities/Calendar';
@@ -15,6 +15,9 @@ const armyStyleStore = useArmyStyleStore();
 export function save() {
   localStorage.setItem('player', JSON.stringify(instanceToPlain(player)));
   localStorage.setItem('calendar', JSON.stringify(instanceToPlain(calendar)));
+
+  const createDate = envData.getCreateDate();
+  localStorage.setItem('createDate', JSON.stringify(createDate));
 
   const items = envData.getItems();
   localStorage.setItem('items', JSON.stringify(items));
@@ -36,12 +39,21 @@ export function load() {
   const playerData = localStorage.getItem('player');
   if (playerData) {
     const savedPlayer = JSON.parse(playerData);
-    setPlayer(plainToInstance(Player, savedPlayer)[0]);
+    const obj = plainToInstance(Player, savedPlayer);
+    player.reload(obj as unknown as Player);
   }
   const calendarData = localStorage.getItem('calendar');
   if (calendarData) {
     const loadCalendar = JSON.parse(calendarData);
-    setCalendar(plainToInstance(Calendar, loadCalendar)[0]);
+    const cal = plainToInstance(Calendar, loadCalendar) as unknown as Calendar;
+    calendar.reset(cal.year, cal.month, cal.day);
+  }
+  const createCalendarData = localStorage.getItem('createDate');
+  if (createCalendarData) {
+    const { year, month, day } = JSON.parse(createCalendarData) as ICalendar;
+    const newCreateCalendar = new Calendar();
+    newCreateCalendar.reset(year, month, day);
+    envData.setCreateDate(newCreateCalendar);
   }
 
   const itemsData = localStorage.getItem('items');
