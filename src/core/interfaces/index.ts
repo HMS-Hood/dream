@@ -128,6 +128,7 @@ export interface ICombatUnit {
   currentHealth: number;
   isDead: boolean;
   maxHealth: number;
+  energy: number;
   physicalAttack: number;
   physicalDefense: number;
   magicalAttack: number;
@@ -151,6 +152,9 @@ export interface ICombatUnit {
   addExperience(amount: number): void;
   addWeaponProficiencyExperience(amount: number): void;
   addShieldProficiencyExperience(amount: number): void;
+  consumeEnergy(amount: number): void;
+  testEnergy(amount: number): boolean;
+  recoverEnergy(): void;
 }
 
 export interface IPropertyCrystal extends Item {

@@ -10,6 +10,7 @@ import { BattleUtils } from './battleUtils';
 import { IRefactoredCampaign } from './IRefactoredCampaign';
 import { BattleState } from './battleState';
 import { BattleStateHandler } from './battleStateHandler';
+import { energySetting } from '../setting/param-combat';
 
 type BattleStatistic = {
   name: string;
@@ -234,6 +235,7 @@ export class Campaign implements IRefactoredCampaign {
       }
       const action = scheduler.nextAction();
       if (!action) break;
+      action.unit.recoverEnergy();
       simulationTime = action.time;
       // 查找该单位所属的战团
       const group = this.battleGroups.find(
@@ -338,6 +340,8 @@ export class Campaign implements IRefactoredCampaign {
     target: ICombatUnit,
     distance: number
   ): void {
+    if (!attacker.testEnergy(energySetting.attackConsume)) return;
+    attacker.consumeEnergy(energySetting.attackConsume);
     let attackerDamage = attacker.physicalAttack;
     const hit = Math.random();
     let attackState: 'normal' | 'miss' | 'parry' | 'block' | 'critical' =
@@ -351,25 +355,40 @@ export class Campaign implements IRefactoredCampaign {
     const parry = Math.random();
     const block = Math.random();
     const critical = Math.random();
-    if (hit > Math.max(0.05, attacker.hitRate - target.dodgeRate)) {
+    if (
+      hit > Math.max(0.05, attacker.hitRate - target.dodgeRate) &&
+      target.testEnergy(energySetting.dodgeConsume)
+    ) {
       attackerDamage = 0;
       attackInfo.push('miss');
       attackState = 'miss';
-    } else if (parry < target.parryRate - attacker.penetrate) {
+      target.consumeEnergy(energySetting.dodgeConsume);
+    } else if (
+      parry < target.parryRate - attacker.penetrate &&
+      target.testEnergy(energySetting.parryConsume)
+    ) {
       attackerDamage = 0;
       attackInfo.push(`parry(rate:${target.parryRate})`);
       attackState = 'parry';
       target.addWeaponProficiencyExperience(1);
-    } else if (block < target.blockRate - attacker.penetrate) {
+      target.consumeEnergy(energySetting.parryConsume);
+    } else if (
+      block < target.blockRate - attacker.penetrate &&
+      target.testEnergy(energySetting.blockConsume)
+    ) {
       attackerDamage = Math.max(0, attackerDamage - target.blockValue);
       attackInfo.push(`block(${target.blockValue},rate:${target.blockRate})`);
       attackState = 'block';
       target.addShieldProficiencyExperience(1);
+      target.consumeEnergy(energySetting.blockConsume);
     } else if (critical < attacker.criticalRate) {
       attackerDamage *= attacker.criticalDamage;
       attackInfo.push('critical');
       attackState = 'critical';
       attacker.addWeaponProficiencyExperience(1);
+      target.consumeEnergy(energySetting.criticalConsume);
+    } else {
+      target.consumeEnergy(energySetting.beHitConsume);
     }
     target.takeDamage(attackerDamage);
     attackInfo.push(
@@ -378,8 +397,13 @@ export class Campaign implements IRefactoredCampaign {
     if (attackerDamage > 0) {
       attacker.addExperience(1);
     }
-    // 如果目标存活且距离满足，则执行反击
-    if (!target.isDead && target.getAttackRange() >= distance) {
+    // 如果目标存活且距离满足，反击能量足够，则执行反击
+    if (
+      !target.isDead &&
+      target.getAttackRange() >= distance &&
+      target.testEnergy(energySetting.counterConsume)
+    ) {
+      target.consumeEnergy(energySetting.counterConsume);
       attackInfo.push(
         `${target.getCharacter().name} counterattacked ${
           attacker.getCharacter().name
@@ -399,19 +423,33 @@ export class Campaign implements IRefactoredCampaign {
       const counterHit = Math.random();
       const countParry = Math.random();
       const countBlock = Math.random();
-      if (counterHit > Math.max(0.05, target.hitRate - attacker.dodgeRate)) {
+      if (
+        counterHit > Math.max(0.05, target.hitRate - attacker.dodgeRate) &&
+        attacker.testEnergy(energySetting.counterDodgeConsume)
+      ) {
         attackInfo.push('counter miss');
         counterDamage = 0;
-      } else if (countParry < attacker.parryRate - target.penetrate) {
+        attacker.consumeEnergy(energySetting.counterDodgeConsume);
+      } else if (
+        countParry < attacker.parryRate - target.penetrate &&
+        attacker.testEnergy(energySetting.counterParryConsume)
+      ) {
         counterDamage = 0;
         attackInfo.push(`counter parry(rate:${attacker.parryRate})`);
         attacker.addWeaponProficiencyExperience(1);
-      } else if (countBlock < attacker.blockRate - target.penetrate) {
+        attacker.consumeEnergy(energySetting.counterParryConsume);
+      } else if (
+        countBlock < attacker.blockRate - target.penetrate &&
+        attacker.testEnergy(energySetting.counterBlockConsume)
+      ) {
         counterDamage = Math.max(0, counterDamage - attacker.blockValue);
         attackInfo.push(
           `counter block(${attacker.blockValue},rate:${attacker.blockRate})`
         );
         attacker.addShieldProficiencyExperience(1);
+        attacker.consumeEnergy(energySetting.counterBlockConsume);
+      } else {
+        attacker.consumeEnergy(energySetting.counterBeHitConsume);
       }
       attacker.takeDamage(counterDamage);
       attackInfo.push(

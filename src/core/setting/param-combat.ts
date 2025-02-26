@@ -70,3 +70,20 @@ export const charmQualityAdjustSquadLimit: QualityNumber = {
   [QualityLevel.SS]: 9,
   [QualityLevel.SSS]: 12,
 };
+
+export const energySetting = {
+  base: 25,
+  lowerLimit: -25,
+  upperLimit: 100,
+  attackConsume: 10,
+  dodgeConsume: 2,
+  parryConsume: 5,
+  blockConsume: 5,
+  beHitConsume: 10,
+  criticalConsume: 20,
+  counterConsume: 5,
+  counterDodgeConsume: 1,
+  counterParryConsume: 2,
+  counterBlockConsume: 2,
+  counterBeHitConsume: 5,
+};

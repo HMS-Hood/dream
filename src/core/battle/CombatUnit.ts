@@ -5,6 +5,7 @@ import {
   baseCombatStats,
   levelModifiers,
   calculateAttributeModifier,
+  energySetting,
 } from '../setting/param-combat';
 import { BasePropertyModifier } from '../interfaces/item';
 
@@ -22,6 +23,8 @@ export class CombatUnit implements ICombatUnit {
 
   // 二级属性
   public maxHealth: number = 0;
+
+  public energy: number = 0;
 
   public physicalAttack: number = 0;
 
@@ -300,5 +303,21 @@ export class CombatUnit implements ICombatUnit {
 
   public addShieldProficiencyExperience(amount: number): void {
     this.character.addShieldProficiencyExperience(this.countRealAmount(amount));
+  }
+
+  public consumeEnergy(amount: number): void {
+    this.energy = Math.max(energySetting.lowerLimit, this.energy - amount);
+  }
+
+  public testEnergy(amount: number): boolean {
+    return this.energy - amount >= 0;
+  }
+
+  public recoverEnergy(): void {
+    this.energy = Math.min(
+      energySetting.upperLimit,
+      this.energy +
+        Math.round(energySetting.base * this.attributeModifiers.spirit)
+    );
   }
 }
