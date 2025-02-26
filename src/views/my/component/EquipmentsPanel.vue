@@ -73,7 +73,6 @@
   import { defineProps } from 'vue';
   import { ICharacter } from '@/core/interfaces';
   import { ItemType } from '@/core/enums';
-  import { player } from '@/core/game';
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const props = defineProps<{

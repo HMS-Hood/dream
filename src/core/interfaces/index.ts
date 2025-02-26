@@ -167,3 +167,26 @@ export interface PropertyCrystalInitData {
   baseProperty: CharacterBaseProperty;
   quality: QualityLevel;
 }
+
+export interface ICalendar {
+  year: number;
+  month: number;
+  day: number;
+  // eslint-disable-next-line no-use-before-define
+  triggers: IDateTrigger[];
+  reset: (year: number, month: number, day: number) => void;
+  nextDay: () => void;
+  nextTenDay: () => void;
+  nextMonth: () => void;
+  nextSomeDate: (some: number) => void;
+  getPassedTime: (comparedCalendar: ICalendar) => number;
+  equals: (calendar: ICalendar) => boolean;
+  getDate: () => string;
+}
+
+export interface IDateTrigger {
+  triggerKey: string;
+  trigger: (calendar: ICalendar) => void;
+}
+
+export type TriggerFun = (calendar: ICalendar) => void;

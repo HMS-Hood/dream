@@ -1,10 +1,14 @@
+import { ICalendar, IDateTrigger } from '../interfaces';
+
 /* eslint-disable import/prefer-default-export */
-export class Calendar {
+export class Calendar implements ICalendar {
   public year: number = 101;
 
   public month: number = 1;
 
   public day: number = 1;
+
+  public triggers: IDateTrigger[] = [];
 
   constructor(year?: number, month?: number, day?: number) {
     if (year) {
@@ -48,7 +52,7 @@ export class Calendar {
     }
   }
 
-  public getPassedTime(comparedCalendar: Calendar): number {
+  public getPassedTime(comparedCalendar: ICalendar): number {
     return (
       (this.year - comparedCalendar.year) * 360 +
       (this.month - comparedCalendar.month) * 30 +
@@ -56,7 +60,7 @@ export class Calendar {
     );
   }
 
-  public equals(calendar: Calendar) {
+  public equals(calendar: ICalendar) {
     return (
       this.year === calendar.year &&
       this.month === calendar.month &&

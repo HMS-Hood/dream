@@ -7,6 +7,7 @@ import { Emblem } from './entities/Emblem';
 import { Flag } from './entities/Flag';
 import { generateCharacter } from './utils/dataUtils';
 import { Calendar } from './entities/Calendar';
+import { ICalendar } from './interfaces';
 
 // Create Emblem and Flag
 const emblem = new Emblem('Eagle Emblem', '/img/emblem.png');
@@ -15,12 +16,20 @@ const flag = new Flag('Red Banner', '/images/red-banner.png');
 // Create Player
 export const player = reactive(new Player(emblem, flag));
 
+export const setPlayer = (newPlayer: Player) => {
+  Object.assign(player, newPlayer);
+};
+
 for (let i = 1; i <= 4; i += 1) {
   const character = reactive(generateCharacter());
   player.members.push(character);
 }
 
 export const calendar = reactive(new Calendar());
+
+export const setCalendar = (newCalendar: ICalendar) => {
+  Object.assign(calendar, newCalendar);
+};
 
 // for (let i = 1; i <= 4; i += 1) {
 //   const leadMember = generateCharacter(`Lead${i}`);

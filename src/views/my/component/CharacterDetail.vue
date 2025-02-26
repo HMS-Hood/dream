@@ -69,7 +69,7 @@
         </a-card>
       </div>
       <div class="right">
-        <div style="width: 120px; height: 120px"></div>
+        <div class="fire-btn" @click="fire()">解雇</div>
         <equipments-panel
           :character="character"
           @open-equipment-modal="openEquipmentModal"
@@ -104,6 +104,7 @@
   import { ItemType } from '@/core/enums';
   import { player } from '@/core/game';
   import { Armor, Item, Shield, Weapon } from '@/core/interfaces/item';
+  import { Modal } from '@arco-design/web-vue';
   import EquipmentsPanel from './EquipmentsPanel.vue';
 
   const character = defineModel<ICharacter>('character');
@@ -161,6 +162,18 @@
       character.value.equipment[position] = undefined;
       if (removeItem) player.items.push(removeItem);
     }
+  };
+
+  const fire = () => {
+    Modal.confirm({
+      content: `是否解雇${character.value?.name}？`,
+      onOk: () => {
+        const index = player.members.findIndex(
+          (member) => member.id === character.value?.id
+        );
+        if (index >= 0) player.members.splice(index, 1);
+      },
+    });
   };
 </script>
 
@@ -240,6 +253,21 @@
     :deep(.arco-descriptions-item-value-block) {
       color: antiquewhite;
       font-size: @secondary-content-font;
+    }
+  }
+
+  .fire-btn {
+    width: 120px;
+    height: 120px;
+    padding: 2em;
+    color: #444;
+    font-size: @secondary-content-font;
+    background-color: #a7a7a7;
+    cursor: pointer;
+
+    &:hover {
+      color: aliceblue;
+      background-color: red;
     }
   }
 

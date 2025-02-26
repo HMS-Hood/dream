@@ -69,3 +69,5 @@ export const proficiencyExpRequirements: { [key in ProficiencyLevel]: number } =
     [ProficiencyLevel.MASTER]: 100000,
     [ProficiencyLevel.GRANDMASTER]: Infinity, // GRANDMASTER is the maximum; no further upgrade.
   };
+
+export const baseSalary = 1000;

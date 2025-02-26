@@ -151,13 +151,9 @@
     }
     return new SideState([]);
   });
-  const activeBattleGroups = computed(
-    () => campaign.value?.getActiveBattleGroups() || []
-  );
   const playerSide = computed(() => campaign.value?.getPlayerSide());
 
   // 控制变量
-  const battleMatched = ref(false);
   const nonPlayerBattlesExecuted = ref(false);
 
   const combatLogs = ref<string[]>([]);
