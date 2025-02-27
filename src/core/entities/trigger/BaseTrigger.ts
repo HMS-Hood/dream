@@ -4,11 +4,14 @@ import { ICalendar, IDateTrigger, TriggerFun } from '../../interfaces';
 export abstract class BaseTrigger implements IDateTrigger {
   triggerFun: TriggerFun;
 
-  constructor(triggerFun: TriggerFun) {
+  initCalendar: ICalendar;
+
+  constructor(calendar: ICalendar, triggerFun: TriggerFun) {
     this.triggerFun = triggerFun;
+    this.initCalendar = calendar;
   }
 
-  abstract trigger: TriggerFun;
+  abstract trigger: (calendar: ICalendar) => IDateTrigger | undefined;
 
   abstract triggerKey: string;
 }

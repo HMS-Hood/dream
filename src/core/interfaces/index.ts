@@ -186,7 +186,7 @@ export interface ICalendar {
 
 export interface IDateTrigger {
   triggerKey: string;
-  trigger: (calendar: ICalendar) => void;
+  trigger: (calendar: ICalendar) => IDateTrigger | undefined;
 }
 
 export type TriggerFun = (calendar: ICalendar) => void;

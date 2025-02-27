@@ -1,11 +1,15 @@
 /* eslint-disable import/prefer-default-export */
-import { ICalendar, TriggerFun } from '../../interfaces';
+import { ICalendar } from '../../interfaces';
 import { BaseTrigger } from './BaseTrigger';
 
 export class MonthTrigger extends BaseTrigger {
   triggerKey: string = 'MONTH-TRIGGER';
 
   trigger = (calendar: ICalendar) => {
-    this.triggerKey = '2';
+    if (calendar.month !== this.initCalendar.month) {
+      if (this.triggerFun) this.triggerFun(calendar);
+      this.initCalendar = calendar;
+    }
+    return this;
   };
 }
