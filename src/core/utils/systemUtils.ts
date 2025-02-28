@@ -2,11 +2,12 @@ import { plainToInstance, instanceToPlain } from 'class-transformer';
 import { useEnvDataStore } from '@/store/envData';
 import { DoingMission, useDoingMissionStore } from '@/store/doingMission';
 import { SquadTemplate, useArmyStyleStore } from '@/store/armyStyle';
-import { calendar, setCalendar, player, setPlayer } from '../game';
+import { calendar, player, territory } from '../game';
 import { ICalendar, ICharacter } from '../interfaces';
 import { MissionInfo } from '../mission/Mission';
 import { Player } from '../entities/Player';
 import { Calendar } from '../entities/Calendar';
+import { Territory } from '../entities/Territory';
 
 const envData = useEnvDataStore();
 const doingMissionStroe = useDoingMissionStore();
@@ -15,6 +16,7 @@ const armyStyleStore = useArmyStyleStore();
 export function save() {
   localStorage.setItem('player', JSON.stringify(instanceToPlain(player)));
   localStorage.setItem('calendar', JSON.stringify(instanceToPlain(calendar)));
+  localStorage.setItem('territory', JSON.stringify(instanceToPlain(territory)));
 
   const createDate = envData.getCreateDate();
   localStorage.setItem('createDate', JSON.stringify(createDate));
@@ -47,6 +49,20 @@ export function load() {
     const loadCalendar = JSON.parse(calendarData);
     const cal = plainToInstance(Calendar, loadCalendar) as unknown as Calendar;
     calendar.reset(cal.year, cal.month, cal.day);
+  }
+  const territoryData = localStorage.getItem('territory');
+  if (territoryData) {
+    const loadTerritory = JSON.parse(territoryData);
+    const terri = plainToInstance(
+      Territory,
+      loadTerritory
+    ) as unknown as Territory;
+    territory.reset(
+      terri.population,
+      terri.safety,
+      terri.prosperity,
+      terri.area
+    );
   }
   const createCalendarData = localStorage.getItem('createDate');
   if (createCalendarData) {

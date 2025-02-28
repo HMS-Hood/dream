@@ -20,24 +20,60 @@ export class Territory {
     this.area = area;
   }
 
-  get popuIncRate(): number {
-    const standardPopulation = 10000 * this.area;
-    let baseRate = 0;
-    if (this.population <= standardPopulation) {
-      baseRate = 0.01;
-    } else {
-      baseRate =
-        ((2 * standardPopulation - this.population) * 0.01) /
-        standardPopulation;
-    }
-    const safetyBuff = (this.safety - 50) / 50 / 100;
-    return (baseRate + safetyBuff) / 12;
+  reset(population: number, safety: number, prosperity: number, area: number) {
+    this.population = population;
+    this.safety = safety;
+    this.prosperity = prosperity;
+    this.area = area;
   }
 
-  get prosIncRate(): number {
-    if (this.safety > 50) {
-      return 0.01 * (((10000 - this.prosperity) / 10000) * (this.safety / 100));
+  get popuInc(): number {
+    return Math.round(
+      Math.max(this.population, this.area * 10000) * this.popuIncRate
+    );
+  }
+
+  get popuIncRate(): number {
+    const standardPopulation = 10000 * this.area;
+    const rate = 0.05;
+    if (this.safety >= 50) {
+      if (this.population <= standardPopulation) {
+        const baseRate = rate;
+        return baseRate * ((this.safety - 50) / 50);
+      }
+      if (this.population <= 2 * standardPopulation) {
+        const baseRate =
+          ((2 * standardPopulation - this.population) * rate) /
+          standardPopulation;
+        return baseRate * ((this.safety - 50) / 50);
+      }
+      const baseRate =
+        ((2 * standardPopulation - this.population) * rate) /
+        standardPopulation;
+      return baseRate * ((50 - this.safety) / 50);
     }
-    return 0.01 * ((this.prosperity / 10000) * ((this.safety - 50) / 100));
+    if (this.population <= standardPopulation) {
+      const baseRate = rate;
+      return baseRate * ((this.safety - 50) / 50);
+    }
+    const baseRate =
+      ((this.population - standardPopulation) / standardPopulation) * rate +
+      rate;
+    return baseRate * ((this.safety - 50) / 50);
+  }
+
+  get prosInc(): number {
+    if (this.safety > 50) {
+      return Math.round(
+        100 * ((((10000 - this.prosperity) / 10000) * (this.safety - 50)) / 50)
+      );
+    }
+    return Math.round(
+      100 * (this.prosperity / 10000) * ((this.safety - 50) / 50)
+    );
+  }
+
+  get tax(): number {
+    return Math.round((this.population * this.prosperity) / 10000);
   }
 }

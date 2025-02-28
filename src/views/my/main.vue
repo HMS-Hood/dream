@@ -36,6 +36,22 @@
               <span>Gold:</span>
               <span>{{ player.gold }}</span>
             </div>
+            <div class="gold">
+              <span>领地:</span>
+              <span>{{ territory.area }}</span>
+            </div>
+            <div class="gold">
+              <span>人口:</span>
+              <span>{{ territory.population }}</span>
+            </div>
+            <div class="gold">
+              <span>治安:</span>
+              <span>{{ territory.safety }}</span>
+            </div>
+            <div class="gold">
+              <span>繁荣:</span>
+              <span>{{ territory.prosperity }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -79,7 +95,7 @@
   import { useRouter } from 'vue-router';
   import { Message } from '@arco-design/web-vue';
   import { load, save } from '@/core/utils/systemUtils';
-  import { player, calendar } from '@/core/game';
+  import { player, calendar, territory } from '@/core/game';
 
   const backgroundImage = ref('/img/bg/bg3.png');
   const router = useRouter();

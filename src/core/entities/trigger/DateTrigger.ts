@@ -16,11 +16,11 @@ export class DateTrigger extends BaseTrigger {
     this.triggerCalendar = triggerCalendar;
   }
 
-  trigger = (calendar: ICalendar) => {
+  trigger(calendar: ICalendar) {
     if (this.triggerCalendar.getPassedTime(calendar) <= 0) {
       if (this.triggerFun) this.triggerFun(calendar);
       return undefined;
     }
     return this;
-  };
+  }
 }

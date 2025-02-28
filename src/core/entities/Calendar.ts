@@ -50,6 +50,9 @@ export class Calendar implements ICalendar {
       }
       this.day -= 30;
     }
+    this.triggers = this.triggers
+      .map((trigger) => trigger.trigger(this))
+      .filter((item) => item !== undefined);
   }
 
   public getPassedTime(comparedCalendar: ICalendar): number {

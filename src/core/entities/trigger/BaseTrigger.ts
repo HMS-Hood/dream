@@ -11,7 +11,7 @@ export abstract class BaseTrigger implements IDateTrigger {
     this.initCalendar = calendar;
   }
 
-  abstract trigger: (calendar: ICalendar) => IDateTrigger | undefined;
+  abstract trigger(calendar: ICalendar): IDateTrigger | undefined;
 
   abstract triggerKey: string;
 }
