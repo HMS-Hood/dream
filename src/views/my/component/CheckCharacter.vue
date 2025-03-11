@@ -245,6 +245,12 @@
         margin-right: 30px;
         border-radius: 30px;
 
+        &.S,
+        &.SS,
+        &.SSS {
+          background-color: @quality-S-color;
+        }
+
         &.A {
           background-color: @quality-A-color;
         }

@@ -361,12 +361,7 @@ export class Character implements ICharacter {
       return;
     }
     // 假定 weapon 对象具有 type 属性，对应具体武器类型
-    const weaponType = this.equipment.weapon.type as unknown as
-      | OneHandWeaponType
-      | TwoHandWeaponType
-      | StaffWeaponType
-      | LongRangeWeaponType;
-    this.addProficiencyExperience(weaponType, amount);
+    this.addProficiencyExperience(this.equipment.weapon.weaponType, amount);
   }
 
   /**

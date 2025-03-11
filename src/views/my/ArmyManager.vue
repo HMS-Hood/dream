@@ -28,7 +28,8 @@
     <div class="army-actions">
       <a-button @click="loadTemplate">读取部队模板</a-button>
       <a-button @click="saveTemplate">保存部队模板</a-button>
-      <a-button type="primary" @click="saveArmy">保存部队信息</a-button>
+      <a-button type="primary" @click="saveArmy">出征</a-button>
+      <a-button @click="cancel">取消</a-button>
     </div>
     <!-- Modal for adjusting squad members -->
   </div>
@@ -47,6 +48,11 @@
   import { Squad } from '@/core/battle/Squad';
   import { Army } from '@/core/battle/Army';
   import SquadColumn from './component/SquadColumn.vue';
+
+  const emit = defineEmits<{
+    (e: 'setArmy', army: IArmy): void;
+    (e: 'cancel'): void;
+  }>();
 
   const squads = ref<ISquad[]>([]);
 
@@ -91,6 +97,7 @@
     }
     armyStore.setArmy(reactive(army));
     Message.success('Army information saved.');
+    emit('setArmy', army);
   };
 
   const armyStyleStore = useArmyStyleStore();
@@ -146,6 +153,10 @@
 
   const reset = () => {
     squads.value = [];
+  };
+
+  const cancel = () => {
+    emit('cancel');
   };
 
   defineExpose({ reset });

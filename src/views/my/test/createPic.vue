@@ -19,6 +19,11 @@
     hairFrontStyle,
     armorColor,
     backgroundDesc,
+    eyeShapes,
+    eyeSizes,
+    jawlineShapes,
+    mouthSizes,
+    lipThicknesses,
   } from './data';
 
   const description = ref<string>('');
@@ -57,13 +62,29 @@
     const desc =
       backgroundDesc[Math.floor(Math.random() * backgroundDesc.length)];
     let suitDesc = ` She wears a ${armorMain} glamorous armor with ${armorBorder} border, paires ${randomPantyhoseColor} stockings.`;
-    if (Math.random() > 0.4) {
+    // let suitDesc = ` She wears a ${armorMain} glamorous armor with ${armorBorder} border.`;
+    if (Math.random() > 0.6) {
       suitDesc = '';
     }
     description.value = `/image model:⭐ FLUX.1.1 Pro prompt:A full-body portrait of a ${randomProfession[0]} standing, ${randomPose}.${suitDesc} 
 Her footwear consists of expertly designed and crafted high-heeled boots. The heels are sturdy yet stylish, accentuating her every step with an impression of both grace and power.
 Her ${randomHairColor} hair was styled with ${randomHairLength} ${randomHairStyle}${randomFrontStyle}. Digital fantasy art style and 
 Japanese anime style ${desc}`;
+    //     description.value = `/image model:⭐ FLUX.1.1 Pro prompt:A full-body portrait of a ${randomProfession[0]} standing, ${randomPose}.${suitDesc}
+    // Her footwear consists of expertly designed and crafted high-heeled boots. The heels are sturdy yet stylish, accentuating her every step with an impression of both grace and power.
+    // Her ${randomHairColor} hair was styled with ${randomHairLength} ${randomHairStyle}${randomFrontStyle}.
+    // Japanese anime style with clean, cel-shaded rendering, smooth gradients, and vibrant pastel color palettes. The lines should be crisp and refined with subtle screen tones, evoking the look of modern anime productions.`;
+    //     const eyeShape = eyeShapes[Math.floor(Math.random() * eyeShapes.length)];
+    //     const eyeSize = eyeSizes[Math.floor(Math.random() * eyeSizes.length)];
+    //     const jawlineShape =
+    //       jawlineShapes[Math.floor(Math.random() * jawlineShapes.length)];
+    //     const mouthSize = mouthSizes[Math.floor(Math.random() * mouthSizes.length)];
+    //     const lipThickness =
+    //       lipThicknesses[Math.floor(Math.random() * lipThicknesses.length)];
+    //     description.value = `/image model:⭐ FLUX.1.1 Pro prompt:A half-body portrait of a ${randomProfession[0]}, ${randomPose}.${suitDesc}
+    // Her eyes are ${eyeShape} and ${eyeSize}, with a ${jawlineShape} jawline, a ${mouthSize} mouth, and ${lipThickness} lips.
+    // Her ${randomHairColor} hair was styled with ${randomHairLength} ${randomHairStyle}${randomFrontStyle}. Digital fantasy art style and
+    // Japanese anime style ${desc}`;
     copy(description.value);
     Message.info('copy');
   };

@@ -101,7 +101,7 @@
   const router = useRouter();
   const row2 = ref([
     { title: 'Item 1', image: '/img/bg/tavern.png', url: '/campaign' },
-    { title: 'Item 2', image: '/img/bg/bg.png' },
+    { title: 'Item 2', image: '/img/bg/bg.png', url: '/create' },
     { title: '佣兵工会', image: '/img/bg/mercenary.png', url: '/mission' },
     { title: '部队', image: '/img/bg/store1.png', url: '/army-manager' },
     { title: '征兵所', image: '/img/bg/military-camp.png', url: '/recruit' },
