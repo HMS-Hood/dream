@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import {
   AttackMethod,
   CharacterLevel,

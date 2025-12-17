@@ -1,6 +1,5 @@
 /* eslint-disable import/prefer-default-export */
 import { reactive } from 'vue';
-import { Type } from 'class-transformer';
 import { Emblem } from './Emblem';
 import { Flag } from './Flag';
 import { Character } from './Character';

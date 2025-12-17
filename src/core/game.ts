@@ -37,7 +37,8 @@ export const territory = reactive(new Territory(5000, 100, 200, 1));
 
 const territoryMonthTrigger = new MonthTrigger(
   new Calendar(),
-  (triggerCalendar: ICalendar) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (_triggerCalendar: ICalendar) => {
     territory.population += territory.popuInc;
     territory.prosperity += territory.prosInc;
     player.gold += territory.tax;
