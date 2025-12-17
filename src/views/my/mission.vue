@@ -119,12 +119,14 @@
       v-model:visible="showArmyManager"
       :modal-style="{ 'background-color': 'rgb(78, 78, 78, 0.8)' }"
       :fullscreen="true"
-      :closable="false"
-      @before-ok="handleArmySet"
+      :hide-title="true"
+      :footer="false"
     >
       <army-manager
         ref="armyManagerRef"
         :idle-members="idleMembers"
+        @set-army="handleArmySet"
+        @cancel="showArmyManager = false"
       ></army-manager>
     </a-modal>
   </div>
@@ -136,9 +138,9 @@
   import { Mission, MissionInfo } from '@/core/mission/Mission';
   import { MissionDifficulty, QualityLevel } from '@/core/enums';
   import { useEnvDataStore } from '@/store/envData';
-  import { useArmyStore } from '@/store/army';
   import { calendar, player } from '@/core/game';
   import { Calendar } from '@/core/entities/Calendar';
+  import { IArmy } from '@/core/interfaces/combat';
   import { DoingMission, useDoingMissionStore } from '@/store/doingMission';
   import { useStatusStore } from '@/store/status';
   import back from './component/back.vue';
@@ -257,36 +259,37 @@
     Message.normal('任务结算完成');
   };
   const armyManagerRef = ref<typeof ArmyManager>();
-  const armyStore = useArmyStore();
-  const handleArmySet = async (done: (closed: boolean) => void) => {
-    const army = armyStore.getArmy();
-    if (!curMissionInfo.value || !army) return;
-    const mission = new Mission(curMissionInfo.value);
-    const missionResult = await mission.completeMission(army);
-    const workingIds = army.squads.flatMap((squad) =>
-      squad.members.map((member) => member.getCharacter().id)
-    );
-    Modal.confirm({
-      title: `任务${missionResult.success ? '成功' : '失败'}`,
-      content: `预估时长: ${missionResult.duration}天（损失人数：${missionResult.lost}）`,
-      okText: '继续任务',
-      cancelText: '取消任务',
-      onOk: () => {
-        missionResultList.push({
-          name: mission.name,
-          quality: mission.quality,
-          difficulty: mission.difficulty,
-          desc: mission.desc,
-          result: missionResult,
-          startDay: new Calendar(calendar.year, calendar.month, calendar.day),
-        });
-        doingMissionStore.setDoingMission(missionResultList);
-        player.workingIds.push(...workingIds);
-        armyManagerRef.value?.reset();
-        done(true);
-      },
-      onCancel: () => done(false),
-    });
+  const handleArmySet = async (army: IArmy) => {
+    try {
+      if (!curMissionInfo.value || !army) return;
+      const mission = new Mission(curMissionInfo.value);
+      const missionResult = await mission.completeMission(army);
+      const workingIds = army.squads.flatMap((squad) =>
+        squad.members.map((member) => member.getCharacter().id)
+      );
+      Modal.confirm({
+        title: `任务${missionResult.success ? '成功' : '失败'}`,
+        content: `预估时长: ${missionResult.duration}天（损失人数：${missionResult.lost}）`,
+        okText: '继续任务',
+        cancelText: '取消任务',
+        onOk: () => {
+          missionResultList.push({
+            name: mission.name,
+            quality: mission.quality,
+            difficulty: mission.difficulty,
+            desc: mission.desc,
+            result: missionResult,
+            startDay: new Calendar(calendar.year, calendar.month, calendar.day),
+          });
+          doingMissionStore.setDoingMission(missionResultList);
+          player.workingIds.push(...workingIds);
+          armyManagerRef.value?.reset();
+          showArmyManager.value = false;
+        },
+      });
+    } catch (error) {
+      console.error('任务执行失败', error);
+    }
   };
 
   const idleMembers = computed(() =>

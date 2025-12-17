@@ -340,7 +340,10 @@ export class Campaign implements IRefactoredCampaign {
     target: ICombatUnit,
     distance: number
   ): void {
-    if (!attacker.testEnergy(energySetting.attackConsume)) return;
+    if (!attacker.testEnergy(energySetting.attackConsume)) {
+      this.record(attacker, target, 0, 0);
+      return;
+    }
     attacker.consumeEnergy(energySetting.attackConsume);
     let attackerDamage = attacker.physicalAttack;
     const hit = Math.random();

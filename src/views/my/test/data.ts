@@ -30,7 +30,7 @@ export const warriorPoses: string[] = [
   'Aiming bow precisely',
   'Donning armor methodically',
   'Sharpening blade intently',
-  'Surveying battlefield strategically',
+  // 'Surveying battlefield strategically',
   'Rallying troops inspirationally',
   'Demonstrating combat stance',
   'Wielding dual weapons skillfully',
@@ -43,7 +43,6 @@ export const magePoses: string[] = [
   'Mixing potions carefully',
   'Channeling elemental forces',
   'Meditating in trance',
-  'Inscribing arcane runes',
   'Summoning ethereal familiar',
   'Manipulating time-space fabric',
   'Deciphering ancient scrolls',
@@ -167,13 +166,16 @@ export const hairLength: string[] = [
 
 export const armorColor: [string, string][] = [
   ['red', 'dark'],
+  ['maroon', 'golden'],
   ['dark', 'pink'],
   ['silver', 'pink'],
+  ['dark blue', 'silver'],
   ['white', 'golden'],
   ['dark violet', 'silver'],
   ['light pink', 'silver'],
   ['pink', 'silver'],
-  ['dark', 'golden'],
+  ['golden', 'violet'],
+  ['green', 'golden'],
 ];
 
 export const backgroundDesc: string[] = [
@@ -187,4 +189,52 @@ export const backgroundDesc: string[] = [
   'with a cool glow, energetic magical lighting, crisp textures, and swirling smoke. Use a rich color palette of muted grays, icy blues, and deep blacks with subtle digital effects for a mysterious, edgy atmosphere.',
   'with a dynamic glow, modern magical lighting, refined textures, and swirling geometric patterns. Employ a vibrant color palette of warm coppers, deep blues, and rich greens with subtle digital effects for a futuristic, empowered feel.',
   'with a luminous glow, divine magical lighting, ornate textures, and swirling celestial motifs. Use a rich color palette of celestial blues, warm golds, and deep reds with subtle digital effects for a sacred, entrancing ambiance.',
+];
+
+export const eyeShapes: string[] = [
+  'almond-shaped',
+  'round',
+  'oval',
+  'upturned',
+  'deep-set',
+  'narrow',
+  'wide',
+];
+
+export const eyeSizes: string[] = [
+  'small',
+  'large',
+  'medium-sized',
+  'big',
+  'wide',
+  'tiny',
+];
+
+export const jawlineShapes: string[] = [
+  'narrow',
+  'angular',
+  'round',
+  'rectangular',
+  'sharp',
+  'soft',
+  'V-shaped',
+  'square',
+];
+
+export const mouthSizes: string[] = [
+  'small',
+  'large',
+  'medium-sized',
+  'wide',
+  'narrow',
+  'broad',
+];
+
+export const lipThicknesses: string[] = [
+  'thin',
+  'thick',
+  'full',
+  'medium-thick',
+  'plump',
+  'slightly thin',
 ];

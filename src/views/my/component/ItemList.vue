@@ -23,8 +23,8 @@
       :body-style="{ padding: '0' }"
       :hide-title="true"
       :closable="false"
-      :footer="false"
-      width="800px"
+      :footer="true"
+      width="75%"
       height="600px"
       @before-ok="handleBeforeOk"
     >
@@ -42,6 +42,7 @@
   import { computed, ref } from 'vue';
   import { Item } from '@/core/interfaces/item';
   import { player } from '@/core/game';
+  import { PropertyCrystal } from '@/core/entities/PropertyCrystal';
   import CheckCharacter from './CheckCharacter.vue';
 
   const hoverItem = ref<Item | null>(null);
@@ -49,10 +50,12 @@
   const selectedItem = ref<Item | null>(null);
   const itemDetailModalVisible = ref<boolean>(false);
 
-  const checkCharacters = player.members.map((member) => ({
-    character: member,
-    checked: false,
-  }));
+  const checkCharacters = ref(
+    player.members.map((member) => ({
+      character: member,
+      checked: false,
+    }))
+  );
 
   const props = defineProps<{
     title: string;
@@ -78,6 +81,13 @@
   };
 
   const handleBeforeOk = () => {
+    if (!selectedItem.value) {
+      return false;
+    }
+    const checkedCharacter = checkCharacters.value.find((item) => item.checked);
+    if (checkedCharacter) {
+      (selectedItem.value as PropertyCrystal).use(checkedCharacter.character);
+    }
     itemDetailModalVisible.value = false;
     return true;
   };

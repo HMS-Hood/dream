@@ -145,6 +145,8 @@ export class CombatUnit implements ICombatUnit {
   // 计算二级属性
   private calculateSecondaryStats(): void {
     this.calculateModifiers();
+    this.isDead = false;
+    this.energy = 25;
     // Base health modified by endurance and level
     this.maxHealth = Math.floor(
       baseCombatStats.health *
@@ -317,7 +319,7 @@ export class CombatUnit implements ICombatUnit {
     this.energy = Math.min(
       energySetting.upperLimit,
       this.energy +
-        Math.round(energySetting.base * this.attributeModifiers.spirit)
+        Math.round(energySetting.base * (1 + this.attributeModifiers.spirit))
     );
   }
 }
